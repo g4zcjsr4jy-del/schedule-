@@ -16,6 +16,77 @@
       background-color: #f3f5f8;
       color: #111827;
       padding-bottom: 90px;
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    /* Умные карточки с поддержкой прозрачности (glassmorphism) поверх фонов */
+    .tm-card {
+      background-color: rgba(255, 255, 255, var(--card-alpha, 0.96));
+      backdrop-filter: blur(var(--card-blur, 8px));
+      -webkit-backdrop-filter: blur(var(--card-blur, 8px));
+      border-color: rgba(226, 232, 240, 0.85);
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    /* Тёмная тема */
+    body.dark-theme {
+      color: #f1f5f9;
+    }
+    body.dark-theme .tm-card {
+      background-color: rgba(15, 23, 42, var(--card-alpha, 0.88));
+      border-color: rgba(51, 65, 85, 0.85);
+      color: #f1f5f9;
+    }
+    body.dark-theme .text-slate-900 { color: #f8fafc !important; }
+    body.dark-theme .text-slate-800 { color: #f1f5f9 !important; }
+    body.dark-theme .text-slate-700 { color: #cbd5e1 !important; }
+    body.dark-theme .text-slate-600 { color: #94a3b8 !important; }
+    body.dark-theme .text-slate-500 { color: #94a3b8 !important; }
+    body.dark-theme .bg-slate-50,
+    body.dark-theme .bg-slate-50\/70,
+    body.dark-theme .bg-slate-50\/80 { background-color: rgba(30, 41, 59, 0.65) !important; }
+    body.dark-theme .bg-slate-100 { background-color: rgba(30, 41, 59, 0.9) !important; }
+    body.dark-theme .bg-slate-200\/80 { background-color: rgba(30, 41, 59, 0.95) !important; }
+    body.dark-theme .border-slate-200,
+    body.dark-theme .border-slate-200\/80,
+    body.dark-theme .border-slate-200\/90,
+    body.dark-theme .border-slate-100 { border-color: rgba(51, 65, 85, 0.8) !important; }
+    body.dark-theme input,
+    body.dark-theme select,
+    body.dark-theme textarea {
+      background-color: #1e293b !important;
+      color: #f8fafc !important;
+      border-color: #475569 !important;
+    }
+    body.dark-theme .modal-surface {
+      background-color: #0f172a !important;
+      color: #f8fafc !important;
+      border-color: #334155 !important;
+    }
+    body.dark-theme .excel-table th,
+    body.dark-theme .excel-table td {
+      border-color: #334155;
+    }
+    body.dark-theme .excel-sticky-col {
+      background-color: #1e293b !important;
+      color: #e2e8f0 !important;
+    }
+    body.dark-theme .excel-table thead th.excel-sticky-col {
+      background-color: #020617 !important;
+    }
+
+    /* Узорные фоны */
+    body.pattern-dots {
+      background-image: radial-gradient(#cbd5e1 1.25px, transparent 1.25px);
+      background-size: 20px 20px;
+    }
+    body.pattern-grid {
+      background-image: linear-gradient(to right, rgba(148, 163, 184, 0.18) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(148, 163, 184, 0.18) 1px, transparent 1px);
+      background-size: 24px 24px;
     }
 
     /* Кастомные скроллбары для Excel-таблицы */
@@ -66,6 +137,11 @@
       background-color: #0f172a;
     }
 
+    /* Живая линия текущего времени */
+    .now-row td {
+      border-top: 2px solid #ef4444 !important;
+    }
+
     /* Анимация модалок */
     .modal-backdrop {
       transition: opacity 0.2s ease;
@@ -76,19 +152,19 @@
 
 <div class="max-w-7xl mx-auto px-3 sm:px-6 pt-4 sm:pt-6">
 
-  <!-- ВЕРХНЯЯ ПАНЕЛЬ: Заголовок + Настройки + Помодоро + Экспорт -->
-  <header class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 mb-4">
+  <!-- ВЕРХНЯЯ ПАНЕЛЬ: Заголовок + Живой статус + Оформление + Помодоро -->
+  <header class="tm-card rounded-2xl border shadow-sm p-4 sm:p-5 mb-4">
     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
       
       <!-- Редактируемый заголовок и режим сна -->
       <div class="flex-1 min-w-0">
         <div class="flex items-center gap-2 group">
-          <h1 id="appTitleDisplay" onclick="openSettingsModal()" title="Нажмите, чтобы переименовать"
-              class="text-xl sm:text-2xl font-extrabold text-slate-900 truncate cursor-pointer hover:text-blue-600 transition-colors">
+          <h1 id="appTitleDisplay" onclick="openSettingsModal('general')" title="Нажмите, чтобы переименовать"
+              class="text-xl sm:text-2xl font-extrabold text-slate-900 truncate cursor-pointer hover:opacity-80 transition-opacity">
             Мой тайм-менеджер
           </h1>
-          <button onclick="openSettingsModal()" title="Настройки названия, сна и категорий"
-                  class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors shrink-0">
+          <button onclick="openSettingsModal('general')" title="Настройки названия, сна и категорий"
+                  class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50/70 transition-colors shrink-0">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
             </svg>
@@ -96,21 +172,21 @@
         </div>
 
         <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs sm:text-sm text-slate-500">
-          <span id="appSubtitleDisplay" onclick="openSettingsModal()" class="cursor-pointer hover:text-slate-800">
+          <span id="appSubtitleDisplay" onclick="openSettingsModal('general')" class="cursor-pointer hover:text-slate-800">
             Персональное расписание и контроль занятости
           </span>
           <span class="text-slate-300">•</span>
-          <button onclick="openSettingsModal()" class="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-800 bg-indigo-50 px-2 py-0.5 rounded-md">
+          <button onclick="openSettingsModal('general')" class="inline-flex items-center gap-1 font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
             <span>🌙 Режим:</span>
             <span id="sleepBadgeText">06:00 – 22:00 (Сон 8 ч)</span>
           </button>
         </div>
       </div>
 
-      <!-- Компактный Помодоро-таймер и кнопки действий -->
+      <!-- Компактный Помодоро + Генератор фонового звука + Кнопки управления -->
       <div class="flex flex-wrap items-center gap-2 sm:gap-2.5">
-        <!-- Мини-виджет Помодоро -->
-        <div class="flex items-center gap-2 bg-slate-900 text-white px-3 py-1.5 rounded-xl shadow-xs">
+        <!-- Мини-виджет Помодоро и Фонового шума -->
+        <div class="flex items-center gap-1.5 bg-slate-900 text-white px-3 py-1.5 rounded-xl shadow-xs">
           <span id="pomoModeIcon" class="text-sm" title="Режим фокусировки">🍅</span>
           <span id="pomoDisplay" class="font-mono font-bold text-sm sm:text-base tracking-wider">25:00</span>
           <button id="pomoToggleBtn" onclick="togglePomodoro()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs px-2 py-1 rounded-lg transition">
@@ -122,9 +198,19 @@
           <button onclick="switchPomodoroMode()" title="Переключить Фокус (25м) / Перерыв (5м)" class="text-slate-400 hover:text-amber-300 text-xs px-1">
             ⇄
           </button>
+          <span class="text-slate-700">|</span>
+          <button id="ambientSoundBtn" onclick="toggleAmbientSound()" title="Фоновый звук для концентрации (мягкий шум дождя)"
+                  class="text-xs px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold transition flex items-center gap-1">
+            <span>🎧</span>
+            <span id="ambientSoundLabel" class="hidden sm:inline">Фон</span>
+          </button>
         </div>
 
-        <button onclick="openSettingsModal()" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm transition">
+        <button onclick="openSettingsModal('appearance')" class="px-3 py-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 font-semibold text-xs sm:text-sm transition">
+          🎨 Фон и тема
+        </button>
+
+        <button onclick="openSettingsModal('general')" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm transition">
           ⚙️ Настройки
         </button>
 
@@ -132,20 +218,23 @@
           📥 Excel / JSON
         </button>
 
-        <button onclick="openEventModal()" class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm shadow-xs transition">
+        <button id="mainAddBtn" onclick="openEventModal()" class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm shadow-xs transition">
           + Добавить
         </button>
       </div>
     </div>
+
+    <!-- ЖИВОЙ ИНДИКАТОР: ЧТО СЕЙЧАС И ЧТО ДАЛЬШЕ -->
+    <div id="liveNowBanner" class="mt-3.5 pt-3 border-t border-slate-200/70 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"></div>
   </header>
 
   <!-- СВОДКА ВРЕМЕНИ (КАРТОЧКИ) -->
   <div id="statsGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3 mb-4"></div>
 
-  <!-- БАЛАНС НЕДЕЛИ + ГРАФИК ЗАГРУЗКИ ПО ДНЯМ -->
+  <!-- БАЛАНС НЕДЕЛИ + ГРАФИК ЗАГРУЗКИ + НЕДЕЛЬНЫЕ ЦЕЛИ -->
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-4">
     <!-- Шкала 168 часов -->
-    <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 flex flex-col justify-between">
+    <div class="lg:col-span-5 tm-card rounded-2xl border shadow-sm p-4 flex flex-col justify-between">
       <div>
         <div class="flex justify-between items-center text-xs sm:text-sm font-bold text-slate-800 mb-2">
           <span>Баланс недели (168 часов)</span>
@@ -153,17 +242,61 @@
         </div>
         <div id="progressTrack" class="h-4 bg-slate-100 rounded-full overflow-hidden flex shadow-inner"></div>
       </div>
-      <div id="legendContainer" class="flex flex-wrap gap-x-4 gap-y-1.5 mt-3 text-xs text-slate-600"></div>
+      <div id="legendContainer" class="flex flex-wrap gap-x-3.5 gap-y-1.5 mt-3 text-xs text-slate-600"></div>
     </div>
 
     <!-- Столбчатая диаграмма загрузки по дням (Пн–Вс) -->
-    <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4">
+    <div class="lg:col-span-4 tm-card rounded-2xl border shadow-sm p-4">
       <div class="flex justify-between items-center text-xs sm:text-sm font-bold text-slate-800 mb-2">
-        <span>Загруженность по дням (%)</span>
+        <span>Загруженность по дням</span>
         <span id="avgLoadLabel" class="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">Средняя: 0%</span>
       </div>
       <div id="dailyBarChart" class="grid grid-cols-7 gap-2 items-end h-24 pt-3 px-1"></div>
     </div>
+
+    <!-- Трекер целей на неделю -->
+    <div class="lg:col-span-3 tm-card rounded-2xl border shadow-sm p-4 flex flex-col justify-between">
+      <div>
+        <div class="flex justify-between items-center text-xs sm:text-sm font-bold text-slate-800 mb-2">
+          <span>🎯 Цели на неделю</span>
+          <button onclick="openGoalsModal()" class="text-xs font-bold text-blue-600 hover:underline">Изменить</button>
+        </div>
+        <div id="weeklyGoalsList" class="space-y-2.5 text-xs"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- БЫСТРЫЕ ШАБЛОНЫ ДЕЛ (В ОДИН КЛИК) -->
+  <div class="tm-card rounded-2xl border shadow-xs px-4 py-2.5 mb-4 flex flex-wrap items-center justify-between gap-2">
+    <div class="flex items-center gap-2 flex-wrap">
+      <span class="text-xs font-extrabold text-slate-600">⚡ Быстро добавить на</span>
+      <select id="quickTemplateDay" class="text-xs font-bold bg-slate-100 border border-slate-200 rounded-lg px-2 py-1 text-slate-800">
+        <option value="0">Пн</option>
+        <option value="1">Вт</option>
+        <option value="2">Ср</option>
+        <option value="3">Чт</option>
+        <option value="4">Пт</option>
+        <option value="5">Сб</option>
+        <option value="6">Вс</option>
+      </select>
+      <span class="text-xs text-slate-400">:</span>
+      <button onclick="applyQuickTemplate('ДЗ / Самоподготовка', 'hw', 90)" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-semibold transition">
+        + 📚 ДЗ (1.5 ч)
+      </button>
+      <button onclick="applyQuickTemplate('Тренировка', 'workout', 75)" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-semibold transition">
+        + 💪 Тренировка (1ч 15м)
+      </button>
+      <button onclick="applyQuickTemplate('Английский / Практика', 'study', 60)" class="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 text-xs font-semibold transition">
+        + 🌍 Язык (1 ч)
+      </button>
+      <button onclick="applyQuickTemplate('Отдых / Обед', 'rest', 45)" class="px-2.5 py-1 rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-800 border border-pink-200 text-xs font-semibold transition">
+        + ☕ Отдых (45 м)
+      </button>
+    </div>
+
+    <button onclick="openCloneDayModal()" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1 rounded-lg transition">
+      📋 Клонировать день...
+    </button>
   </div>
 
   <!-- НАВИГАЦИЯ ПО ВКЛАДКАМ -->
@@ -183,16 +316,16 @@
       </button>
     </div>
 
-    <!-- Фильтр по категориям (опционально для быстрого фокуса) -->
+    <!-- Фильтр по категориям -->
     <div id="filterBar" class="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 sm:pb-0"></div>
   </div>
 
   <!-- ВКЛАДКА 1: НАГЛЯДНАЯ EXCEL-КАРТА ЗАНЯТОСТИ -->
-  <section id="viewHeatmap" class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden">
+  <section id="viewHeatmap" class="tm-card rounded-2xl border shadow-sm overflow-hidden">
     <div class="p-3 sm:p-4 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2 bg-slate-50/70">
       <div>
         <h2 class="text-sm sm:text-base font-bold text-slate-800">Почасовая карта занятости недели</h2>
-        <p class="text-xs text-slate-500">Нажмите на любую свободную клетку, чтобы запланировать дело, или на занятую — для редактирования.</p>
+        <p class="text-xs text-slate-500">Красная линия показывает текущее время. Нажмите на пустую клетку, чтобы запланировать дело.</p>
       </div>
       <div class="flex items-center gap-2 text-xs">
         <span class="text-slate-500">Шаг сетки:</span>
@@ -216,7 +349,7 @@
   <section id="viewCards" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4"></section>
 
   <!-- ВКЛАДКА 3: ЧЕК-ЛИСТ ДНЯ -->
-  <section id="viewChecklist" class="hidden bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
+  <section id="viewChecklist" class="hidden tm-card rounded-2xl border shadow-sm p-4 sm:p-6">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-200">
       <div>
         <h2 class="text-base sm:text-lg font-bold text-slate-900">Трекер выполнения на день</h2>
@@ -256,7 +389,7 @@
 
 <!-- МОДАЛЬНОЕ ОКНО: ДОБАВЛЕНИЕ / РЕДАКТИРОВАНИЕ СОБЫТИЯ -->
 <div id="eventModalBackdrop" class="modal-backdrop fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
-  <div class="bg-white rounded-2xl w-full max-w-md p-5 shadow-2xl border border-slate-100">
+  <div class="modal-surface bg-white rounded-2xl w-full max-w-md p-5 shadow-2xl border border-slate-100 max-h-[92vh] overflow-y-auto">
     <div class="flex justify-between items-center mb-4">
       <h2 id="eventModalTitle" class="text-lg font-extrabold text-slate-900">Новое занятие</h2>
       <button onclick="closeEventModal()" class="text-slate-400 hover:text-slate-700 text-xl leading-none">&times;</button>
@@ -264,17 +397,27 @@
     <input type="hidden" id="editEventId" />
 
     <div class="space-y-3">
-      <div>
-        <label class="block text-xs font-bold text-slate-700 mb-1">День недели</label>
-        <select id="fDay" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-white">
-          <option value="0">Понедельник</option>
-          <option value="1">Вторник</option>
-          <option value="2">Среда</option>
-          <option value="3">Четверг</option>
-          <option value="4">Пятница</option>
-          <option value="5">Суббота</option>
-          <option value="6">Воскресенье</option>
-        </select>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">День недели</label>
+          <select id="fDay" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-white">
+            <option value="0">Понедельник</option>
+            <option value="1">Вторник</option>
+            <option value="2">Среда</option>
+            <option value="3">Четверг</option>
+            <option value="4">Пятница</option>
+            <option value="5">Суббота</option>
+            <option value="6">Воскресенье</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Приоритет / Важность</label>
+          <select id="fPriority" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-white">
+            <option value="normal">⚪ Обычный</option>
+            <option value="medium">🟡 Важный</option>
+            <option value="high">🔴 Высокий (фокус)</option>
+          </select>
+        </div>
       </div>
 
       <div class="grid grid-cols-2 gap-3">
@@ -299,8 +442,8 @@
       </div>
 
       <div>
-        <label class="block text-xs font-bold text-slate-700 mb-1">Аудитория / Заметка</label>
-        <input type="text" id="fMeta" placeholder="Например: ауд. 119 или Онлайн" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm" />
+        <label class="block text-xs font-bold text-slate-700 mb-1">Аудитория / Заметка / Подзадачи</label>
+        <input type="text" id="fMeta" placeholder="Например: ауд. 119, взять тетрадь" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm" />
       </div>
 
       <!-- Быстрое дублирование на другой день -->
@@ -341,16 +484,70 @@
   </div>
 </div>
 
-<!-- МОДАЛЬНОЕ ОКНО: НАСТРОЙКИ (НАЗВАНИЕ, СОН, КАТЕГОРИИ) -->
+<!-- МОДАЛЬНОЕ ОКНО: НАСТРОЙКИ И ОФОРМЛЕНИЕ (ФОН, ТЕМА, СОН, КАТЕГОРИИ) -->
 <div id="settingsModalBackdrop" class="modal-backdrop fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
-  <div class="bg-white rounded-2xl w-full max-w-lg p-5 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-lg font-extrabold text-slate-900">Настройки расписания и категорий</h2>
+  <div class="modal-surface bg-white rounded-2xl w-full max-w-xl p-5 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+    <div class="flex justify-between items-center mb-3">
+      <h2 class="text-lg font-extrabold text-slate-900">Настройки и оформление</h2>
       <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-slate-700 text-xl leading-none">&times;</button>
     </div>
 
-    <div class="space-y-4">
-      <!-- Название и подзаголовок -->
+    <!-- Внутренние вкладки модалки настроек -->
+    <div class="flex gap-1.5 bg-slate-100 p-1 rounded-xl mb-4">
+      <button id="setTabAppearanceBtn" onclick="switchSettingsTab('appearance')" class="flex-1 py-1.5 px-3 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-xs">
+        🎨 Фон и тема
+      </button>
+      <button id="setTabGeneralBtn" onclick="switchSettingsTab('general')" class="flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold text-slate-600">
+        ⚙️ Название, сон и категории
+      </button>
+    </div>
+
+    <!-- ВКЛАДКА НАСТРОЕК 1: ОФОРМЛЕНИЕ И ФОН -->
+    <div id="settingsAppearancePane" class="space-y-4">
+      <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70 space-y-3">
+        <div class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Готовые темы и фоны</div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="themePresetsGrid"></div>
+      </div>
+
+      <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70 space-y-3">
+        <div class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Свой цвет или своя картинка на фон</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Выбрать сплошной цвет фона:</label>
+            <div class="flex items-center gap-2">
+              <input type="color" id="customBgColorInput" onchange="previewCustomBgColor(this.value)" class="w-10 h-9 p-0.5 rounded-lg border border-slate-300 cursor-pointer" />
+              <span class="text-xs text-slate-500">Любой оттенок</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Загрузить свои обои (картинку):</label>
+            <input type="file" id="customBgImageInput" accept="image/*" onchange="handleBgImageUpload(event)"
+                   class="w-full text-xs text-slate-600 file:mr-2 file:py-1.5 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-purple-100 file:text-purple-700 hover:file:bg-purple-200" />
+          </div>
+        </div>
+
+        <div id="removeBgImageWrap" class="hidden pt-1">
+          <button type="button" onclick="clearCustomBgImage()" class="text-xs font-bold text-red-600 hover:underline">
+            ✕ Удалить загруженную картинку фона
+          </button>
+        </div>
+      </div>
+
+      <!-- Прозрачность карточек (Glassmorphism) -->
+      <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70 space-y-2">
+        <div class="flex justify-between items-center">
+          <label class="text-xs font-bold text-slate-700">Прозрачность карточек (эффект стекла):</label>
+          <span id="cardOpacityLabel" class="text-xs font-extrabold text-blue-600">96%</span>
+        </div>
+        <input type="range" id="cardOpacitySlider" min="55" max="100" value="96" oninput="previewCardOpacity(this.value)"
+               class="w-full accent-blue-600 cursor-pointer" />
+        <p class="text-[11px] text-slate-500">Уменьшите прозрачность до 70–85%, чтобы красиво просвечивали фоновые обои или градиент.</p>
+      </div>
+    </div>
+
+    <!-- ВКЛАДКА НАСТРОЕК 2: ОБЩИЕ НАСТРОЙКИ И КАТЕГОРИИ -->
+    <div id="settingsGeneralPane" class="hidden space-y-4">
       <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70 space-y-3">
         <div class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Общая информация</div>
         <div>
@@ -363,7 +560,6 @@
         </div>
       </div>
 
-      <!-- Режим дня и сна -->
       <div class="bg-indigo-50/60 p-3.5 rounded-xl border border-indigo-100 space-y-3">
         <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-700">Режим активного дня (бодрствование)</div>
         <div class="grid grid-cols-2 gap-3">
@@ -376,10 +572,8 @@
             <input type="time" id="setSleepTime" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-white" />
           </div>
         </div>
-        <p class="text-[11px] text-indigo-700">Статистика сна, бодрствования и сетка Excel автоматически перестроятся под ваш режим.</p>
       </div>
 
-      <!-- Редактор категорий -->
       <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70 space-y-3">
         <div class="flex justify-between items-center">
           <span class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Категории занятий</span>
@@ -397,19 +591,79 @@
       </button>
       <div class="flex gap-2">
         <button onclick="closeSettingsModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs">
-          Отмена
+          Закрыть
         </button>
         <button onclick="saveSettings()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs">
-          Применить
+          Сохранить
         </button>
       </div>
     </div>
   </div>
 </div>
 
+<!-- МОДАЛЬНОЕ ОКНО: НАСТРОЙКА ЦЕЛЕЙ НА НЕДЕЛЮ -->
+<div id="goalsModalBackdrop" class="modal-backdrop fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+  <div class="modal-surface bg-white rounded-2xl w-full max-w-md p-5 shadow-2xl border border-slate-100">
+    <div class="flex justify-between items-center mb-3">
+      <h2 class="text-lg font-extrabold text-slate-900">🎯 Цели на неделю (часы)</h2>
+      <button onclick="closeGoalsModal()" class="text-slate-400 hover:text-slate-700 text-xl leading-none">&times;</button>
+    </div>
+    <p class="text-xs text-slate-500 mb-3">Укажите целевое количество часов в неделю для каждой категории (0 — не отслеживать).</p>
+    <div id="goalsEditorList" class="space-y-2.5 max-h-72 overflow-y-auto pr-1"></div>
+    <div class="flex justify-end gap-2 mt-5 pt-3 border-t border-slate-100">
+      <button onclick="closeGoalsModal()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-semibold text-xs">Отмена</button>
+      <button onclick="saveGoals()" class="px-4 py-2 rounded-xl bg-blue-600 text-white font-bold text-xs">Сохранить цели</button>
+    </div>
+  </div>
+</div>
+
+<!-- МОДАЛЬНОЕ ОКНО: КЛОНИРОВАНИЕ ДНЯ -->
+<div id="cloneModalBackdrop" class="modal-backdrop fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+  <div class="modal-surface bg-white rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100">
+    <div class="flex justify-between items-center mb-3">
+      <h2 class="text-base font-extrabold text-slate-900">📋 Скопировать весь день</h2>
+      <button onclick="closeCloneDayModal()" class="text-slate-400 hover:text-slate-700 text-xl leading-none">&times;</button>
+    </div>
+    <div class="space-y-3">
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">Откуда копируем:</label>
+        <select id="cloneFromDay" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm">
+          <option value="0">Понедельник</option>
+          <option value="1">Вторник</option>
+          <option value="2">Среда</option>
+          <option value="3">Четверг</option>
+          <option value="4">Пятница</option>
+          <option value="5">Суббота</option>
+          <option value="6">Воскресенье</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">Куда вставить:</label>
+        <select id="cloneToDay" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm">
+          <option value="0">Понедельник</option>
+          <option value="1">Вторник</option>
+          <option value="2">Среда</option>
+          <option value="3">Четверг</option>
+          <option value="4">Пятница</option>
+          <option value="5">Суббота</option>
+          <option value="6" selected>Воскресенье</option>
+        </select>
+      </div>
+      <label class="flex items-center gap-2 text-xs text-slate-600 cursor-pointer">
+        <input type="checkbox" id="cloneReplaceCheck" checked class="rounded accent-blue-600" />
+        <span>Заменить существующие дела в целевом дне</span>
+      </label>
+    </div>
+    <div class="flex justify-end gap-2 mt-5 pt-3 border-t border-slate-100">
+      <button onclick="closeCloneDayModal()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-semibold text-xs">Отмена</button>
+      <button onclick="executeCloneDay()" class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-bold text-xs">Скопировать</button>
+    </div>
+  </div>
+</div>
+
 <!-- МОДАЛЬНОЕ ОКНО: ЭКСПОРТ / ИМПОРТ (EXCEL CSV & JSON) -->
 <div id="exportModalBackdrop" class="modal-backdrop fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
-  <div class="bg-white rounded-2xl w-full max-w-md p-5 shadow-2xl border border-slate-100">
+  <div class="modal-surface bg-white rounded-2xl w-full max-w-md p-5 shadow-2xl border border-slate-100">
     <div class="flex justify-between items-center mb-3">
       <h2 class="text-lg font-extrabold text-slate-900">Экспорт и импорт данных</h2>
       <button onclick="closeExportModal()" class="text-slate-400 hover:text-slate-700 text-xl leading-none">&times;</button>
@@ -442,7 +696,19 @@
 <script>
   const DAYS = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
   const DAYS_SHORT = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
-  const STORAGE_KEY = "smart_time_manager_v2";
+  const STORAGE_KEY = "smart_time_manager_v3";
+
+  // Готовые темы оформления
+  const THEME_PRESETS = [
+    { id: "light", name: "Светлый минимал", dark: false, bg: "#f3f5f8", pattern: "", preview: "#f3f5f8" },
+    { id: "dark", name: "Тёмная ночь", dark: true, bg: "#090d16", pattern: "", preview: "#0f172a" },
+    { id: "mint", name: "Свежая мята", dark: false, bg: "linear-gradient(135deg, #d1fae5 0%, #e0f2fe 100%)", pattern: "", preview: "linear-gradient(135deg, #a7f3d0, #bae6fd)" },
+    { id: "sunset", name: "Тёплый закат", dark: false, bg: "linear-gradient(135deg, #fef3c7 0%, #fce7f3 50%, #e0e7ff 100%)", pattern: "", preview: "linear-gradient(135deg, #fde68a, #fbcfe8)" },
+    { id: "ocean", name: "Глубокий океан", dark: true, bg: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0f766e 100%)", pattern: "", preview: "linear-gradient(135deg, #1e3a8a, #0f766e)" },
+    { id: "cosmic", name: "Космос", dark: true, bg: "linear-gradient(135deg, #1e1b4b 0%, #311042 50%, #090d16 100%)", pattern: "", preview: "linear-gradient(135deg, #312e81, #581c87)" },
+    { id: "dots", name: "Блокнот (точки)", dark: false, bg: "#f8fafc", pattern: "pattern-dots", preview: "#e2e8f0" },
+    { id: "grid", name: "Инженерная сетка", dark: false, bg: "#f8fafc", pattern: "pattern-grid", preview: "#cbd5e1" }
+  ];
 
   // Базовые категории с цветами
   const DEFAULT_CATEGORIES = [
@@ -455,32 +721,32 @@
 
   // Сохраняем все исходные занятия пользователя
   const DEFAULT_EVENTS = [
-    { id: "1", day: 0, start: "08:30", end: "09:20", cat: "study", title: "Высшая математика (лек)", meta: "ауд. 119 (1/1) • Астамиров Р." },
-    { id: "2", day: 0, start: "10:30", end: "11:20", cat: "study", title: "Иностранный язык (пр)", meta: "ауд. 422а/2 • Васильева О.М." },
-    { id: "3", day: 0, start: "18:00", end: "19:15", cat: "workout", title: "Тренировка", meta: "1 ч 15 мин" },
+    { id: "1", day: 0, start: "08:30", end: "09:20", cat: "study", priority: "normal", title: "Высшая математика (лек)", meta: "ауд. 119 (1/1) • Астамиров Р." },
+    { id: "2", day: 0, start: "10:30", end: "11:20", cat: "study", priority: "normal", title: "Иностранный язык (пр)", meta: "ауд. 422а/2 • Васильева О.М." },
+    { id: "3", day: 0, start: "18:00", end: "19:15", cat: "workout", priority: "medium", title: "Тренировка", meta: "1 ч 15 мин" },
 
-    { id: "4", day: 1, start: "08:30", end: "09:20", cat: "study", title: "Иностранный язык (пр)", meta: "ауд. 836/УЛК • Васильева О.М." },
-    { id: "5", day: 1, start: "10:30", end: "11:20", cat: "study", title: "Иностранный язык (пр)", meta: "ауд. 1013/УЛК • Васильева О.М." },
+    { id: "4", day: 1, start: "08:30", end: "09:20", cat: "study", priority: "normal", title: "Иностранный язык (пр)", meta: "ауд. 836/УЛК • Васильева О.М." },
+    { id: "5", day: 1, start: "10:30", end: "11:20", cat: "study", priority: "normal", title: "Иностранный язык (пр)", meta: "ауд. 1013/УЛК • Васильева О.М." },
 
-    { id: "6", day: 2, start: "08:30", end: "09:20", cat: "study", title: "Иностранный язык (пр)", meta: "ауд. 1036/УЛК • Васильева О.М." },
-    { id: "7", day: 2, start: "10:30", end: "11:20", cat: "study", title: "Модуль соц.-полит. знаний (пр)", meta: "ауд. 203/5 • Маликов А.В." },
-    { id: "8", day: 2, start: "12:50", end: "13:40", cat: "study", title: "Введение в инф. системы (пр)", meta: "ауд. 636/УЛК • Ким Г.А." },
-    { id: "9", day: 2, start: "18:00", end: "19:15", cat: "workout", title: "Тренировка", meta: "1 ч 15 мин" },
+    { id: "6", day: 2, start: "08:30", end: "09:20", cat: "study", priority: "normal", title: "Иностранный язык (пр)", meta: "ауд. 1036/УЛК • Васильева О.М." },
+    { id: "7", day: 2, start: "10:30", end: "11:20", cat: "study", priority: "normal", title: "Модуль соц.-полит. знаний (пр)", meta: "ауд. 203/5 • Маликов А.В." },
+    { id: "8", day: 2, start: "12:50", end: "13:40", cat: "study", priority: "normal", title: "Введение в инф. системы (пр)", meta: "ауд. 636/УЛК • Ким Г.А." },
+    { id: "9", day: 2, start: "18:00", end: "19:15", cat: "workout", priority: "medium", title: "Тренировка", meta: "1 ч 15 мин" },
 
-    { id: "10", day: 3, start: "08:30", end: "09:20", cat: "study", title: "Модуль соц.-полит. знаний (лек)", meta: "ауд. 119 (1/1) • Маликов А.В." },
-    { id: "11", day: 3, start: "10:30", end: "11:20", cat: "study", title: "Введение в инф. системы (лек)", meta: "ауд. 119 (1/1) • Ким Г.А." },
+    { id: "10", day: 3, start: "08:30", end: "09:20", cat: "study", priority: "normal", title: "Модуль соц.-полит. знаний (лек)", meta: "ауд. 119 (1/1) • Маликов А.В." },
+    { id: "11", day: 3, start: "10:30", end: "11:20", cat: "study", priority: "normal", title: "Введение в инф. системы (лек)", meta: "ауд. 119 (1/1) • Ким Г.А." },
 
-    { id: "12", day: 4, start: "08:30", end: "09:20", cat: "study", title: "Экология и уст. развитие (лек)", meta: "ауд. 119 (1/1) • Гордиянова Т.В." },
-    { id: "13", day: 4, start: "09:30", end: "10:20", cat: "study", title: "Модуль соц.-полит. знаний (лек)", meta: "ауд. 119 (1/1) • Маликов А.В." },
-    { id: "14", day: 4, start: "10:30", end: "11:20", cat: "study", title: "Высшая математика (пр)", meta: "ауд. 1013/УЛК • Астамиров Р." },
-    { id: "15", day: 4, start: "11:30", end: "12:20", cat: "study", title: "Высшая математика (пр)", meta: "ауд. 701/УЛК • Астамиров Р." },
-    { id: "16", day: 4, start: "12:50", end: "13:40", cat: "study", title: "Основы экономики и фин. грам. (лек)", meta: "ауд. 119 (1/1) • Шайкин Д.Н." },
-    { id: "17", day: 4, start: "14:50", end: "15:40", cat: "study", title: "Иностранный язык (пр)", meta: "ауд. 514а/4 • Васильева О.М." },
-    { id: "18", day: 4, start: "18:00", end: "19:15", cat: "workout", title: "Тренировка", meta: "1 ч 15 мин" },
+    { id: "12", day: 4, start: "08:30", end: "09:20", cat: "study", priority: "normal", title: "Экология и уст. развитие (лек)", meta: "ауд. 119 (1/1) • Гордиянова Т.В." },
+    { id: "13", day: 4, start: "09:30", end: "10:20", cat: "study", priority: "normal", title: "Модуль соц.-полит. знаний (лек)", meta: "ауд. 119 (1/1) • Маликов А.В." },
+    { id: "14", day: 4, start: "10:30", end: "11:20", cat: "study", priority: "normal", title: "Высшая математика (пр)", meta: "ауд. 1013/УЛК • Астамиров Р." },
+    { id: "15", day: 4, start: "11:30", end: "12:20", cat: "study", priority: "normal", title: "Высшая математика (пр)", meta: "ауд. 701/УЛК • Астамиров Р." },
+    { id: "16", day: 4, start: "12:50", end: "13:40", cat: "study", priority: "normal", title: "Основы экономики и фин. грам. (лек)", meta: "ауд. 119 (1/1) • Шайкин Д.Н." },
+    { id: "17", day: 4, start: "14:50", end: "15:40", cat: "study", priority: "normal", title: "Иностранный язык (пр)", meta: "ауд. 514а/4 • Васильева О.М." },
+    { id: "18", day: 4, start: "18:00", end: "19:15", cat: "workout", priority: "medium", title: "Тренировка", meta: "1 ч 15 мин" },
 
-    { id: "19", day: 5, start: "08:30", end: "09:20", cat: "study", title: "Иностранный язык (пр)", meta: "ауд. 1005/УЛК • Васильева О.М." },
-    { id: "20", day: 5, start: "12:50", end: "13:40", cat: "study", title: "Экология и уст. развитие (пр)", meta: "ауд. 1036/УЛК • Гордиянова Т.В." },
-    { id: "21", day: 5, start: "13:50", end: "14:40", cat: "study", title: "Основы экономики и фин. грам. (пр)", meta: "ауд. 1036/УЛК • Шайкин Д.Н." }
+    { id: "19", day: 5, start: "08:30", end: "09:20", cat: "study", priority: "normal", title: "Иностранный язык (пр)", meta: "ауд. 1005/УЛК • Васильева О.М." },
+    { id: "20", day: 5, start: "12:50", end: "13:40", cat: "study", priority: "normal", title: "Экология и уст. развитие (пр)", meta: "ауд. 1036/УЛК • Гордиянова Т.В." },
+    { id: "21", day: 5, start: "13:50", end: "14:40", cat: "study", priority: "normal", title: "Основы экономики и фин. грам. (пр)", meta: "ауд. 1036/УЛК • Шайкин Д.Н." }
   ];
 
   // Состояние приложения
@@ -491,7 +757,7 @@
 
   function loadState() {
     try {
-      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(localStorage.getItem("smart_time_manager_v2"));
       if (saved && Array.isArray(saved.events)) {
         return {
           title: saved.title || "Мой тайм-менеджер",
@@ -500,7 +766,15 @@
           sleepTime: saved.sleepTime || "22:00",
           categories: Array.isArray(saved.categories) && saved.categories.length ? saved.categories : JSON.parse(JSON.stringify(DEFAULT_CATEGORIES)),
           events: saved.events,
-          completedIds: Array.isArray(saved.completedIds) ? saved.completedIds : []
+          completedIds: Array.isArray(saved.completedIds) ? saved.completedIds : [],
+          weeklyGoals: saved.weeklyGoals || { workout: 3.5, hw: 6 },
+          theme: saved.theme || {
+            presetId: "light",
+            dark: false,
+            customBg: "",
+            customImage: "",
+            cardOpacity: 96
+          }
         };
       }
     } catch (e) {
@@ -513,12 +787,24 @@
       sleepTime: "22:00",
       categories: JSON.parse(JSON.stringify(DEFAULT_CATEGORIES)),
       events: JSON.parse(JSON.stringify(DEFAULT_EVENTS)),
-      completedIds: []
+      completedIds: [],
+      weeklyGoals: { workout: 3.5, hw: 6 },
+      theme: {
+        presetId: "light",
+        dark: false,
+        customBg: "",
+        customImage: "",
+        cardOpacity: 96
+      }
     };
   }
 
   function saveState() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+      showToast("⚠️ Не удалось сохранить (возможно, слишком тяжёлая картинка фона)");
+    }
   }
 
   function showToast(msg) {
@@ -526,7 +812,30 @@
     el.textContent = msg;
     el.classList.remove("opacity-0");
     clearTimeout(el._timer);
-    el._timer = setTimeout(() => el.classList.add("opacity-0"), 2600);
+    el._timer = setTimeout(() => el.classList.add("opacity-0"), 2800);
+  }
+
+  // ПРИМЕНЕНИЕ ФОНА И ТЕМЫ ОФОРМЛЕНИЯ
+  function applyThemeStyles() {
+    const t = state.theme || { presetId: "light", dark: false, customBg: "", customImage: "", cardOpacity: 96 };
+    const body = document.body;
+
+    body.classList.remove("dark-theme", "pattern-dots", "pattern-grid");
+    if (t.dark) body.classList.add("dark-theme");
+
+    const alpha = (Number(t.cardOpacity || 96) / 100).toFixed(2);
+    document.documentElement.style.setProperty("--card-alpha", alpha);
+    document.documentElement.style.setProperty("--card-blur", alpha < 0.95 ? "12px" : "4px");
+
+    if (t.customImage) {
+      body.style.background = `url("${t.customImage}") center / cover fixed no-repeat`;
+    } else if (t.customBg) {
+      body.style.background = t.customBg;
+    } else {
+      const preset = THEME_PRESETS.find(p => p.id === t.presetId) || THEME_PRESETS[0];
+      body.style.background = preset.bg;
+      if (preset.pattern) body.classList.add(preset.pattern);
+    }
   }
 
   // Вспомогательные функции времени
@@ -551,11 +860,20 @@
     return `${h} ч ${String(min).padStart(2, "0")} м`;
   }
 
+  function getTodayIdx() {
+    const jsDay = new Date().getDay();
+    return jsDay === 0 ? 6 : jsDay - 1;
+  }
+
+  function getNowMins() {
+    const now = new Date();
+    return now.getHours() * 60 + now.getMinutes();
+  }
+
   function getCategory(catId) {
     return state.categories.find(c => c.id === catId) || state.categories[0] || { id: "other", name: "Другое", color: "#64748b" };
   }
 
-  // Преобразование HEX в мягкий фон и тёмный текст
   function hexToRgba(hex, alpha) {
     const clean = hex.replace("#", "");
     const bigint = parseInt(clean.length === 3 ? clean.split("").map(c => c + c).join("") : clean, 16);
@@ -565,7 +883,6 @@
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
 
-  // Расчёт параметров бодрствования и сна
   function getDayBounds() {
     const wake = toMins(state.wakeTime || "06:00");
     let sleep = toMins(state.sleepTime || "22:00");
@@ -577,6 +894,7 @@
 
   // ГЛАВНЫЙ РЕНДЕР
   function renderAll() {
+    applyThemeStyles();
     document.title = state.title;
     document.getElementById("appTitleDisplay").textContent = state.title;
     document.getElementById("appSubtitleDisplay").textContent = state.subtitle;
@@ -584,18 +902,62 @@
     const bounds = getDayBounds();
     document.getElementById("sleepBadgeText").textContent = `${state.wakeTime} – ${state.sleepTime} (Сон ${fmtDur(bounds.sleepPerDay)}/сут)`;
 
+    renderLiveBanner(bounds);
     renderFilterBar();
     renderStatsAndCharts(bounds);
+    renderWeeklyGoals();
     renderExcelHeatmap(bounds);
     renderDayCards(bounds);
     renderChecklist();
+  }
+
+  // ЖИВОЙ БАННЕР ТЕКУЩЕГО И СЛЕДУЮЩЕГО ДЕЛА
+  function renderLiveBanner(bounds) {
+    const banner = document.getElementById("liveNowBanner");
+    const today = getTodayIdx();
+    const nowM = getNowMins();
+    const todayEvents = state.events
+      .filter(e => e.day === today)
+      .sort((a, b) => toMins(a.start) - toMins(b.start));
+
+    const currentEv = todayEvents.find(e => toMins(e.start) <= nowM && toMins(e.end) > nowM);
+    const nextEv = todayEvents.find(e => toMins(e.start) > nowM);
+
+    let leftPart = "";
+    if (nowM < bounds.wake || nowM >= bounds.sleep) {
+      leftPart = `<span class="inline-flex items-center gap-1.5 font-bold text-indigo-600"><span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>Сейчас время сна / отдыха (${fromMins(nowM)})</span>`;
+    } else if (currentEv) {
+      const rem = toMins(currentEv.end) - nowM;
+      const cat = getCategory(currentEv.cat);
+      leftPart = `<span class="inline-flex items-center gap-1.5 font-bold text-slate-900">
+        <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+        <span>Сейчас (${DAYS[today]}, ${fromMins(nowM)}):</span>
+        <span class="px-2 py-0.5 rounded-md text-white" style="background:${cat.color}">${currentEv.title}</span>
+        <span class="text-slate-500 font-semibold">(осталось ${fmtDur(rem)})</span>
+      </span>`;
+    } else {
+      leftPart = `<span class="inline-flex items-center gap-1.5 font-bold text-emerald-700">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span>Сейчас (${DAYS[today]}, ${fromMins(nowM)}): Свободное окно</span>
+      </span>`;
+    }
+
+    let rightPart = "";
+    if (nextEv) {
+      const wait = toMins(nextEv.start) - nowM;
+      rightPart = `<span class="text-slate-600 font-medium">Далее в <strong>${nextEv.start}</strong>: <strong class="text-slate-900">${nextEv.title}</strong> (через ${fmtDur(wait)})</span>`;
+    } else {
+      rightPart = `<span class="text-slate-400">На сегодня запланированных дел больше нет</span>`;
+    }
+
+    banner.innerHTML = `${leftPart}<div>${rightPart}</div>`;
   }
 
   // Фильтр по категориям
   function renderFilterBar() {
     const bar = document.getElementById("filterBar");
     let html = `
-      <button onclick="setCatFilter('all')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition whitespace-nowrap ${activeCategoryFilter === 'all' ? 'bg-slate-800 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}">
+      <button onclick="setCatFilter('all')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition whitespace-nowrap ${activeCategoryFilter === 'all' ? 'bg-slate-800 text-white' : 'tm-card text-slate-600 border hover:opacity-80'}">
         Все категории
       </button>
     `;
@@ -604,7 +966,7 @@
       html += `
         <button onclick="setCatFilter('${cat.id}')"
                 style="${isAct ? `background:${cat.color}; color:#fff; border-color:${cat.color};` : ''}"
-                class="px-2.5 py-1 rounded-lg text-xs font-semibold transition whitespace-nowrap border ${isAct ? '' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}">
+                class="px-2.5 py-1 rounded-lg text-xs font-semibold transition whitespace-nowrap border ${isAct ? '' : 'tm-card text-slate-700 hover:opacity-80'}">
           <span class="inline-block w-2 h-2 rounded-full mr-1" style="background:${isAct ? '#fff' : cat.color}"></span>${cat.name}
         </button>
       `;
@@ -623,7 +985,6 @@
     const weeklySleepMins = bounds.sleepPerDay * 7;
     const weeklyAwakeMins = bounds.awakePerDay * 7;
 
-    // Считаем минуты по категориям
     const catTotals = {};
     state.categories.forEach(c => catTotals[c.id] = 0);
     let totalBusyMins = 0;
@@ -640,14 +1001,13 @@
 
     const weeklyFreeMins = Math.max(0, weeklyAwakeMins - totalBusyMins);
 
-    // Карточки статистики
     const statsGrid = document.getElementById("statsGrid");
     let cardsHtml = "";
     state.categories.slice(0, 4).forEach(cat => {
       const mins = catTotals[cat.id] || 0;
       const count = state.events.filter(e => e.cat === cat.id).length;
       cardsHtml += `
-        <div class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-xs">
+        <div class="tm-card rounded-2xl p-3 border shadow-xs">
           <div class="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-500">
             <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:${cat.color}"></span>
             <span class="truncate">${cat.name}</span>
@@ -659,20 +1019,19 @@
     });
 
     cardsHtml += `
-      <div class="bg-indigo-50/70 rounded-2xl p-3 border border-indigo-100">
-        <div class="text-[11px] font-bold uppercase tracking-wide text-indigo-700">Сон за неделю</div>
-        <div class="text-base sm:text-lg font-extrabold text-indigo-900 mt-1">${fmtDur(weeklySleepMins)}</div>
-        <div class="text-[11px] text-indigo-600/80 mt-0.5">${fmtDur(bounds.sleepPerDay)} / сутки</div>
+      <div class="tm-card rounded-2xl p-3 border border-indigo-200/70">
+        <div class="text-[11px] font-bold uppercase tracking-wide text-indigo-600">Сон за неделю</div>
+        <div class="text-base sm:text-lg font-extrabold text-indigo-700 mt-1">${fmtDur(weeklySleepMins)}</div>
+        <div class="text-[11px] text-slate-400 mt-0.5">${fmtDur(bounds.sleepPerDay)} / сутки</div>
       </div>
-      <div class="bg-emerald-50/80 rounded-2xl p-3 border border-emerald-200/80">
-        <div class="text-[11px] font-bold uppercase tracking-wide text-emerald-800">Свободное время</div>
-        <div class="text-base sm:text-lg font-extrabold text-emerald-700 mt-1">${fmtDur(weeklyFreeMins)}</div>
-        <div class="text-[11px] text-emerald-700/80 mt-0.5">Из ${fmtDur(weeklyAwakeMins)} бодрств.</div>
+      <div class="tm-card rounded-2xl p-3 border border-emerald-200/80">
+        <div class="text-[11px] font-bold uppercase tracking-wide text-emerald-700">Свободное время</div>
+        <div class="text-base sm:text-lg font-extrabold text-emerald-600 mt-1">${fmtDur(weeklyFreeMins)}</div>
+        <div class="text-[11px] text-slate-400 mt-0.5">Из ${fmtDur(weeklyAwakeMins)} бодрств.</div>
       </div>
     `;
     statsGrid.innerHTML = cardsHtml;
 
-    // Прогресс-бар 168 часов
     document.getElementById("awakeLabel").textContent = `Бодрствование: ${fmtDur(weeklyAwakeMins)}`;
     const pct = (m) => ((m / totalWeekMins) * 100).toFixed(2) + "%";
 
@@ -693,10 +1052,10 @@
     document.getElementById("progressTrack").innerHTML = trackHtml;
     document.getElementById("legendContainer").innerHTML = legendHtml;
 
-    // Столбчатая диаграмма по дням недели
     const chartEl = document.getElementById("dailyBarChart");
     let chartHtml = "";
     let sumPercent = 0;
+    const todayIdx = getTodayIdx();
 
     for (let d = 0; d < 7; d++) {
       const dayEvents = state.events.filter(e => e.day === d && (activeCategoryFilter === "all" || e.cat === activeCategoryFilter));
@@ -706,18 +1065,55 @@
       sumPercent += loadPct;
 
       const barColor = loadPct > 65 ? "#ef4444" : loadPct > 35 ? "#3b82f6" : "#10b981";
+      const isToday = d === todayIdx;
       chartHtml += `
         <div class="flex flex-col items-center h-full justify-end group cursor-pointer" onclick="jumpToDay(${d})" title="${DAYS[d]}: занято ${fmtDur(busy)} (${loadPct}%)">
           <span class="text-[10px] font-bold text-slate-600 mb-1">${loadPct}%</span>
-          <div class="w-full max-w-[28px] bg-slate-100 rounded-t-md h-14 flex items-end overflow-hidden">
+          <div class="w-full max-w-[26px] bg-slate-100 rounded-t-md h-14 flex items-end overflow-hidden ${isToday ? 'ring-2 ring-blue-500 ring-offset-1' : ''}">
             <div class="w-full rounded-t-md transition-all duration-300" style="height:${Math.max(6, loadPct)}%; background:${barColor};"></div>
           </div>
-          <span class="text-[11px] font-bold text-slate-700 mt-1">${DAYS_SHORT[d]}</span>
+          <span class="text-[11px] font-bold mt-1 ${isToday ? 'text-blue-600 underline' : 'text-slate-700'}">${DAYS_SHORT[d]}</span>
         </div>
       `;
     }
     chartEl.innerHTML = chartHtml;
     document.getElementById("avgLoadLabel").textContent = `Средняя: ${Math.round(sumPercent / 7)}%`;
+  }
+
+  // ТРЕКЕР НЕДЕЛЬНЫХ ЦЕЛЕЙ
+  function renderWeeklyGoals() {
+    const list = document.getElementById("weeklyGoalsList");
+    const goals = state.weeklyGoals || {};
+    let html = "";
+
+    state.categories.forEach(cat => {
+      const targetHours = Number(goals[cat.id] || 0);
+      if (targetHours <= 0) return;
+
+      let actualMins = 0;
+      state.events.filter(e => e.cat === cat.id).forEach(e => {
+        actualMins += Math.max(0, toMins(e.end) - toMins(e.start));
+      });
+      const actualHours = +(actualMins / 60).toFixed(1);
+      const pct = Math.min(100, Math.round((actualHours / targetHours) * 100));
+
+      html += `
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <span class="font-bold text-slate-700 truncate">${cat.name}</span>
+            <span class="font-extrabold ${pct >= 100 ? 'text-emerald-600' : 'text-slate-600'}">${actualHours} / ${targetHours} ч (${pct}%)</span>
+          </div>
+          <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full transition-all duration-300" style="width:${pct}%; background:${pct >= 100 ? '#10b981' : cat.color};"></div>
+          </div>
+        </div>
+      `;
+    });
+
+    if (!html) {
+      html = `<div class="text-slate-400 py-3 text-center">Цели пока не заданы. Нажмите «Изменить», чтобы поставить план на неделю.</div>`;
+    }
+    list.innerHTML = html;
   }
 
   function jumpToDay(dayIdx) {
@@ -731,54 +1127,52 @@
     const step = Number(document.getElementById("gridStepSelect").value) || 30;
     const startMins = Math.floor(bounds.wake / step) * step;
     const endMins = Math.ceil(bounds.sleep / step) * step;
+    const todayIdx = getTodayIdx();
+    const nowM = getNowMins();
 
-    // Шапка таблицы (Дни недели)
     let headHtml = `<tr>
       <th class="excel-sticky-col text-white py-2.5 px-2 text-center w-20 font-bold">Время</th>`;
     for (let d = 0; d < 7; d++) {
-      headHtml += `<th class="bg-slate-900 text-white py-2.5 px-2 text-center font-bold min-w-[110px]">${DAYS[d]}</th>`;
+      const isToday = d === todayIdx;
+      headHtml += `<th class="${isToday ? 'bg-blue-700' : 'bg-slate-900'} text-white py-2.5 px-2 text-center font-bold min-w-[115px]">
+        ${DAYS[d]} ${isToday ? '•' : ''}
+      </th>`;
     }
     headHtml += `<th class="bg-slate-800 text-slate-200 py-2.5 px-2 text-center w-24 font-bold">Занято / 7д</th></tr>`;
     document.getElementById("excelHead").innerHTML = headHtml;
 
-    // Подготовка событий с учетом фильтра
     const visibleEvents = state.events.filter(e => activeCategoryFilter === "all" || e.cat === activeCategoryFilter);
 
-    // Строки временных интервалов
     let bodyHtml = "";
-    const renderedSpanIds = new Set(); // чтобы объединять ячейки по вертикали (rowspan)
+    const renderedSpanIds = new Set();
 
     for (let t = startMins; t < endMins; t += step) {
       const slotStart = t;
       const slotEnd = t + step;
       const isHourMark = t % 60 === 0;
+      const isNowRow = nowM >= slotStart && nowM < slotEnd;
       let busyDaysCount = 0;
 
-      bodyHtml += `<tr class="${isHourMark ? 'border-t border-slate-300' : ''}">
-        <td class="excel-sticky-col py-1.5 px-2 text-center font-mono text-[11px] ${isHourMark ? 'font-bold text-slate-800' : 'text-slate-400'}">
+      bodyHtml += `<tr class="${isHourMark ? 'border-t border-slate-300' : ''} ${isNowRow ? 'now-row' : ''}">
+        <td class="excel-sticky-col py-1.5 px-2 text-center font-mono text-[11px] ${isNowRow ? 'text-red-600 font-extrabold' : isHourMark ? 'font-bold text-slate-800' : 'text-slate-400'}">
           ${fromMins(slotStart)}
         </td>`;
 
       for (let d = 0; d < 7; d++) {
-        // Ищем событие, покрывающее этот слот
         const ev = visibleEvents.find(e => e.day === d && toMins(e.start) < slotEnd && toMins(e.end) > slotStart);
 
         if (ev) {
           busyDaysCount++;
           const spanKey = `${d}_${ev.id}`;
-          if (renderedSpanIds.has(spanKey)) {
-            // Ячейка уже объединена сверху через rowspan
-            continue;
-          }
+          if (renderedSpanIds.has(spanKey)) continue;
 
-          // Вычисляем сколько слотов занимает событие вниз
-          const evStart = Math.max(startMins, toMins(ev.start));
           const evEnd = Math.min(endMins, toMins(ev.end));
           const slotsCount = Math.max(1, Math.ceil((evEnd - slotStart) / step));
           renderedSpanIds.add(spanKey);
 
           const cat = getCategory(ev.cat);
-          const bg = hexToRgba(cat.color, 0.16);
+          const bg = hexToRgba(cat.color, 0.18);
+          const prioDot = ev.priority === "high" ? "🔴 " : ev.priority === "medium" ? "🟡 " : "";
 
           bodyHtml += `
             <td rowspan="${slotsCount}" onclick="editEvent('${ev.id}')"
@@ -788,24 +1182,22 @@
                 ${ev.start}–${ev.end}
               </div>
               <div class="text-[11px] font-bold text-slate-900 leading-snug mt-0.5 line-clamp-2">
-                ${ev.title}
+                ${prioDot}${ev.title}
               </div>
               ${ev.meta ? `<div class="text-[10px] text-slate-600 truncate mt-0.5">${ev.meta}</div>` : ""}
             </td>
           `;
         } else {
-          // Пустая ячейка (Свободно)
           bodyHtml += `
             <td onclick="openEventModal(${d}, '${fromMins(slotStart)}', '${fromMins(Math.min(endMins, slotStart + 60))}')"
                 title="Свободно (${DAYS[d]}, ${fromMins(slotStart)}). Нажмите, чтобы добавить дело"
-                class="py-1.5 px-1.5 text-center text-[10px] text-slate-300 hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition group">
+                class="py-1.5 px-1.5 text-center text-[10px] text-slate-300 hover:bg-emerald-500/15 hover:text-emerald-700 cursor-pointer transition group">
               <span class="opacity-0 group-hover:opacity-100 font-semibold">+ Свободно</span>
             </td>
           `;
         }
       }
 
-      // Правая итоговая колонка по строке (сколько дней в этот час занято)
       const heatBadge = busyDaysCount === 0
         ? `<span class="text-slate-300">0/7</span>`
         : `<span class="inline-block px-1.5 py-0.5 rounded font-bold text-[10px] ${busyDaysCount >= 5 ? 'bg-red-100 text-red-700' : busyDaysCount >= 3 ? 'bg-amber-100 text-amber-800' : 'bg-blue-50 text-blue-700'}">${busyDaysCount} из 7</span>`;
@@ -814,7 +1206,6 @@
     }
     document.getElementById("excelBody").innerHTML = bodyHtml;
 
-    // Нижний подвал таблицы (Итоги по каждому дню как в Excel)
     let footHtml = `<tr class="bg-slate-100 font-bold text-slate-800">
       <td class="excel-sticky-col bg-slate-200 py-2.5 px-2 text-center text-[11px]">ИТОГО</td>`;
 
@@ -843,6 +1234,7 @@
   function renderDayCards(bounds) {
     const container = document.getElementById("viewCards");
     container.innerHTML = "";
+    const todayIdx = getTodayIdx();
 
     for (let d = 0; d < 7; d++) {
       const dayEvents = state.events
@@ -872,19 +1264,27 @@
         }
 
         const cat = getCategory(ev.cat);
+        const isDone = state.completedIds.includes(ev.id);
+        const prioBadge = ev.priority === "high" ? `<span class="text-[10px] font-bold text-red-600 bg-red-100 px-1.5 py-0.5 rounded">Важно</span>` : "";
+
         stackHtml += `
-          <div onclick="editEvent('${ev.id}')"
-               style="background:${hexToRgba(cat.color, 0.14)}; border-left: 4px solid ${cat.color};"
-               class="rounded-xl p-3 cursor-pointer hover:brightness-95 transition flex justify-between items-center gap-2">
-            <div class="min-w-0">
-              <div class="flex items-center gap-2">
-                <span class="text-xs font-extrabold" style="color:${cat.color}">${ev.start} – ${ev.end}</span>
-                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/80 text-slate-700">${cat.name}</span>
+          <div style="background:${hexToRgba(cat.color, 0.16)}; border-left: 4px solid ${cat.color};"
+               class="rounded-xl p-3 transition flex justify-between items-center gap-2 ${isDone ? 'opacity-65' : ''}">
+            <div class="flex items-start gap-2.5 min-w-0 flex-1">
+              <input type="checkbox" ${isDone ? "checked" : ""} onchange="toggleCheckEvent('${ev.id}')"
+                     title="Отметить выполненным"
+                     class="mt-1 w-4 h-4 rounded accent-emerald-600 cursor-pointer shrink-0" />
+              <div onclick="editEvent('${ev.id}')" class="min-w-0 flex-1 cursor-pointer">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="text-xs font-extrabold" style="color:${cat.color}">${ev.start} – ${ev.end}</span>
+                  <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/80 text-slate-700">${cat.name}</span>
+                  ${prioBadge}
+                </div>
+                <div class="text-sm font-bold text-slate-900 mt-0.5 truncate ${isDone ? 'line-through' : ''}">${ev.title}</div>
+                ${ev.meta ? `<div class="text-xs text-slate-600 mt-0.5 truncate">${ev.meta}</div>` : ""}
               </div>
-              <div class="text-sm font-bold text-slate-900 mt-0.5 truncate">${ev.title}</div>
-              ${ev.meta ? `<div class="text-xs text-slate-600 mt-0.5 truncate">${ev.meta}</div>` : ""}
             </div>
-            <div class="text-xs font-bold text-slate-700 bg-white/70 px-2 py-1 rounded-lg shrink-0">
+            <div onclick="editEvent('${ev.id}')" class="text-xs font-bold text-slate-700 bg-white/75 px-2 py-1 rounded-lg shrink-0 cursor-pointer">
               ${fmtDur(e - s)}
             </div>
           </div>
@@ -907,10 +1307,13 @@
 
       const card = document.createElement("div");
       card.id = `day-card-${d}`;
-      card.className = "bg-white rounded-2xl border border-slate-200/90 shadow-xs p-4";
+      card.className = `tm-card rounded-2xl border shadow-xs p-4 ${d === todayIdx ? 'ring-2 ring-blue-500/60' : ''}`;
       card.innerHTML = `
         <div class="flex justify-between items-center pb-3 mb-3 border-b border-slate-100">
-          <h3 class="text-base font-extrabold text-slate-900">${DAYS[d]}</h3>
+          <div class="flex items-center gap-2">
+            <h3 class="text-base font-extrabold text-slate-900">${DAYS[d]}</h3>
+            ${d === todayIdx ? '<span class="text-[10px] font-extrabold uppercase bg-blue-600 text-white px-2 py-0.5 rounded-full">Сегодня</span>' : ''}
+          </div>
           <span class="text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-full">
             Свободно: ${fmtDur(freeMins)}
           </span>
@@ -945,7 +1348,7 @@
       const cat = getCategory(ev.cat);
 
       html += `
-        <label class="flex items-center justify-between gap-3 p-3.5 rounded-xl border cursor-pointer transition ${isDone ? 'bg-slate-50 border-slate-200 opacity-70' : 'bg-white border-slate-200 hover:border-blue-300'}">
+        <label class="flex items-center justify-between gap-3 p-3.5 rounded-xl border cursor-pointer transition ${isDone ? 'bg-slate-50 border-slate-200 opacity-70' : 'tm-card border-slate-200 hover:border-blue-300'}">
           <div class="flex items-center gap-3 min-w-0">
             <input type="checkbox" ${isDone ? "checked" : ""} onchange="toggleCheckEvent('${ev.id}')"
                    class="w-5 h-5 rounded-md accent-emerald-600 cursor-pointer shrink-0" />
@@ -976,7 +1379,7 @@
       state.completedIds.push(id);
     }
     saveState();
-    renderChecklist();
+    renderAll();
   }
 
   function resetDayChecks() {
@@ -984,8 +1387,89 @@
     const dayIds = state.events.filter(e => e.day === selectedDay).map(e => e.id);
     state.completedIds = state.completedIds.filter(id => !dayIds.includes(id));
     saveState();
-    renderChecklist();
+    renderAll();
     showToast("Отметки за день сброшены");
+  }
+
+  // БЫСТРЫЕ ШАБЛОНЫ (В ОДИН КЛИК В СВОБОДНОЕ ОКНО)
+  function applyQuickTemplate(title, catHint, durationMins) {
+    const day = Number(document.getElementById("quickTemplateDay").value);
+    const bounds = getDayBounds();
+    const cat = state.categories.find(c => c.id === catHint) ? catHint : state.categories[0].id;
+
+    // Ищем первое свободное окно в выбранном дне
+    const dayEvents = state.events
+      .filter(e => e.day === day)
+      .sort((a, b) => toMins(a.start) - toMins(b.start));
+
+    let slotStart = Math.max(bounds.wake, 14 * 60); // по умолчанию предлагаем после обеда или в первое окно
+    // Проверим окна с утра
+    let cursor = bounds.wake;
+    let found = false;
+    for (const ev of dayEvents) {
+      if (toMins(ev.start) - cursor >= durationMins) {
+        slotStart = cursor;
+        found = true;
+        break;
+      }
+      cursor = Math.max(cursor, toMins(ev.end));
+    }
+    if (!found && bounds.sleep - cursor >= durationMins) {
+      slotStart = cursor;
+    }
+
+    const slotEnd = Math.min(bounds.sleep, slotStart + durationMins);
+    state.events.push({
+      id: String(Date.now()),
+      day,
+      start: fromMins(slotStart),
+      end: fromMins(slotEnd),
+      cat,
+      priority: "normal",
+      title,
+      meta: "Добавлено из быстрого шаблона"
+    });
+    saveState();
+    renderAll();
+    showToast(`Добавлено: ${title} (${DAYS_SHORT[day]}, ${fromMins(slotStart)}–${fromMins(slotEnd)})`);
+  }
+
+  // КЛОНИРОВАНИЕ ДНЯ
+  function openCloneDayModal() {
+    document.getElementById("cloneModalBackdrop").classList.remove("hidden");
+    document.getElementById("cloneModalBackdrop").classList.add("flex");
+  }
+  function closeCloneDayModal() {
+    document.getElementById("cloneModalBackdrop").classList.add("hidden");
+    document.getElementById("cloneModalBackdrop").classList.remove("flex");
+  }
+  function executeCloneDay() {
+    const fromD = Number(document.getElementById("cloneFromDay").value);
+    const toD = Number(document.getElementById("cloneToDay").value);
+    const replace = document.getElementById("cloneReplaceCheck").checked;
+
+    if (fromD === toD) {
+      showToast("Выберите два разных дня недели");
+      return;
+    }
+
+    if (replace) {
+      state.events = state.events.filter(e => e.day !== toD);
+    }
+
+    const sourceEvents = state.events.filter(e => e.day === fromD);
+    sourceEvents.forEach((ev, i) => {
+      state.events.push({
+        ...ev,
+        id: String(Date.now() + i + Math.floor(Math.random() * 1000)),
+        day: toD
+      });
+    });
+
+    saveState();
+    closeCloneDayModal();
+    renderAll();
+    showToast(`Расписание с ${DAYS_SHORT[fromD]} скопировано на ${DAYS_SHORT[toD]}`);
   }
 
   // ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
@@ -1019,6 +1503,7 @@
     document.getElementById("eventModalTitle").textContent = "Добавить занятие / дело";
     document.getElementById("editEventId").value = "";
     document.getElementById("fDay").value = day;
+    document.getElementById("fPriority").value = "normal";
     document.getElementById("fStart").value = start;
     document.getElementById("fEnd").value = end;
     populateCategorySelect(state.categories[0]?.id || "study");
@@ -1040,6 +1525,7 @@
     document.getElementById("eventModalTitle").textContent = "Редактировать занятие";
     document.getElementById("editEventId").value = ev.id;
     document.getElementById("fDay").value = ev.day;
+    document.getElementById("fPriority").value = ev.priority || "normal";
     document.getElementById("fStart").value = ev.start;
     document.getElementById("fEnd").value = ev.end;
     populateCategorySelect(ev.cat);
@@ -1064,6 +1550,7 @@
   function saveEvent() {
     const id = document.getElementById("editEventId").value;
     const day = Number(document.getElementById("fDay").value);
+    const priority = document.getElementById("fPriority").value;
     const start = document.getElementById("fStart").value;
     const end = document.getElementById("fEnd").value;
     const cat = document.getElementById("fCat").value;
@@ -1079,10 +1566,10 @@
 
     if (id) {
       const idx = state.events.findIndex(e => e.id === id);
-      if (idx !== -1) state.events[idx] = { id, day, start, end, cat, title, meta };
+      if (idx !== -1) state.events[idx] = { id, day, priority, start, end, cat, title, meta };
       showToast("Изменения сохранены");
     } else {
-      state.events.push({ id: String(Date.now()), day, start, end, cat, title, meta });
+      state.events.push({ id: String(Date.now()), day, priority, start, end, cat, title, meta });
       showToast("Занятие добавлено");
     }
 
@@ -1093,6 +1580,7 @@
 
   function duplicateCurrentEvent() {
     const targetDay = Number(document.getElementById("dupTargetDay").value);
+    const priority = document.getElementById("fPriority").value;
     const start = document.getElementById("fStart").value;
     const end = document.getElementById("fEnd").value;
     const cat = document.getElementById("fCat").value;
@@ -1102,6 +1590,7 @@
     state.events.push({
       id: String(Date.now() + Math.floor(Math.random() * 1000)),
       day: targetDay,
+      priority,
       start,
       end,
       cat,
@@ -1123,10 +1612,29 @@
     showToast("Занятие удалено");
   }
 
-  // МОДАЛКА НАСТРОЕК (НАЗВАНИЕ, СОН, КАТЕГОРИИ)
+  // МОДАЛКА НАСТРОЕК И ОФОРМЛЕНИЯ
   let tempCategories = [];
 
-  function openSettingsModal() {
+  function switchSettingsTab(tab) {
+    const appPane = document.getElementById("settingsAppearancePane");
+    const genPane = document.getElementById("settingsGeneralPane");
+    const appBtn = document.getElementById("setTabAppearanceBtn");
+    const genBtn = document.getElementById("setTabGeneralBtn");
+
+    if (tab === "appearance") {
+      appPane.classList.remove("hidden");
+      genPane.classList.add("hidden");
+      appBtn.classList.add("bg-white", "text-slate-900", "shadow-xs", "font-bold");
+      genBtn.classList.remove("bg-white", "text-slate-900", "shadow-xs", "font-bold");
+    } else {
+      genPane.classList.remove("hidden");
+      appPane.classList.add("hidden");
+      genBtn.classList.add("bg-white", "text-slate-900", "shadow-xs", "font-bold");
+      appBtn.classList.remove("bg-white", "text-slate-900", "shadow-xs", "font-bold");
+    }
+  }
+
+  function openSettingsModal(initialTab = "appearance") {
     resetConfirmStep = false;
     document.getElementById("setTitle").value = state.title;
     document.getElementById("setSubtitle").value = state.subtitle;
@@ -1134,7 +1642,17 @@
     document.getElementById("setSleepTime").value = state.sleepTime;
     tempCategories = JSON.parse(JSON.stringify(state.categories));
     renderCategoriesEditor();
+    renderThemePresets();
 
+    const op = state.theme?.cardOpacity || 96;
+    document.getElementById("cardOpacitySlider").value = op;
+    document.getElementById("cardOpacityLabel").textContent = op + "%";
+    if (state.theme?.customBg) {
+      document.getElementById("customBgColorInput").value = state.theme.customBg;
+    }
+    document.getElementById("removeBgImageWrap").classList.toggle("hidden", !state.theme?.customImage);
+
+    switchSettingsTab(initialTab);
     const backdrop = document.getElementById("settingsModalBackdrop");
     backdrop.classList.remove("hidden");
     backdrop.classList.add("flex");
@@ -1144,6 +1662,116 @@
     const backdrop = document.getElementById("settingsModalBackdrop");
     backdrop.classList.add("hidden");
     backdrop.classList.remove("flex");
+  }
+
+  function renderThemePresets() {
+    const grid = document.getElementById("themePresetsGrid");
+    const activeId = state.theme?.presetId || "light";
+    grid.innerHTML = THEME_PRESETS.map(p => {
+      const isSelected = !state.theme?.customImage && !state.theme?.customBg && activeId === p.id;
+      return `
+        <button type="button" onclick="selectThemePreset('${p.id}')"
+                class="p-2 rounded-xl border text-left transition flex flex-col gap-1.5 ${isSelected ? 'border-blue-600 ring-2 ring-blue-500/30' : 'border-slate-200 hover:border-slate-400'}">
+          <div class="w-full h-8 rounded-lg border border-black/10" style="background:${p.preview};"></div>
+          <span class="text-[11px] font-bold text-slate-800 leading-tight">${p.name}</span>
+        </button>
+      `;
+    }).join("");
+  }
+
+  function selectThemePreset(presetId) {
+    const preset = THEME_PRESETS.find(p => p.id === presetId) || THEME_PRESETS[0];
+    state.theme = {
+      ...state.theme,
+      presetId: preset.id,
+      dark: preset.dark,
+      customBg: "",
+      customImage: ""
+    };
+    document.getElementById("removeBgImageWrap").classList.add("hidden");
+    applyThemeStyles();
+    renderThemePresets();
+    saveState();
+  }
+
+  function previewCustomBgColor(hex) {
+    // Автоматически определяем тёмный ли выбранный цвет фона
+    const r = parseInt(hex.substr(1, 2), 16);
+    const g = parseInt(hex.substr(3, 2), 16);
+    const b = parseInt(hex.substr(5, 2), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+    state.theme = {
+      ...state.theme,
+      presetId: "custom",
+      dark: brightness < 125,
+      customBg: hex,
+      customImage: ""
+    };
+    applyThemeStyles();
+    renderThemePresets();
+    saveState();
+  }
+
+  function handleBgImageUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Сжимаем изображение через canvas, чтобы оно гарантированно поместилось в localStorage
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const maxDim = 1440;
+        let w = img.width;
+        let h = img.height;
+        if (w > maxDim || h > maxDim) {
+          if (w > h) { h = Math.round(h * (maxDim / w)); w = maxDim; }
+          else { w = Math.round(w * (maxDim / h)); h = maxDim; }
+        }
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+        const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.78);
+
+        state.theme = {
+          ...state.theme,
+          presetId: "image",
+          customImage: compressedDataUrl,
+          cardOpacity: Math.min(state.theme.cardOpacity || 96, 86)
+        };
+        document.getElementById("cardOpacitySlider").value = state.theme.cardOpacity;
+        document.getElementById("cardOpacityLabel").textContent = state.theme.cardOpacity + "%";
+        document.getElementById("removeBgImageWrap").classList.remove("hidden");
+
+        applyThemeStyles();
+        renderThemePresets();
+        saveState();
+        showToast("Обои установлены!");
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function clearCustomBgImage() {
+    state.theme.customImage = "";
+    state.theme.presetId = "light";
+    state.theme.dark = false;
+    document.getElementById("removeBgImageWrap").classList.add("hidden");
+    applyThemeStyles();
+    renderThemePresets();
+    saveState();
+    showToast("Картинка фона удалена");
+  }
+
+  function previewCardOpacity(val) {
+    document.getElementById("cardOpacityLabel").textContent = val + "%";
+    state.theme.cardOpacity = Number(val);
+    applyThemeStyles();
+    saveState();
   }
 
   function renderCategoriesEditor() {
@@ -1192,7 +1820,7 @@
     saveState();
     closeSettingsModal();
     renderAll();
-    showToast("Настройки успешно применены");
+    showToast("Настройки и оформление применены");
   }
 
   function confirmFullReset() {
@@ -1202,10 +1830,49 @@
       return;
     }
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem("smart_time_manager_v2");
     state = loadState();
     closeSettingsModal();
     renderAll();
     showToast("Расписание сброшено к исходному");
+  }
+
+  // МОДАЛКА ЦЕЛЕЙ НА НЕДЕЛЮ
+  function openGoalsModal() {
+    const list = document.getElementById("goalsEditorList");
+    const goals = state.weeklyGoals || {};
+    list.innerHTML = state.categories.map(cat => `
+      <div class="flex items-center justify-between gap-3 p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="w-3 h-3 rounded-full shrink-0" style="background:${cat.color}"></span>
+          <span class="text-xs font-bold text-slate-800 truncate">${cat.name}</span>
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <input type="number" step="0.5" min="0" max="100" data-goal-cat="${cat.id}" value="${goals[cat.id] || 0}"
+                 class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-xs font-bold text-right" />
+          <span class="text-xs text-slate-500">ч/нед</span>
+        </div>
+      </div>
+    `).join("");
+
+    document.getElementById("goalsModalBackdrop").classList.remove("hidden");
+    document.getElementById("goalsModalBackdrop").classList.add("flex");
+  }
+  function closeGoalsModal() {
+    document.getElementById("goalsModalBackdrop").classList.add("hidden");
+    document.getElementById("goalsModalBackdrop").classList.remove("flex");
+  }
+  function saveGoals() {
+    const inputs = document.querySelectorAll("[data-goal-cat]");
+    const updated = {};
+    inputs.forEach(inp => {
+      updated[inp.dataset.goalCat] = Math.max(0, Number(inp.value) || 0);
+    });
+    state.weeklyGoals = updated;
+    saveState();
+    closeGoalsModal();
+    renderWeeklyGoals();
+    showToast("Недельные цели обновлены");
   }
 
   // ЭКСПОРТ И ИМПОРТ (CSV ДЛЯ EXCEL И JSON)
@@ -1223,7 +1890,6 @@
   }
 
   function exportCSV() {
-    // BOM для корректного открытия кириллицы в Excel
     let csv = "\uFEFFДень недели;Начало;Конец;Длительность (мин);Категория;Название;Заметка\n";
     const sorted = [...state.events].sort((a, b) => a.day - b.day || toMins(a.start) - toMins(b.start));
 
@@ -1278,13 +1944,8 @@
         const parsed = JSON.parse(e.target.result);
         if (parsed && Array.isArray(parsed.events)) {
           state = {
-            title: parsed.title || state.title,
-            subtitle: parsed.subtitle || state.subtitle,
-            wakeTime: parsed.wakeTime || "06:00",
-            sleepTime: parsed.sleepTime || "22:00",
-            categories: Array.isArray(parsed.categories) ? parsed.categories : state.categories,
-            events: parsed.events,
-            completedIds: Array.isArray(parsed.completedIds) ? parsed.completedIds : []
+            ...state,
+            ...parsed
           };
           saveState();
           renderAll();
@@ -1300,10 +1961,57 @@
     reader.readAsText(file);
   }
 
-  // ПОМОДОРО-ТАЙМЕР ФОКУСИРОВКИ
-  let pomoMode = "work"; // "work" (25m) | "break" (5m)
+  // ПОМОДОРО-ТАЙМЕР И ГЕНЕРАТОР МЯГКОГО ФОНОВОГО ШУМА (WEB AUDIO API)
+  let pomoMode = "work";
   let pomoSecondsLeft = 25 * 60;
   let pomoInterval = null;
+
+  let audioCtx = null;
+  let brownNoiseNode = null;
+  let isAmbientPlaying = false;
+
+  function toggleAmbientSound() {
+    const btn = document.getElementById("ambientSoundBtn");
+    const label = document.getElementById("ambientSoundLabel");
+
+    if (isAmbientPlaying) {
+      if (audioCtx) {
+        audioCtx.close();
+        audioCtx = null;
+      }
+      isAmbientPlaying = false;
+      btn.classList.remove("bg-indigo-600", "text-white");
+      btn.classList.add("bg-slate-800", "text-slate-300");
+      label.textContent = "Фон";
+      showToast("Фоновый звук выключен");
+      return;
+    }
+
+    try {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AudioContextClass();
+      const bufferSize = 4096;
+      let lastOut = 0.0;
+      brownNoiseNode = audioCtx.createScriptProcessor(bufferSize, 1, 1);
+      brownNoiseNode.onaudioprocess = function(e) {
+        const output = e.outputBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          output[i] = (lastOut + (0.02 * white)) / 1.02;
+          lastOut = output[i];
+          output[i] *= 0.12; // комфортная тихая громкость (мягкий дождь/водопад)
+        }
+      };
+      brownNoiseNode.connect(audioCtx.destination);
+      isAmbientPlaying = true;
+      btn.classList.remove("bg-slate-800", "text-slate-300");
+      btn.classList.add("bg-indigo-600", "text-white");
+      label.textContent = "Шум вкл";
+      showToast("🎧 Включён мягкий фоновый шум для концентрации");
+    } catch (err) {
+      showToast("Браузер заблокировал аудио");
+    }
+  }
 
   function updatePomoUI() {
     const m = String(Math.floor(pomoSecondsLeft / 60)).padStart(2, "0");
@@ -1355,7 +2063,7 @@
   }
 
   // Закрытие модалок по клику на фон
-  ["eventModalBackdrop", "settingsModalBackdrop", "exportModalBackdrop"].forEach(id => {
+  ["eventModalBackdrop", "settingsModalBackdrop", "exportModalBackdrop", "goalsModalBackdrop", "cloneModalBackdrop"].forEach(id => {
     document.getElementById(id).addEventListener("click", (e) => {
       if (e.target.id === id) {
         e.target.classList.add("hidden");
@@ -1364,10 +2072,15 @@
     });
   });
 
-  // Автовыбор сегодняшнего дня недели для вкладки "Чек-лист дня"
-  const jsDay = new Date().getDay(); // 0 = Вс, 1 = Пн...
-  const ruDayIdx = jsDay === 0 ? 6 : jsDay - 1;
-  document.getElementById("checklistDaySelect").value = ruDayIdx;
+  // Автовыбор сегодняшнего дня недели
+  const initialToday = getTodayIdx();
+  document.getElementById("checklistDaySelect").value = initialToday;
+  document.getElementById("quickTemplateDay").value = initialToday;
+
+  // Обновление живого баннера каждую минуту
+  setInterval(() => {
+    renderLiveBanner(getDayBounds());
+  }, 60000);
 
   // Первый запуск
   renderAll();
