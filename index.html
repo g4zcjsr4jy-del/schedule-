@@ -3,605 +3,473 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Тайм-менеджер — ИСУ 26дд-1</title>
+  <title>Мой тайм-менеджер</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #f3f5f8;
-      --card: #ffffff;
-      --text: #111827;
-      --muted: #6b7280;
-      --border: #e5e7eb;
-      --primary: #2563eb;
-      --study-bg: #dbeafe;
-      --study-border: #3b82f6;
-      --study-text: #1e3a8a;
-      --workout-bg: #d1fae5;
-      --workout-border: #10b981;
-      --workout-text: #065f46;
-      --hw-bg: #fef3c7;
-      --hw-border: #f59e0b;
-      --hw-text: #78350f;
-      --free-bg: #f9fafb;
-      --sleep-bg: #eef2ff;
-      --sleep-text: #4338ca;
-      --radius: 14px;
-    }
-
     * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
     body {
-      background: var(--bg);
-      color: var(--text);
-      padding: 16px 14px 80px;
-      line-height: 1.4;
-    }
-
-    .container {
-      max-width: 960px;
-      margin: 0 auto;
-    }
-
-    header {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    h1 {
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    .subtitle {
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    button {
-      border: none;
-      border-radius: 10px;
-      padding: 9px 14px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.15s, transform 0.1s;
-    }
-
-    button:active {
-      transform: scale(0.98);
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: #fff;
-    }
-
-    .btn-secondary {
-      background: #e5e7eb;
-      color: #1f2937;
-    }
-
-    .btn-danger {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
-
-    /* Сводка времени */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    @media (min-width: 680px) {
-      .stats-grid {
-        grid-template-columns: repeat(5, 1fr);
-      }
-    }
-
-    .stat-card {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 12px;
-      border: 1px solid var(--border);
-    }
-
-    .stat-label {
-      font-size: 11px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      margin-bottom: 4px;
-    }
-
-    .stat-value {
-      font-size: 17px;
-      font-weight: 700;
-    }
-
-    .stat-sub {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    /* Прогресс-бар недели */
-    .bar-card {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 14px;
-      border: 1px solid var(--border);
-      margin-bottom: 16px;
-    }
-
-    .bar-title {
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .progress-track {
-      height: 14px;
-      background: #e5e7eb;
-      border-radius: 999px;
-      overflow: hidden;
-      display: flex;
-    }
-
-    .seg-sleep { background: #6366f1; }
-    .seg-study { background: #3b82f6; }
-    .seg-workout { background: #10b981; }
-    .seg-hw { background: #f59e0b; }
-    .seg-free { background: #d1d5db; }
-
-    .legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 10px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-    }
-
-    /* Переключатель видов и фильтры */
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .tabs {
-      display: flex;
-      background: #e5e7eb;
-      padding: 3px;
-      border-radius: 10px;
-    }
-
-    .tab {
-      background: transparent;
-      color: #4b5563;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 13px;
-    }
-
-    .tab.active {
-      background: #fff;
+      background-color: #f3f5f8;
       color: #111827;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+      padding-bottom: 90px;
     }
 
-    /* Карточки дней */
-    .days-list {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
+    /* Кастомные скроллбары для Excel-таблицы */
+    .excel-scroll::-webkit-scrollbar {
+      height: 8px;
+      width: 8px;
     }
-
-    @media (min-width: 760px) {
-      .days-list {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    .day-card {
-      background: var(--card);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      padding: 14px;
-    }
-
-    .day-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 10px;
-      margin-bottom: 10px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .day-name {
-      font-size: 16px;
-      font-weight: 700;
-    }
-
-    .day-free-badge {
-      font-size: 12px;
-      background: #ecfdf5;
-      color: #047857;
-      padding: 3px 8px;
-      border-radius: 999px;
-      font-weight: 600;
-    }
-
-    .events-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .event-item {
-      border-left: 4px solid;
-      border-radius: 8px;
-      padding: 9px 11px;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .cat-study {
-      background: var(--study-bg);
-      border-color: var(--study-border);
-      color: var(--study-text);
-    }
-
-    .cat-workout {
-      background: var(--workout-bg);
-      border-color: var(--workout-border);
-      color: var(--workout-text);
-    }
-
-    .cat-hw {
-      background: var(--hw-bg);
-      border-color: var(--hw-border);
-      color: var(--hw-text);
-    }
-
-    .event-time {
-      font-size: 12px;
-      font-weight: 700;
-      opacity: 0.9;
-    }
-
-    .event-title {
-      font-size: 14px;
-      font-weight: 600;
-      margin-top: 2px;
-    }
-
-    .event-meta {
-      font-size: 12px;
-      opacity: 0.85;
-      margin-top: 2px;
-    }
-
-    .event-dur {
-      font-size: 11px;
-      font-weight: 600;
-      white-space: nowrap;
-      opacity: 0.85;
-    }
-
-    .free-slot {
-      border: 1px dashed #cbd5e1;
-      background: var(--free-bg);
-      color: #475569;
-      border-radius: 8px;
-      padding: 7px 11px;
-      font-size: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    .free-slot:hover {
+    .excel-scroll::-webkit-scrollbar-track {
       background: #f1f5f9;
-      border-color: #94a3b8;
-    }
-
-    .sleep-note {
-      font-size: 11px;
-      color: var(--sleep-text);
-      background: var(--sleep-bg);
-      padding: 6px 10px;
       border-radius: 8px;
-      text-align: center;
-      font-weight: 500;
+    }
+    .excel-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 8px;
+    }
+    .excel-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
     }
 
-    /* Таблица всей недели */
-    .table-wrap {
-      overflow-x: auto;
-      background: var(--card);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      display: none;
+    /* Стили Excel-сетки */
+    .excel-table {
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    .excel-table th,
+    .excel-table td {
+      border-right: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .excel-table th:first-child,
+    .excel-table td:first-child {
+      border-left: 1px solid #e2e8f0;
+    }
+    .excel-table thead th {
+      border-top: 1px solid #1e293b;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .excel-sticky-col {
+      position: sticky;
+      left: 0;
+      z-index: 10;
+      background-color: #f8fafc;
+    }
+    .excel-table thead th.excel-sticky-col {
+      z-index: 30;
+      background-color: #0f172a;
     }
 
-    .table-wrap.active {
-      display: block;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 720px;
-      font-size: 12px;
-    }
-
-    th, td {
-      border: 1px solid var(--border);
-      padding: 8px;
-      vertical-align: top;
-      width: 14.28%;
-    }
-
-    th {
-      background: #1f2937;
-      color: #fff;
-      font-weight: 600;
-      text-align: center;
-    }
-
-    /* Модальное окно */
+    /* Анимация модалок */
     .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(17, 24, 39, 0.55);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      z-index: 100;
-    }
-
-    .modal-backdrop.open {
-      display: flex;
-    }
-
-    .modal {
-      background: #fff;
-      border-radius: 16px;
-      width: 100%;
-      max-width: 420px;
-      padding: 18px;
-      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15);
-    }
-
-    .modal h2 {
-      font-size: 17px;
-      margin-bottom: 14px;
-    }
-
-    .form-group {
-      margin-bottom: 12px;
-    }
-
-    label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      color: #374151;
-      margin-bottom: 4px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 9px 10px;
-      border: 1px solid #d1d5db;
-      border-radius: 9px;
-      font-size: 14px;
-      background: #fff;
-    }
-
-    .row-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .modal-actions {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      margin-top: 16px;
-    }
-
-    .modal-right {
-      display: flex;
-      gap: 8px;
+      transition: opacity 0.2s ease;
     }
   </style>
 </head>
-<body>
-<div class="container">
-  <header>
-    <div>
-      <h1>Тайм-менеджер — ИСУ 26дд-1</h1>
-      <div class="subtitle">Режим сна: 22:00 – 06:00 (8 ч/день) • Автосохранение</div>
-    </div>
-    <div class="header-actions">
-      <button class="btn-secondary" onclick="resetSchedule()">Сбросить</button>
-      <button class="btn-primary" onclick="openModal()">+ Добавить</button>
+<body class="antialiased selection:bg-blue-100 selection:text-blue-900">
+
+<div class="max-w-7xl mx-auto px-3 sm:px-6 pt-4 sm:pt-6">
+
+  <!-- ВЕРХНЯЯ ПАНЕЛЬ: Заголовок + Настройки + Помодоро + Экспорт -->
+  <header class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 mb-4">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      
+      <!-- Редактируемый заголовок и режим сна -->
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 group">
+          <h1 id="appTitleDisplay" onclick="openSettingsModal()" title="Нажмите, чтобы переименовать"
+              class="text-xl sm:text-2xl font-extrabold text-slate-900 truncate cursor-pointer hover:text-blue-600 transition-colors">
+            Мой тайм-менеджер
+          </h1>
+          <button onclick="openSettingsModal()" title="Настройки названия, сна и категорий"
+                  class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs sm:text-sm text-slate-500">
+          <span id="appSubtitleDisplay" onclick="openSettingsModal()" class="cursor-pointer hover:text-slate-800">
+            Персональное расписание и контроль занятости
+          </span>
+          <span class="text-slate-300">•</span>
+          <button onclick="openSettingsModal()" class="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-800 bg-indigo-50 px-2 py-0.5 rounded-md">
+            <span>🌙 Режим:</span>
+            <span id="sleepBadgeText">06:00 – 22:00 (Сон 8 ч)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Компактный Помодоро-таймер и кнопки действий -->
+      <div class="flex flex-wrap items-center gap-2 sm:gap-2.5">
+        <!-- Мини-виджет Помодоро -->
+        <div class="flex items-center gap-2 bg-slate-900 text-white px-3 py-1.5 rounded-xl shadow-xs">
+          <span id="pomoModeIcon" class="text-sm" title="Режим фокусировки">🍅</span>
+          <span id="pomoDisplay" class="font-mono font-bold text-sm sm:text-base tracking-wider">25:00</span>
+          <button id="pomoToggleBtn" onclick="togglePomodoro()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs px-2 py-1 rounded-lg transition">
+            Старт
+          </button>
+          <button onclick="resetPomodoro()" title="Сброс таймера" class="text-slate-400 hover:text-white p-1 text-xs">
+            ↺
+          </button>
+          <button onclick="switchPomodoroMode()" title="Переключить Фокус (25м) / Перерыв (5м)" class="text-slate-400 hover:text-amber-300 text-xs px-1">
+            ⇄
+          </button>
+        </div>
+
+        <button onclick="openSettingsModal()" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm transition">
+          ⚙️ Настройки
+        </button>
+
+        <button onclick="openExportModal()" class="px-3 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-semibold text-xs sm:text-sm transition">
+          📥 Excel / JSON
+        </button>
+
+        <button onclick="openEventModal()" class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm shadow-xs transition">
+          + Добавить
+        </button>
+      </div>
     </div>
   </header>
 
-  <!-- Карточки статистики -->
-  <div class="stats-grid" id="statsGrid"></div>
+  <!-- СВОДКА ВРЕМЕНИ (КАРТОЧКИ) -->
+  <div id="statsGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3 mb-4"></div>
 
-  <!-- Шкала баланса недели -->
-  <div class="bar-card">
-    <div class="bar-title">
-      <span>Баланс недели (168 часов)</span>
-      <span id="awakeLabel">Бодрствование: 112 ч</span>
+  <!-- БАЛАНС НЕДЕЛИ + ГРАФИК ЗАГРУЗКИ ПО ДНЯМ -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-4">
+    <!-- Шкала 168 часов -->
+    <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 flex flex-col justify-between">
+      <div>
+        <div class="flex justify-between items-center text-xs sm:text-sm font-bold text-slate-800 mb-2">
+          <span>Баланс недели (168 часов)</span>
+          <span id="awakeLabel" class="text-slate-500 font-medium">Бодрствование: 112 ч</span>
+        </div>
+        <div id="progressTrack" class="h-4 bg-slate-100 rounded-full overflow-hidden flex shadow-inner"></div>
+      </div>
+      <div id="legendContainer" class="flex flex-wrap gap-x-4 gap-y-1.5 mt-3 text-xs text-slate-600"></div>
     </div>
-    <div class="progress-track" id="progressTrack"></div>
-    <div class="legend">
-      <div class="legend-item"><span class="dot seg-sleep"></span>Сон (56 ч)</div>
-      <div class="legend-item"><span class="dot seg-study"></span>Учёба</div>
-      <div class="legend-item"><span class="dot seg-workout"></span>Тренировки</div>
-      <div class="legend-item"><span class="dot seg-hw"></span>Домашнее обучение</div>
-      <div class="legend-item"><span class="dot seg-free"></span>Свободное время</div>
+
+    <!-- Столбчатая диаграмма загрузки по дням (Пн–Вс) -->
+    <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4">
+      <div class="flex justify-between items-center text-xs sm:text-sm font-bold text-slate-800 mb-2">
+        <span>Загруженность по дням (%)</span>
+        <span id="avgLoadLabel" class="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">Средняя: 0%</span>
+      </div>
+      <div id="dailyBarChart" class="grid grid-cols-7 gap-2 items-end h-24 pt-3 px-1"></div>
     </div>
   </div>
 
-  <!-- Переключатели -->
-  <div class="controls">
-    <div class="tabs">
-      <button class="tab active" id="tabCards" onclick="switchView('cards')">По дням (карточки)</button>
-      <button class="tab" id="tabGrid" onclick="switchView('grid')">Вся неделя (таблица)</button>
+  <!-- НАВИГАЦИЯ ПО ВКЛАДКАМ -->
+  <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+    <div class="inline-flex bg-slate-200/80 p-1 rounded-xl w-full sm:w-auto overflow-x-auto">
+      <button id="tabHeatmap" onclick="switchView('heatmap')"
+              class="tab-btn flex-1 sm:flex-initial px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold transition whitespace-nowrap bg-white text-slate-900 shadow-xs">
+        📊 Карта занятости (Excel)
+      </button>
+      <button id="tabCards" onclick="switchView('cards')"
+              class="tab-btn flex-1 sm:flex-initial px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition whitespace-nowrap">
+        🗂 По дням (карточки)
+      </button>
+      <button id="tabChecklist" onclick="switchView('checklist')"
+              class="tab-btn flex-1 sm:flex-initial px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition whitespace-nowrap">
+        ✅ Чек-лист дня
+      </button>
     </div>
+
+    <!-- Фильтр по категориям (опционально для быстрого фокуса) -->
+    <div id="filterBar" class="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 sm:pb-0"></div>
   </div>
 
-  <!-- Вид 1: Карточки по дням -->
-  <div class="days-list" id="daysContainer"></div>
+  <!-- ВКЛАДКА 1: НАГЛЯДНАЯ EXCEL-КАРТА ЗАНЯТОСТИ -->
+  <section id="viewHeatmap" class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden">
+    <div class="p-3 sm:p-4 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2 bg-slate-50/70">
+      <div>
+        <h2 class="text-sm sm:text-base font-bold text-slate-800">Почасовая карта занятости недели</h2>
+        <p class="text-xs text-slate-500">Нажмите на любую свободную клетку, чтобы запланировать дело, или на занятую — для редактирования.</p>
+      </div>
+      <div class="flex items-center gap-2 text-xs">
+        <span class="text-slate-500">Шаг сетки:</span>
+        <select id="gridStepSelect" onchange="renderAll()" class="bg-white border border-slate-300 rounded-lg px-2 py-1 font-semibold text-slate-700">
+          <option value="60">1 час</option>
+          <option value="30" selected>30 минут</option>
+        </select>
+      </div>
+    </div>
 
-  <!-- Вид 2: Таблица всей недели -->
-  <div class="table-wrap" id="gridContainer">
-    <table>
-      <thead>
-        <tr>
-          <th>Пн</th>
-          <th>Вт</th>
-          <th>Ср</th>
-          <th>Чт</th>
-          <th>Пт</th>
-          <th>Сб</th>
-          <th>Вс</th>
-        </tr>
-      </thead>
-      <tbody id="gridBody"></tbody>
-    </table>
+    <div class="excel-scroll overflow-x-auto max-h-[72vh]">
+      <table class="excel-table w-full min-w-[820px] text-xs">
+        <thead id="excelHead"></thead>
+        <tbody id="excelBody"></tbody>
+        <tfoot id="excelFoot"></tfoot>
+      </table>
+    </div>
+  </section>
+
+  <!-- ВКЛАДКА 2: КАРТОЧКИ ПО ДНЯМ -->
+  <section id="viewCards" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4"></section>
+
+  <!-- ВКЛАДКА 3: ЧЕК-ЛИСТ ДНЯ -->
+  <section id="viewChecklist" class="hidden bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-200">
+      <div>
+        <h2 class="text-base sm:text-lg font-bold text-slate-900">Трекер выполнения на день</h2>
+        <p class="text-xs sm:text-sm text-slate-500">Отмечайте выполненные пары, тренировки и задачи в реальном времени.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <select id="checklistDaySelect" onchange="renderChecklist()" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs sm:text-sm font-bold text-slate-800">
+          <option value="0">Понедельник</option>
+          <option value="1">Вторник</option>
+          <option value="2">Среда</option>
+          <option value="3">Четверг</option>
+          <option value="4">Пятница</option>
+          <option value="5">Суббота</option>
+          <option value="6">Воскресенье</option>
+        </select>
+        <button onclick="resetDayChecks()" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">
+          Сбросить отметки
+        </button>
+      </div>
+    </div>
+
+    <!-- Прогресс-бар выполнения -->
+    <div class="mb-5">
+      <div class="flex justify-between text-xs font-bold text-slate-700 mb-1.5">
+        <span>Прогресс выполнения за день</span>
+        <span id="checklistProgressText">0 из 0 (0%)</span>
+      </div>
+      <div class="h-3 bg-slate-100 rounded-full overflow-hidden">
+        <div id="checklistProgressBar" class="h-full bg-emerald-500 transition-all duration-300" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <div id="checklistItems" class="space-y-2.5"></div>
+  </section>
+
+</div>
+
+<!-- МОДАЛЬНОЕ ОКНО: ДОБАВЛЕНИЕ / РЕДАКТИРОВАНИЕ СОБЫТИЯ -->
+<div id="eventModalBackdrop" class="modal-backdrop fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+  <div class="bg-white rounded-2xl w-full max-w-md p-5 shadow-2xl border border-slate-100">
+    <div class="flex justify-between items-center mb-4">
+      <h2 id="eventModalTitle" class="text-lg font-extrabold text-slate-900">Новое занятие</h2>
+      <button onclick="closeEventModal()" class="text-slate-400 hover:text-slate-700 text-xl leading-none">&times;</button>
+    </div>
+    <input type="hidden" id="editEventId" />
+
+    <div class="space-y-3">
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">День недели</label>
+        <select id="fDay" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-white">
+          <option value="0">Понедельник</option>
+          <option value="1">Вторник</option>
+          <option value="2">Среда</option>
+          <option value="3">Четверг</option>
+          <option value="4">Пятница</option>
+          <option value="5">Суббота</option>
+          <option value="6">Воскресенье</option>
+        </select>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Начало</label>
+          <input type="time" id="fStart" value="15:00" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Конец</label>
+          <input type="time" id="fEnd" value="16:00" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm" />
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">Категория</label>
+        <select id="fCat" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-white"></select>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">Название занятия / дела</label>
+        <input type="text" id="fTitle" placeholder="Например: Высшая математика или Подготовка" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">Аудитория / Заметка</label>
+        <input type="text" id="fMeta" placeholder="Например: ауд. 119 или Онлайн" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm" />
+      </div>
+
+      <!-- Быстрое дублирование на другой день -->
+      <div id="duplicateBox" class="hidden pt-2 border-t border-slate-100">
+        <label class="block text-xs font-bold text-slate-600 mb-1">Скопировать это занятие на другой день:</label>
+        <div class="flex gap-2">
+          <select id="dupTargetDay" class="flex-1 px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs bg-slate-50">
+            <option value="0">Понедельник</option>
+            <option value="1">Вторник</option>
+            <option value="2">Среда</option>
+            <option value="3">Четверг</option>
+            <option value="4">Пятница</option>
+            <option value="5">Суббота</option>
+            <option value="6">Воскресенье</option>
+          </select>
+          <button type="button" onclick="duplicateCurrentEvent()" class="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs">
+            Дублировать
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="eventFormError" class="hidden mt-3 text-xs font-semibold text-red-600 bg-red-50 p-2 rounded-lg"></div>
+
+    <div class="flex items-center justify-between gap-2 mt-5 pt-3 border-t border-slate-100">
+      <button id="btnDeleteEvent" onclick="deleteEvent()" class="hidden px-3 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 font-bold text-xs">
+        Удалить
+      </button>
+      <div class="flex gap-2 ml-auto">
+        <button onclick="closeEventModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs">
+          Отмена
+        </button>
+        <button onclick="saveEvent()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs">
+          Сохранить
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- Модальное окно редактирования -->
-<div class="modal-backdrop" id="modalBackdrop">
-  <div class="modal">
-    <h2 id="modalTitle">Новое занятие</h2>
-    <input type="hidden" id="editId" />
-
-    <div class="form-group">
-      <label>День недели</label>
-      <select id="fDay">
-        <option value="0">Понедельник</option>
-        <option value="1">Вторник</option>
-        <option value="2">Среда</option>
-        <option value="3">Четверг</option>
-        <option value="4">Пятница</option>
-        <option value="5">Суббота</option>
-        <option value="6">Воскресенье</option>
-      </select>
+<!-- МОДАЛЬНОЕ ОКНО: НАСТРОЙКИ (НАЗВАНИЕ, СОН, КАТЕГОРИИ) -->
+<div id="settingsModalBackdrop" class="modal-backdrop fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+  <div class="bg-white rounded-2xl w-full max-w-lg p-5 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-lg font-extrabold text-slate-900">Настройки расписания и категорий</h2>
+      <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-slate-700 text-xl leading-none">&times;</button>
     </div>
 
-    <div class="row-2 form-group">
-      <div>
-        <label>Начало</label>
-        <input type="time" id="fStart" value="15:00" />
+    <div class="space-y-4">
+      <!-- Название и подзаголовок -->
+      <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70 space-y-3">
+        <div class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Общая информация</div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Название расписания</label>
+          <input type="text" id="setTitle" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-white" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Подзаголовок / описание</label>
+          <input type="text" id="setSubtitle" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-white" />
+        </div>
       </div>
-      <div>
-        <label>Конец</label>
-        <input type="time" id="fEnd" value="16:00" />
+
+      <!-- Режим дня и сна -->
+      <div class="bg-indigo-50/60 p-3.5 rounded-xl border border-indigo-100 space-y-3">
+        <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-700">Режим активного дня (бодрствование)</div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Подъём (начало дня)</label>
+            <input type="time" id="setWakeTime" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-white" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Отбой (конец дня)</label>
+            <input type="time" id="setSleepTime" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-white" />
+          </div>
+        </div>
+        <p class="text-[11px] text-indigo-700">Статистика сна, бодрствования и сетка Excel автоматически перестроятся под ваш режим.</p>
+      </div>
+
+      <!-- Редактор категорий -->
+      <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70 space-y-3">
+        <div class="flex justify-between items-center">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Категории занятий</span>
+          <button type="button" onclick="addCategoryRow()" class="text-xs font-bold text-blue-600 hover:text-blue-800">
+            + Добавить категорию
+          </button>
+        </div>
+        <div id="categoriesEditorList" class="space-y-2"></div>
       </div>
     </div>
 
-    <div class="form-group">
-      <label>Категория</label>
-      <select id="fCat">
-        <option value="study">Учёба (пары)</option>
-        <option value="workout">Тренировка</option>
-        <option value="hw">Домашнее обучение</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label>Название</label>
-      <input type="text" id="fTitle" placeholder="Например: Высшая математика (ДЗ)" />
-    </div>
-
-    <div class="form-group">
-      <label>Аудитория / Заметка</label>
-      <input type="text" id="fMeta" placeholder="Например: ауд. 119 или Общежитие" />
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn-danger" id="btnDelete" onclick="deleteEvent()" style="display:none;">Удалить</button>
-      <div class="modal-right" style="margin-left:auto;">
-        <button class="btn-secondary" onclick="closeModal()">Отмена</button>
-        <button class="btn-primary" onclick="saveEvent()">Сохранить</button>
+    <div class="flex items-center justify-between gap-2 mt-5 pt-3 border-t border-slate-100">
+      <button onclick="confirmFullReset()" class="px-3 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 font-bold text-xs">
+        Сбросить всё по умолчанию
+      </button>
+      <div class="flex gap-2">
+        <button onclick="closeSettingsModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs">
+          Отмена
+        </button>
+        <button onclick="saveSettings()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs">
+          Применить
+        </button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- МОДАЛЬНОЕ ОКНО: ЭКСПОРТ / ИМПОРТ (EXCEL CSV & JSON) -->
+<div id="exportModalBackdrop" class="modal-backdrop fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+  <div class="bg-white rounded-2xl w-full max-w-md p-5 shadow-2xl border border-slate-100">
+    <div class="flex justify-between items-center mb-3">
+      <h2 class="text-lg font-extrabold text-slate-900">Экспорт и импорт данных</h2>
+      <button onclick="closeExportModal()" class="text-slate-400 hover:text-slate-700 text-xl leading-none">&times;</button>
+    </div>
+    <p class="text-xs text-slate-500 mb-4">Выгрузите расписание в формат CSV для открытия в Microsoft Excel / Google Таблицах или сделайте резервную копию в JSON.</p>
+
+    <div class="space-y-2.5">
+      <button onclick="exportCSV()" class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2">
+        <span>📊 Скачать таблицу для Excel (.csv)</span>
+      </button>
+
+      <button onclick="exportJSON()" class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2">
+        <span>💾 Скачать резервную копию (.json)</span>
+      </button>
+
+      <div class="pt-3 border-t border-slate-200">
+        <label class="block text-xs font-bold text-slate-700 mb-1.5">Загрузить резервную копию (.json):</label>
+        <input type="file" id="importJsonFile" accept=".json" onchange="importJSON(event)"
+               class="w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+      </div>
+    </div>
+
+    <div id="exportNotice" class="hidden mt-3 text-xs font-semibold text-emerald-700 bg-emerald-50 p-2.5 rounded-xl"></div>
+  </div>
+</div>
+
+<!-- ВСПЛЫВАЮЩЕЕ УВЕДОМЛЕНИЕ (TOAST) -->
+<div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-xl shadow-lg opacity-0 pointer-events-none transition-opacity duration-200 z-50"></div>
 
 <script>
   const DAYS = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
-  const STORAGE_KEY = "isu_26dd1_schedule_v1";
+  const DAYS_SHORT = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+  const STORAGE_KEY = "smart_time_manager_v2";
 
+  // Базовые категории с цветами
+  const DEFAULT_CATEGORIES = [
+    { id: "study", name: "Учёба (пары)", color: "#3b82f6" },
+    { id: "workout", name: "Тренировки", color: "#10b981" },
+    { id: "hw", name: "Дом. обучение", color: "#f59e0b" },
+    { id: "work", name: "Работа / Проекты", color: "#8b5cf6" },
+    { id: "rest", name: "Отдых / Личное", color: "#ec4899" }
+  ];
+
+  // Сохраняем все исходные занятия пользователя
   const DEFAULT_EVENTS = [
-    // Понедельник (0)
     { id: "1", day: 0, start: "08:30", end: "09:20", cat: "study", title: "Высшая математика (лек)", meta: "ауд. 119 (1/1) • Астамиров Р." },
     { id: "2", day: 0, start: "10:30", end: "11:20", cat: "study", title: "Иностранный язык (пр)", meta: "ауд. 422а/2 • Васильева О.М." },
     { id: "3", day: 0, start: "18:00", end: "19:15", cat: "workout", title: "Тренировка", meta: "1 ч 15 мин" },
 
-    // Вторник (1)
     { id: "4", day: 1, start: "08:30", end: "09:20", cat: "study", title: "Иностранный язык (пр)", meta: "ауд. 836/УЛК • Васильева О.М." },
     { id: "5", day: 1, start: "10:30", end: "11:20", cat: "study", title: "Иностранный язык (пр)", meta: "ауд. 1013/УЛК • Васильева О.М." },
 
-    // Среда (2)
     { id: "6", day: 2, start: "08:30", end: "09:20", cat: "study", title: "Иностранный язык (пр)", meta: "ауд. 1036/УЛК • Васильева О.М." },
     { id: "7", day: 2, start: "10:30", end: "11:20", cat: "study", title: "Модуль соц.-полит. знаний (пр)", meta: "ауд. 203/5 • Маликов А.В." },
     { id: "8", day: 2, start: "12:50", end: "13:40", cat: "study", title: "Введение в инф. системы (пр)", meta: "ауд. 636/УЛК • Ким Г.А." },
     { id: "9", day: 2, start: "18:00", end: "19:15", cat: "workout", title: "Тренировка", meta: "1 ч 15 мин" },
 
-    // Четверг (3)
     { id: "10", day: 3, start: "08:30", end: "09:20", cat: "study", title: "Модуль соц.-полит. знаний (лек)", meta: "ауд. 119 (1/1) • Маликов А.В." },
     { id: "11", day: 3, start: "10:30", end: "11:20", cat: "study", title: "Введение в инф. системы (лек)", meta: "ауд. 119 (1/1) • Ким Г.А." },
 
-    // Пятница (4)
     { id: "12", day: 4, start: "08:30", end: "09:20", cat: "study", title: "Экология и уст. развитие (лек)", meta: "ауд. 119 (1/1) • Гордиянова Т.В." },
     { id: "13", day: 4, start: "09:30", end: "10:20", cat: "study", title: "Модуль соц.-полит. знаний (лек)", meta: "ауд. 119 (1/1) • Маликов А.В." },
     { id: "14", day: 4, start: "10:30", end: "11:20", cat: "study", title: "Высшая математика (пр)", meta: "ауд. 1013/УЛК • Астамиров Р." },
@@ -610,22 +478,67 @@
     { id: "17", day: 4, start: "14:50", end: "15:40", cat: "study", title: "Иностранный язык (пр)", meta: "ауд. 514а/4 • Васильева О.М." },
     { id: "18", day: 4, start: "18:00", end: "19:15", cat: "workout", title: "Тренировка", meta: "1 ч 15 мин" },
 
-    // Суббота (5)
     { id: "19", day: 5, start: "08:30", end: "09:20", cat: "study", title: "Иностранный язык (пр)", meta: "ауд. 1005/УЛК • Васильева О.М." },
     { id: "20", day: 5, start: "12:50", end: "13:40", cat: "study", title: "Экология и уст. развитие (пр)", meta: "ауд. 1036/УЛК • Гордиянова Т.В." },
     { id: "21", day: 5, start: "13:50", end: "14:40", cat: "study", title: "Основы экономики и фин. грам. (пр)", meta: "ауд. 1036/УЛК • Шайкин Д.Н." }
   ];
 
-  let events = JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(JSON.stringify(DEFAULT_EVENTS));
+  // Состояние приложения
+  let state = loadState();
+  let activeCategoryFilter = "all";
+  let currentView = "heatmap";
+  let resetConfirmStep = false;
 
+  function loadState() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (saved && Array.isArray(saved.events)) {
+        return {
+          title: saved.title || "Мой тайм-менеджер",
+          subtitle: saved.subtitle || "Персональное расписание, карта занятости и контроль времени",
+          wakeTime: saved.wakeTime || "06:00",
+          sleepTime: saved.sleepTime || "22:00",
+          categories: Array.isArray(saved.categories) && saved.categories.length ? saved.categories : JSON.parse(JSON.stringify(DEFAULT_CATEGORIES)),
+          events: saved.events,
+          completedIds: Array.isArray(saved.completedIds) ? saved.completedIds : []
+        };
+      }
+    } catch (e) {
+      console.error("Ошибка чтения localStorage:", e);
+    }
+    return {
+      title: "Мой тайм-менеджер",
+      subtitle: "Персональное расписание, карта занятости и контроль времени",
+      wakeTime: "06:00",
+      sleepTime: "22:00",
+      categories: JSON.parse(JSON.stringify(DEFAULT_CATEGORIES)),
+      events: JSON.parse(JSON.stringify(DEFAULT_EVENTS)),
+      completedIds: []
+    };
+  }
+
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function showToast(msg) {
+    const el = document.getElementById("toast");
+    el.textContent = msg;
+    el.classList.remove("opacity-0");
+    clearTimeout(el._timer);
+    el._timer = setTimeout(() => el.classList.add("opacity-0"), 2600);
+  }
+
+  // Вспомогательные функции времени
   function toMins(t) {
     const [h, m] = t.split(":").map(Number);
     return h * 60 + m;
   }
 
   function fromMins(m) {
-    const hh = String(Math.floor(m / 60)).padStart(2, "0");
-    const mm = String(m % 60).padStart(2, "0");
+    const clamped = Math.max(0, Math.min(24 * 60, m));
+    const hh = String(Math.floor(clamped / 60)).padStart(2, "0");
+    const mm = String(clamped % 60).padStart(2, "0");
     return `${hh}:${mm}`;
   }
 
@@ -638,87 +551,310 @@
     return `${h} ч ${String(min).padStart(2, "0")} м`;
   }
 
-  function saveToStorage() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+  function getCategory(catId) {
+    return state.categories.find(c => c.id === catId) || state.categories[0] || { id: "other", name: "Другое", color: "#64748b" };
   }
 
-  function render() {
-    let studyMins = 0;
-    let workoutMins = 0;
-    let hwMins = 0;
+  // Преобразование HEX в мягкий фон и тёмный текст
+  function hexToRgba(hex, alpha) {
+    const clean = hex.replace("#", "");
+    const bigint = parseInt(clean.length === 3 ? clean.split("").map(c => c + c).join("") : clean, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
 
-    events.forEach(ev => {
+  // Расчёт параметров бодрствования и сна
+  function getDayBounds() {
+    const wake = toMins(state.wakeTime || "06:00");
+    let sleep = toMins(state.sleepTime || "22:00");
+    if (sleep <= wake) sleep = 23 * 60 + 30;
+    const awakePerDay = sleep - wake;
+    const sleepPerDay = 24 * 60 - awakePerDay;
+    return { wake, sleep, awakePerDay, sleepPerDay };
+  }
+
+  // ГЛАВНЫЙ РЕНДЕР
+  function renderAll() {
+    document.title = state.title;
+    document.getElementById("appTitleDisplay").textContent = state.title;
+    document.getElementById("appSubtitleDisplay").textContent = state.subtitle;
+
+    const bounds = getDayBounds();
+    document.getElementById("sleepBadgeText").textContent = `${state.wakeTime} – ${state.sleepTime} (Сон ${fmtDur(bounds.sleepPerDay)}/сут)`;
+
+    renderFilterBar();
+    renderStatsAndCharts(bounds);
+    renderExcelHeatmap(bounds);
+    renderDayCards(bounds);
+    renderChecklist();
+  }
+
+  // Фильтр по категориям
+  function renderFilterBar() {
+    const bar = document.getElementById("filterBar");
+    let html = `
+      <button onclick="setCatFilter('all')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition whitespace-nowrap ${activeCategoryFilter === 'all' ? 'bg-slate-800 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}">
+        Все категории
+      </button>
+    `;
+    state.categories.forEach(cat => {
+      const isAct = activeCategoryFilter === cat.id;
+      html += `
+        <button onclick="setCatFilter('${cat.id}')"
+                style="${isAct ? `background:${cat.color}; color:#fff; border-color:${cat.color};` : ''}"
+                class="px-2.5 py-1 rounded-lg text-xs font-semibold transition whitespace-nowrap border ${isAct ? '' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}">
+          <span class="inline-block w-2 h-2 rounded-full mr-1" style="background:${isAct ? '#fff' : cat.color}"></span>${cat.name}
+        </button>
+      `;
+    });
+    bar.innerHTML = html;
+  }
+
+  function setCatFilter(catId) {
+    activeCategoryFilter = catId;
+    renderAll();
+  }
+
+  // Статистика, шкала недели и диаграмма по дням
+  function renderStatsAndCharts(bounds) {
+    const totalWeekMins = 168 * 60;
+    const weeklySleepMins = bounds.sleepPerDay * 7;
+    const weeklyAwakeMins = bounds.awakePerDay * 7;
+
+    // Считаем минуты по категориям
+    const catTotals = {};
+    state.categories.forEach(c => catTotals[c.id] = 0);
+    let totalBusyMins = 0;
+
+    state.events.forEach(ev => {
       const dur = Math.max(0, toMins(ev.end) - toMins(ev.start));
-      if (ev.cat === "study") studyMins += dur;
-      else if (ev.cat === "workout") workoutMins += dur;
-      else if (ev.cat === "hw") hwMins += dur;
+      if (catTotals[ev.cat] !== undefined) {
+        catTotals[ev.cat] += dur;
+      } else {
+        catTotals[ev.cat] = dur;
+      }
+      totalBusyMins += dur;
     });
 
-    const totalWeek = 168 * 60;
-    const sleepMins = 56 * 60; // 22:00 - 06:00 (8 ч * 7 дней)
-    const awakeMins = totalWeek - sleepMins; // 112 ч
-    const busyMins = studyMins + workoutMins + hwMins;
-    const freeMins = Math.max(0, awakeMins - busyMins);
+    const weeklyFreeMins = Math.max(0, weeklyAwakeMins - totalBusyMins);
 
-    // Статистика
-    document.getElementById("statsGrid").innerHTML = `
-      <div class="stat-card">
-        <div class="stat-label">Учёба (пары)</div>
-        <div class="stat-value" style="color:var(--study-text)">${fmtDur(studyMins)}</div>
-        <div class="stat-sub">${events.filter(e => e.cat === "study").length} занятий</div>
+    // Карточки статистики
+    const statsGrid = document.getElementById("statsGrid");
+    let cardsHtml = "";
+    state.categories.slice(0, 4).forEach(cat => {
+      const mins = catTotals[cat.id] || 0;
+      const count = state.events.filter(e => e.cat === cat.id).length;
+      cardsHtml += `
+        <div class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-xs">
+          <div class="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-500">
+            <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:${cat.color}"></span>
+            <span class="truncate">${cat.name}</span>
+          </div>
+          <div class="text-base sm:text-lg font-extrabold mt-1" style="color:${cat.color}">${fmtDur(mins)}</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">${count} зан. в неделю</div>
+        </div>
+      `;
+    });
+
+    cardsHtml += `
+      <div class="bg-indigo-50/70 rounded-2xl p-3 border border-indigo-100">
+        <div class="text-[11px] font-bold uppercase tracking-wide text-indigo-700">Сон за неделю</div>
+        <div class="text-base sm:text-lg font-extrabold text-indigo-900 mt-1">${fmtDur(weeklySleepMins)}</div>
+        <div class="text-[11px] text-indigo-600/80 mt-0.5">${fmtDur(bounds.sleepPerDay)} / сутки</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">Тренировки</div>
-        <div class="stat-value" style="color:var(--workout-text)">${fmtDur(workoutMins)}</div>
-        <div class="stat-sub">${events.filter(e => e.cat === "workout").length} трен.</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Дом. обучение</div>
-        <div class="stat-value" style="color:var(--hw-text)">${fmtDur(hwMins)}</div>
-        <div class="stat-sub">Самоподготовка</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Сон (22–06)</div>
-        <div class="stat-value" style="color:var(--sleep-text)">56 ч</div>
-        <div class="stat-sub">8 ч / сутки</div>
-      </div>
-      <div class="stat-card" style="background:#ecfdf5; border-color:#a7f3d0;">
-        <div class="stat-label" style="color:#065f46;">Свободно</div>
-        <div class="stat-value" style="color:#047857;">${fmtDur(freeMins)}</div>
-        <div class="stat-sub">Из 112 ч бодрств.</div>
+      <div class="bg-emerald-50/80 rounded-2xl p-3 border border-emerald-200/80">
+        <div class="text-[11px] font-bold uppercase tracking-wide text-emerald-800">Свободное время</div>
+        <div class="text-base sm:text-lg font-extrabold text-emerald-700 mt-1">${fmtDur(weeklyFreeMins)}</div>
+        <div class="text-[11px] text-emerald-700/80 mt-0.5">Из ${fmtDur(weeklyAwakeMins)} бодрств.</div>
       </div>
     `;
+    statsGrid.innerHTML = cardsHtml;
 
-    // Шкала прогресса
-    const pct = (m) => ((m / totalWeek) * 100).toFixed(2) + "%";
-    document.getElementById("progressTrack").innerHTML = `
-      <div class="seg-sleep" style="width:${pct(sleepMins)}" title="Сон: 56 ч"></div>
-      <div class="seg-study" style="width:${pct(studyMins)}" title="Учёба: ${fmtDur(studyMins)}"></div>
-      <div class="seg-workout" style="width:${pct(workoutMins)}" title="Тренировки: ${fmtDur(workoutMins)}"></div>
-      <div class="seg-hw" style="width:${pct(hwMins)}" title="Домашнее обучение: ${fmtDur(hwMins)}"></div>
-      <div class="seg-free" style="width:${pct(freeMins)}" title="Свободно: ${fmtDur(freeMins)}"></div>
-    `;
+    // Прогресс-бар 168 часов
+    document.getElementById("awakeLabel").textContent = `Бодрствование: ${fmtDur(weeklyAwakeMins)}`;
+    const pct = (m) => ((m / totalWeekMins) * 100).toFixed(2) + "%";
 
-    // Рендер дней (карточки)
-    const daysContainer = document.getElementById("daysContainer");
-    daysContainer.innerHTML = "";
+    let trackHtml = `<div style="width:${pct(weeklySleepMins)}; background:#6366f1;" title="Сон: ${fmtDur(weeklySleepMins)}"></div>`;
+    let legendHtml = `<div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>Сон (${fmtDur(weeklySleepMins)})</div>`;
 
-    const DAY_START = 6 * 60;  // 06:00
-    const DAY_END = 22 * 60;   // 22:00
+    state.categories.forEach(cat => {
+      const m = catTotals[cat.id] || 0;
+      if (m > 0) {
+        trackHtml += `<div style="width:${pct(m)}; background:${cat.color};" title="${cat.name}: ${fmtDur(m)}"></div>`;
+      }
+      legendHtml += `<div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background:${cat.color}"></span>${cat.name}</div>`;
+    });
+
+    trackHtml += `<div style="width:${pct(weeklyFreeMins)}; background:#cbd5e1;" title="Свободно: ${fmtDur(weeklyFreeMins)}"></div>`;
+    legendHtml += `<div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-slate-300"></span>Свободно</div>`;
+
+    document.getElementById("progressTrack").innerHTML = trackHtml;
+    document.getElementById("legendContainer").innerHTML = legendHtml;
+
+    // Столбчатая диаграмма по дням недели
+    const chartEl = document.getElementById("dailyBarChart");
+    let chartHtml = "";
+    let sumPercent = 0;
 
     for (let d = 0; d < 7; d++) {
-      const dayEvents = events
-        .filter(e => e.day === d)
+      const dayEvents = state.events.filter(e => e.day === d && (activeCategoryFilter === "all" || e.cat === activeCategoryFilter));
+      let busy = 0;
+      dayEvents.forEach(e => busy += Math.max(0, toMins(e.end) - toMins(e.start)));
+      const loadPct = Math.min(100, Math.round((busy / bounds.awakePerDay) * 100));
+      sumPercent += loadPct;
+
+      const barColor = loadPct > 65 ? "#ef4444" : loadPct > 35 ? "#3b82f6" : "#10b981";
+      chartHtml += `
+        <div class="flex flex-col items-center h-full justify-end group cursor-pointer" onclick="jumpToDay(${d})" title="${DAYS[d]}: занято ${fmtDur(busy)} (${loadPct}%)">
+          <span class="text-[10px] font-bold text-slate-600 mb-1">${loadPct}%</span>
+          <div class="w-full max-w-[28px] bg-slate-100 rounded-t-md h-14 flex items-end overflow-hidden">
+            <div class="w-full rounded-t-md transition-all duration-300" style="height:${Math.max(6, loadPct)}%; background:${barColor};"></div>
+          </div>
+          <span class="text-[11px] font-bold text-slate-700 mt-1">${DAYS_SHORT[d]}</span>
+        </div>
+      `;
+    }
+    chartEl.innerHTML = chartHtml;
+    document.getElementById("avgLoadLabel").textContent = `Средняя: ${Math.round(sumPercent / 7)}%`;
+  }
+
+  function jumpToDay(dayIdx) {
+    switchView("cards");
+    const target = document.getElementById(`day-card-${dayIdx}`);
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  // EXCEL-ПОДОБНАЯ КАРТА ЗАНЯТОСТИ (ПОЧАСОВАЯ СЕТКА)
+  function renderExcelHeatmap(bounds) {
+    const step = Number(document.getElementById("gridStepSelect").value) || 30;
+    const startMins = Math.floor(bounds.wake / step) * step;
+    const endMins = Math.ceil(bounds.sleep / step) * step;
+
+    // Шапка таблицы (Дни недели)
+    let headHtml = `<tr>
+      <th class="excel-sticky-col text-white py-2.5 px-2 text-center w-20 font-bold">Время</th>`;
+    for (let d = 0; d < 7; d++) {
+      headHtml += `<th class="bg-slate-900 text-white py-2.5 px-2 text-center font-bold min-w-[110px]">${DAYS[d]}</th>`;
+    }
+    headHtml += `<th class="bg-slate-800 text-slate-200 py-2.5 px-2 text-center w-24 font-bold">Занято / 7д</th></tr>`;
+    document.getElementById("excelHead").innerHTML = headHtml;
+
+    // Подготовка событий с учетом фильтра
+    const visibleEvents = state.events.filter(e => activeCategoryFilter === "all" || e.cat === activeCategoryFilter);
+
+    // Строки временных интервалов
+    let bodyHtml = "";
+    const renderedSpanIds = new Set(); // чтобы объединять ячейки по вертикали (rowspan)
+
+    for (let t = startMins; t < endMins; t += step) {
+      const slotStart = t;
+      const slotEnd = t + step;
+      const isHourMark = t % 60 === 0;
+      let busyDaysCount = 0;
+
+      bodyHtml += `<tr class="${isHourMark ? 'border-t border-slate-300' : ''}">
+        <td class="excel-sticky-col py-1.5 px-2 text-center font-mono text-[11px] ${isHourMark ? 'font-bold text-slate-800' : 'text-slate-400'}">
+          ${fromMins(slotStart)}
+        </td>`;
+
+      for (let d = 0; d < 7; d++) {
+        // Ищем событие, покрывающее этот слот
+        const ev = visibleEvents.find(e => e.day === d && toMins(e.start) < slotEnd && toMins(e.end) > slotStart);
+
+        if (ev) {
+          busyDaysCount++;
+          const spanKey = `${d}_${ev.id}`;
+          if (renderedSpanIds.has(spanKey)) {
+            // Ячейка уже объединена сверху через rowspan
+            continue;
+          }
+
+          // Вычисляем сколько слотов занимает событие вниз
+          const evStart = Math.max(startMins, toMins(ev.start));
+          const evEnd = Math.min(endMins, toMins(ev.end));
+          const slotsCount = Math.max(1, Math.ceil((evEnd - slotStart) / step));
+          renderedSpanIds.add(spanKey);
+
+          const cat = getCategory(ev.cat);
+          const bg = hexToRgba(cat.color, 0.16);
+
+          bodyHtml += `
+            <td rowspan="${slotsCount}" onclick="editEvent('${ev.id}')"
+                style="background:${bg}; border-left: 3px solid ${cat.color};"
+                class="p-1.5 align-top cursor-pointer hover:brightness-95 transition">
+              <div class="text-[10px] font-extrabold leading-tight" style="color:${cat.color}">
+                ${ev.start}–${ev.end}
+              </div>
+              <div class="text-[11px] font-bold text-slate-900 leading-snug mt-0.5 line-clamp-2">
+                ${ev.title}
+              </div>
+              ${ev.meta ? `<div class="text-[10px] text-slate-600 truncate mt-0.5">${ev.meta}</div>` : ""}
+            </td>
+          `;
+        } else {
+          // Пустая ячейка (Свободно)
+          bodyHtml += `
+            <td onclick="openEventModal(${d}, '${fromMins(slotStart)}', '${fromMins(Math.min(endMins, slotStart + 60))}')"
+                title="Свободно (${DAYS[d]}, ${fromMins(slotStart)}). Нажмите, чтобы добавить дело"
+                class="py-1.5 px-1.5 text-center text-[10px] text-slate-300 hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition group">
+              <span class="opacity-0 group-hover:opacity-100 font-semibold">+ Свободно</span>
+            </td>
+          `;
+        }
+      }
+
+      // Правая итоговая колонка по строке (сколько дней в этот час занято)
+      const heatBadge = busyDaysCount === 0
+        ? `<span class="text-slate-300">0/7</span>`
+        : `<span class="inline-block px-1.5 py-0.5 rounded font-bold text-[10px] ${busyDaysCount >= 5 ? 'bg-red-100 text-red-700' : busyDaysCount >= 3 ? 'bg-amber-100 text-amber-800' : 'bg-blue-50 text-blue-700'}">${busyDaysCount} из 7</span>`;
+
+      bodyHtml += `<td class="bg-slate-50/70 text-center py-1 px-1">${heatBadge}</td></tr>`;
+    }
+    document.getElementById("excelBody").innerHTML = bodyHtml;
+
+    // Нижний подвал таблицы (Итоги по каждому дню как в Excel)
+    let footHtml = `<tr class="bg-slate-100 font-bold text-slate-800">
+      <td class="excel-sticky-col bg-slate-200 py-2.5 px-2 text-center text-[11px]">ИТОГО</td>`;
+
+    let totalWeekFiltered = 0;
+    for (let d = 0; d < 7; d++) {
+      const dayEvents = visibleEvents.filter(e => e.day === d);
+      let busy = 0;
+      dayEvents.forEach(e => busy += Math.max(0, toMins(e.end) - toMins(e.start)));
+      totalWeekFiltered += busy;
+      const pct = Math.min(100, Math.round((busy / bounds.awakePerDay) * 100));
+
+      footHtml += `
+        <td class="py-2 px-2 text-center">
+          <div class="text-[11px] text-slate-900">${fmtDur(busy)} <span class="text-slate-500">(${pct}%)</span></div>
+          <div class="w-full h-1.5 bg-slate-300 rounded-full overflow-hidden mt-1">
+            <div class="h-full bg-blue-600" style="width:${pct}%"></div>
+          </div>
+        </td>
+      `;
+    }
+    footHtml += `<td class="bg-slate-200 py-2 px-2 text-center text-[11px] text-blue-800">${fmtDur(totalWeekFiltered)}</td></tr>`;
+    document.getElementById("excelFoot").innerHTML = footHtml;
+  }
+
+  // КАРТОЧКИ ПО ДНЯМ
+  function renderDayCards(bounds) {
+    const container = document.getElementById("viewCards");
+    container.innerHTML = "";
+
+    for (let d = 0; d < 7; d++) {
+      const dayEvents = state.events
+        .filter(e => e.day === d && (activeCategoryFilter === "all" || e.cat === activeCategoryFilter))
         .sort((a, b) => toMins(a.start) - toMins(b.start));
 
-      let dayBusy = 0;
-      dayEvents.forEach(e => {
-        dayBusy += Math.max(0, toMins(e.end) - toMins(e.start));
-      });
-      const dayFree = Math.max(0, (DAY_END - DAY_START) - dayBusy);
+      let busyMins = 0;
+      dayEvents.forEach(e => busyMins += Math.max(0, toMins(e.end) - toMins(e.start)));
+      const freeMins = Math.max(0, bounds.awakePerDay - busyMins);
 
-      let stackHtml = `<div class="sleep-note">06:00 — Подъём</div>`;
-      let cursor = DAY_START;
+      let stackHtml = `<div class="text-[11px] font-semibold text-indigo-700 bg-indigo-50/80 py-1.5 px-3 rounded-xl text-center">🌅 ${state.wakeTime} — Начало дня</div>`;
+      let cursor = bounds.wake;
 
       dayEvents.forEach(ev => {
         const s = toMins(ev.start);
@@ -727,131 +863,206 @@
         if (s > cursor) {
           const gap = s - cursor;
           stackHtml += `
-            <div class="free-slot" onclick="openModal(${d}, '${fromMins(cursor)}', '${fromMins(s)}')">
-              <span>+ Свободно: ${fromMins(cursor)}–${fromMins(s)}</span>
-              <strong>${fmtDur(gap)}</strong>
+            <div onclick="openEventModal(${d}, '${fromMins(cursor)}', '${fromMins(s)}')"
+                 class="border border-dashed border-slate-300 bg-slate-50/80 hover:bg-emerald-50 hover:border-emerald-300 text-slate-500 hover:text-emerald-800 rounded-xl px-3 py-2 text-xs flex justify-between items-center cursor-pointer transition">
+              <span>+ Свободное окно: ${fromMins(cursor)}–${fromMins(s)}</span>
+              <span class="font-bold">${fmtDur(gap)}</span>
             </div>
           `;
         }
 
-        const catClass = ev.cat === "study" ? "cat-study" : (ev.cat === "workout" ? "cat-workout" : "cat-hw");
+        const cat = getCategory(ev.cat);
         stackHtml += `
-          <div class="event-item ${catClass}" onclick="editEvent('${ev.id}')">
-            <div>
-              <div class="event-time">${ev.start} – ${ev.end}</div>
-              <div class="event-title">${ev.title}</div>
-              ${ev.meta ? `<div class="event-meta">${ev.meta}</div>` : ""}
+          <div onclick="editEvent('${ev.id}')"
+               style="background:${hexToRgba(cat.color, 0.14)}; border-left: 4px solid ${cat.color};"
+               class="rounded-xl p-3 cursor-pointer hover:brightness-95 transition flex justify-between items-center gap-2">
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-extrabold" style="color:${cat.color}">${ev.start} – ${ev.end}</span>
+                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/80 text-slate-700">${cat.name}</span>
+              </div>
+              <div class="text-sm font-bold text-slate-900 mt-0.5 truncate">${ev.title}</div>
+              ${ev.meta ? `<div class="text-xs text-slate-600 mt-0.5 truncate">${ev.meta}</div>` : ""}
             </div>
-            <div class="event-dur">${fmtDur(e - s)}</div>
+            <div class="text-xs font-bold text-slate-700 bg-white/70 px-2 py-1 rounded-lg shrink-0">
+              ${fmtDur(e - s)}
+            </div>
           </div>
         `;
         cursor = Math.max(cursor, e);
       });
 
-      if (cursor < DAY_END) {
-        const gap = DAY_END - cursor;
+      if (cursor < bounds.sleep) {
+        const gap = bounds.sleep - cursor;
         stackHtml += `
-          <div class="free-slot" onclick="openModal(${d}, '${fromMins(cursor)}', '${fromMins(DAY_END)}')">
-            <span>+ Свободно: ${fromMins(cursor)}–${fromMins(DAY_END)}</span>
-            <strong>${fmtDur(gap)}</strong>
+          <div onclick="openEventModal(${d}, '${fromMins(cursor)}', '${fromMins(bounds.sleep)}')"
+               class="border border-dashed border-slate-300 bg-slate-50/80 hover:bg-emerald-50 hover:border-emerald-300 text-slate-500 hover:text-emerald-800 rounded-xl px-3 py-2 text-xs flex justify-between items-center cursor-pointer transition">
+            <span>+ Свободное окно: ${fromMins(cursor)}–${fromMins(bounds.sleep)}</span>
+            <span class="font-bold">${fmtDur(gap)}</span>
           </div>
         `;
       }
 
-      stackHtml += `<div class="sleep-note">22:00 — Отбой (сон 8 ч)</div>`;
+      stackHtml += `<div class="text-[11px] font-semibold text-indigo-700 bg-indigo-50/80 py-1.5 px-3 rounded-xl text-center">🌙 ${state.sleepTime} — Отбой (сон ${fmtDur(bounds.sleepPerDay)})</div>`;
 
       const card = document.createElement("div");
-      card.className = "day-card";
+      card.id = `day-card-${d}`;
+      card.className = "bg-white rounded-2xl border border-slate-200/90 shadow-xs p-4";
       card.innerHTML = `
-        <div class="day-header">
-          <div class="day-name">${DAYS[d]}</div>
-          <div class="day-free-badge">Свободно: ${fmtDur(dayFree)}</div>
+        <div class="flex justify-between items-center pb-3 mb-3 border-b border-slate-100">
+          <h3 class="text-base font-extrabold text-slate-900">${DAYS[d]}</h3>
+          <span class="text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-full">
+            Свободно: ${fmtDur(freeMins)}
+          </span>
         </div>
-        <div class="events-stack">${stackHtml}</div>
+        <div class="space-y-2">${stackHtml}</div>
       `;
-      daysContainer.appendChild(card);
+      container.appendChild(card);
+    }
+  }
+
+  // ЧЕК-ЛИСТ ДНЯ
+  function renderChecklist() {
+    const selectedDay = Number(document.getElementById("checklistDaySelect").value);
+    const dayEvents = state.events
+      .filter(e => e.day === selectedDay)
+      .sort((a, b) => toMins(a.start) - toMins(b.start));
+
+    const container = document.getElementById("checklistItems");
+    if (dayEvents.length === 0) {
+      container.innerHTML = `<div class="text-center py-8 text-sm text-slate-400">На этот день пока нет запланированных дел.</div>`;
+      document.getElementById("checklistProgressText").textContent = "0 из 0 (100%)";
+      document.getElementById("checklistProgressBar").style.width = "100%";
+      return;
     }
 
-    // Рендер таблицы недели
-    const gridBody = document.getElementById("gridBody");
-    let rowHtml = "<tr>";
-    for (let d = 0; d < 7; d++) {
-      const dayEvents = events
-        .filter(e => e.day === d)
-        .sort((a, b) => toMins(a.start) - toMins(b.start));
+    let doneCount = 0;
+    let html = "";
 
-      let cellHtml = "";
-      dayEvents.forEach(ev => {
-        const catClass = ev.cat === "study" ? "cat-study" : (ev.cat === "workout" ? "cat-workout" : "cat-hw");
-        cellHtml += `
-          <div class="event-item ${catClass}" style="margin-bottom:6px; padding:6px 8px;" onclick="editEvent('${ev.id}')">
-            <div>
-              <div class="event-time" style="font-size:11px;">${ev.start}–${ev.end}</div>
-              <div class="event-title" style="font-size:12px;">${ev.title}</div>
+    dayEvents.forEach(ev => {
+      const isDone = state.completedIds.includes(ev.id);
+      if (isDone) doneCount++;
+      const cat = getCategory(ev.cat);
+
+      html += `
+        <label class="flex items-center justify-between gap-3 p-3.5 rounded-xl border cursor-pointer transition ${isDone ? 'bg-slate-50 border-slate-200 opacity-70' : 'bg-white border-slate-200 hover:border-blue-300'}">
+          <div class="flex items-center gap-3 min-w-0">
+            <input type="checkbox" ${isDone ? "checked" : ""} onchange="toggleCheckEvent('${ev.id}')"
+                   class="w-5 h-5 rounded-md accent-emerald-600 cursor-pointer shrink-0" />
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold" style="color:${cat.color}">${ev.start}–${ev.end}</span>
+                <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">${cat.name}</span>
+              </div>
+              <div class="text-sm font-bold text-slate-900 truncate ${isDone ? 'line-through text-slate-400' : ''}">${ev.title}</div>
+              ${ev.meta ? `<div class="text-xs text-slate-500 truncate">${ev.meta}</div>` : ""}
             </div>
           </div>
-        `;
-      });
-      if (!cellHtml) cellHtml = `<div style="color:#9ca3af; text-align:center; padding:12px 0;">Выходной</div>`;
-      rowHtml += `<td>${cellHtml}</td>`;
-    }
-    rowHtml += "</tr>";
-    gridBody.innerHTML = rowHtml;
+          <span class="text-xs font-bold text-slate-500 shrink-0">${fmtDur(toMins(ev.end) - toMins(ev.start))}</span>
+        </label>
+      `;
+    });
+
+    const pct = Math.round((doneCount / dayEvents.length) * 100);
+    document.getElementById("checklistProgressText").textContent = `${doneCount} из ${dayEvents.length} (${pct}%)`;
+    document.getElementById("checklistProgressBar").style.width = `${pct}%`;
+    container.innerHTML = html;
   }
 
-  function switchView(mode) {
-    const cards = document.getElementById("daysContainer");
-    const grid = document.getElementById("gridContainer");
-    const tCards = document.getElementById("tabCards");
-    const tGrid = document.getElementById("tabGrid");
-
-    if (mode === "cards") {
-      cards.style.display = "grid";
-      grid.classList.remove("active");
-      tCards.classList.add("active");
-      tGrid.classList.remove("active");
+  function toggleCheckEvent(id) {
+    if (state.completedIds.includes(id)) {
+      state.completedIds = state.completedIds.filter(x => x !== id);
     } else {
-      cards.style.display = "none";
-      grid.classList.add("active");
-      tCards.classList.remove("active");
-      tGrid.classList.add("active");
+      state.completedIds.push(id);
     }
+    saveState();
+    renderChecklist();
   }
 
-  function openModal(day = 0, start = "15:00", end = "16:30") {
-    document.getElementById("modalTitle").textContent = "Добавить занятие";
-    document.getElementById("editId").value = "";
+  function resetDayChecks() {
+    const selectedDay = Number(document.getElementById("checklistDaySelect").value);
+    const dayIds = state.events.filter(e => e.day === selectedDay).map(e => e.id);
+    state.completedIds = state.completedIds.filter(id => !dayIds.includes(id));
+    saveState();
+    renderChecklist();
+    showToast("Отметки за день сброшены");
+  }
+
+  // ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+  function switchView(view) {
+    currentView = view;
+    const views = { heatmap: "viewHeatmap", cards: "viewCards", checklist: "viewChecklist" };
+    const tabs = { heatmap: "tabHeatmap", cards: "tabCards", checklist: "tabChecklist" };
+
+    Object.keys(views).forEach(k => {
+      const el = document.getElementById(views[k]);
+      const tab = document.getElementById(tabs[k]);
+      if (k === view) {
+        el.classList.remove("hidden");
+        tab.classList.add("bg-white", "text-slate-900", "shadow-xs", "font-bold");
+        tab.classList.remove("text-slate-600", "font-semibold");
+      } else {
+        el.classList.add("hidden");
+        tab.classList.remove("bg-white", "text-slate-900", "shadow-xs", "font-bold");
+        tab.classList.add("text-slate-600", "font-semibold");
+      }
+    });
+  }
+
+  // МОДАЛКА СОБЫТИЙ
+  function populateCategorySelect(selectedId) {
+    const sel = document.getElementById("fCat");
+    sel.innerHTML = state.categories.map(c => `<option value="${c.id}" ${c.id === selectedId ? "selected" : ""}>${c.name}</option>`).join("");
+  }
+
+  function openEventModal(day = 0, start = "15:00", end = "16:00") {
+    document.getElementById("eventModalTitle").textContent = "Добавить занятие / дело";
+    document.getElementById("editEventId").value = "";
     document.getElementById("fDay").value = day;
     document.getElementById("fStart").value = start;
     document.getElementById("fEnd").value = end;
-    document.getElementById("fCat").value = "hw";
+    populateCategorySelect(state.categories[0]?.id || "study");
     document.getElementById("fTitle").value = "";
     document.getElementById("fMeta").value = "";
-    document.getElementById("btnDelete").style.display = "none";
-    document.getElementById("modalBackdrop").classList.add("open");
+    document.getElementById("btnDeleteEvent").classList.add("hidden");
+    document.getElementById("duplicateBox").classList.add("hidden");
+    document.getElementById("eventFormError").classList.add("hidden");
+
+    const backdrop = document.getElementById("eventModalBackdrop");
+    backdrop.classList.remove("hidden");
+    backdrop.classList.add("flex");
   }
 
   function editEvent(id) {
-    const ev = events.find(e => e.id === id);
+    const ev = state.events.find(e => e.id === id);
     if (!ev) return;
-    document.getElementById("modalTitle").textContent = "Редактировать";
-    document.getElementById("editId").value = ev.id;
+
+    document.getElementById("eventModalTitle").textContent = "Редактировать занятие";
+    document.getElementById("editEventId").value = ev.id;
     document.getElementById("fDay").value = ev.day;
     document.getElementById("fStart").value = ev.start;
     document.getElementById("fEnd").value = ev.end;
-    document.getElementById("fCat").value = ev.cat;
+    populateCategorySelect(ev.cat);
     document.getElementById("fTitle").value = ev.title;
     document.getElementById("fMeta").value = ev.meta || "";
-    document.getElementById("btnDelete").style.display = "inline-block";
-    document.getElementById("modalBackdrop").classList.add("open");
+    document.getElementById("btnDeleteEvent").classList.remove("hidden");
+    document.getElementById("duplicateBox").classList.remove("hidden");
+    document.getElementById("dupTargetDay").value = (ev.day + 1) % 7;
+    document.getElementById("eventFormError").classList.add("hidden");
+
+    const backdrop = document.getElementById("eventModalBackdrop");
+    backdrop.classList.remove("hidden");
+    backdrop.classList.add("flex");
   }
 
-  function closeModal() {
-    document.getElementById("modalBackdrop").classList.remove("open");
+  function closeEventModal() {
+    const backdrop = document.getElementById("eventModalBackdrop");
+    backdrop.classList.add("hidden");
+    backdrop.classList.remove("flex");
   }
 
   function saveEvent() {
-    const id = document.getElementById("editId").value;
+    const id = document.getElementById("editEventId").value;
     const day = Number(document.getElementById("fDay").value);
     const start = document.getElementById("fStart").value;
     const end = document.getElementById("fEnd").value;
@@ -859,44 +1070,307 @@
     const title = document.getElementById("fTitle").value.trim() || "Занятие";
     const meta = document.getElementById("fMeta").value.trim();
 
-    if (toMins(end) <= toMins(start)) {
-      alert("Время окончания должно быть позже времени начала.");
+    const errEl = document.getElementById("eventFormError");
+    if (!start || !end || toMins(end) <= toMins(start)) {
+      errEl.textContent = "Время окончания должно быть позже времени начала.";
+      errEl.classList.remove("hidden");
       return;
     }
 
     if (id) {
-      const idx = events.findIndex(e => e.id === id);
-      if (idx !== -1) events[idx] = { id, day, start, end, cat, title, meta };
+      const idx = state.events.findIndex(e => e.id === id);
+      if (idx !== -1) state.events[idx] = { id, day, start, end, cat, title, meta };
+      showToast("Изменения сохранены");
     } else {
-      events.push({ id: String(Date.now()), day, start, end, cat, title, meta });
+      state.events.push({ id: String(Date.now()), day, start, end, cat, title, meta });
+      showToast("Занятие добавлено");
     }
 
-    saveToStorage();
-    closeModal();
-    render();
+    saveState();
+    closeEventModal();
+    renderAll();
+  }
+
+  function duplicateCurrentEvent() {
+    const targetDay = Number(document.getElementById("dupTargetDay").value);
+    const start = document.getElementById("fStart").value;
+    const end = document.getElementById("fEnd").value;
+    const cat = document.getElementById("fCat").value;
+    const title = document.getElementById("fTitle").value.trim() || "Занятие";
+    const meta = document.getElementById("fMeta").value.trim();
+
+    state.events.push({
+      id: String(Date.now() + Math.floor(Math.random() * 1000)),
+      day: targetDay,
+      start,
+      end,
+      cat,
+      title,
+      meta
+    });
+    saveState();
+    renderAll();
+    showToast(`Скопировано на: ${DAYS[targetDay]}`);
   }
 
   function deleteEvent() {
-    const id = document.getElementById("editId").value;
-    events = events.filter(e => e.id !== id);
-    saveToStorage();
-    closeModal();
-    render();
+    const id = document.getElementById("editEventId").value;
+    state.events = state.events.filter(e => e.id !== id);
+    state.completedIds = state.completedIds.filter(x => x !== id);
+    saveState();
+    closeEventModal();
+    renderAll();
+    showToast("Занятие удалено");
   }
 
-  function resetSchedule() {
-    if (confirm("Вернуть исходное расписание ИСУ 26дд-1?")) {
-      events = JSON.parse(JSON.stringify(DEFAULT_EVENTS));
-      saveToStorage();
-      render();
+  // МОДАЛКА НАСТРОЕК (НАЗВАНИЕ, СОН, КАТЕГОРИИ)
+  let tempCategories = [];
+
+  function openSettingsModal() {
+    resetConfirmStep = false;
+    document.getElementById("setTitle").value = state.title;
+    document.getElementById("setSubtitle").value = state.subtitle;
+    document.getElementById("setWakeTime").value = state.wakeTime;
+    document.getElementById("setSleepTime").value = state.sleepTime;
+    tempCategories = JSON.parse(JSON.stringify(state.categories));
+    renderCategoriesEditor();
+
+    const backdrop = document.getElementById("settingsModalBackdrop");
+    backdrop.classList.remove("hidden");
+    backdrop.classList.add("flex");
+  }
+
+  function closeSettingsModal() {
+    const backdrop = document.getElementById("settingsModalBackdrop");
+    backdrop.classList.add("hidden");
+    backdrop.classList.remove("flex");
+  }
+
+  function renderCategoriesEditor() {
+    const list = document.getElementById("categoriesEditorList");
+    list.innerHTML = tempCategories.map((cat, idx) => `
+      <div class="flex items-center gap-2">
+        <input type="color" value="${cat.color}" onchange="tempCategories[${idx}].color = this.value"
+               class="w-9 h-9 p-0.5 rounded-lg border border-slate-300 cursor-pointer bg-white shrink-0" />
+        <input type="text" value="${cat.name}" oninput="tempCategories[${idx}].name = this.value"
+               placeholder="Название категории"
+               class="flex-1 px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-semibold bg-white" />
+        ${tempCategories.length > 1 ? `
+          <button type="button" onclick="removeCategoryRow(${idx})" class="text-red-500 hover:bg-red-50 px-2 py-1 rounded-lg text-xs font-bold">✕</button>
+        ` : ""}
+      </div>
+    `).join("");
+  }
+
+  function addCategoryRow() {
+    const palette = ["#0ea5e9", "#14b8a6", "#f97316", "#a855f7", "#eab308", "#64748b"];
+    const randomColor = palette[tempCategories.length % palette.length];
+    tempCategories.push({
+      id: "cat_" + Date.now(),
+      name: "Новая категория",
+      color: randomColor
+    });
+    renderCategoriesEditor();
+  }
+
+  function removeCategoryRow(idx) {
+    tempCategories.splice(idx, 1);
+    renderCategoriesEditor();
+  }
+
+  function saveSettings() {
+    state.title = document.getElementById("setTitle").value.trim() || "Мой тайм-менеджер";
+    state.subtitle = document.getElementById("setSubtitle").value.trim() || "Персональное расписание";
+    state.wakeTime = document.getElementById("setWakeTime").value || "06:00";
+    state.sleepTime = document.getElementById("setSleepTime").value || "22:00";
+
+    const validCats = tempCategories.filter(c => c.name.trim() !== "");
+    if (validCats.length > 0) {
+      state.categories = validCats;
+    }
+
+    saveState();
+    closeSettingsModal();
+    renderAll();
+    showToast("Настройки успешно применены");
+  }
+
+  function confirmFullReset() {
+    if (!resetConfirmStep) {
+      resetConfirmStep = true;
+      showToast("Нажмите ещё раз для подтверждения полного сброса");
+      return;
+    }
+    localStorage.removeItem(STORAGE_KEY);
+    state = loadState();
+    closeSettingsModal();
+    renderAll();
+    showToast("Расписание сброшено к исходному");
+  }
+
+  // ЭКСПОРТ И ИМПОРТ (CSV ДЛЯ EXCEL И JSON)
+  function openExportModal() {
+    document.getElementById("exportNotice").classList.add("hidden");
+    const backdrop = document.getElementById("exportModalBackdrop");
+    backdrop.classList.remove("hidden");
+    backdrop.classList.add("flex");
+  }
+
+  function closeExportModal() {
+    const backdrop = document.getElementById("exportModalBackdrop");
+    backdrop.classList.add("hidden");
+    backdrop.classList.remove("flex");
+  }
+
+  function exportCSV() {
+    // BOM для корректного открытия кириллицы в Excel
+    let csv = "\uFEFFДень недели;Начало;Конец;Длительность (мин);Категория;Название;Заметка\n";
+    const sorted = [...state.events].sort((a, b) => a.day - b.day || toMins(a.start) - toMins(b.start));
+
+    sorted.forEach(ev => {
+      const cat = getCategory(ev.cat);
+      const dur = Math.max(0, toMins(ev.end) - toMins(ev.start));
+      const row = [
+        DAYS[ev.day],
+        ev.start,
+        ev.end,
+        dur,
+        cat.name,
+        `"${(ev.title || "").replace(/"/g, '""')}"`,
+        `"${(ev.meta || "").replace(/"/g, '""')}"`
+      ].join(";");
+      csv += row + "\n";
+    });
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${state.title.replace(/\s+/g, "_")}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    const notice = document.getElementById("exportNotice");
+    notice.textContent = "Файл CSV скачан! Его можно сразу открыть в Excel.";
+    notice.classList.remove("hidden");
+  }
+
+  function exportJSON() {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${state.title.replace(/\s+/g, "_")}_backup.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    const notice = document.getElementById("exportNotice");
+    notice.textContent = "Резервная копия JSON сохранена.";
+    notice.classList.remove("hidden");
+  }
+
+  function importJSON(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        if (parsed && Array.isArray(parsed.events)) {
+          state = {
+            title: parsed.title || state.title,
+            subtitle: parsed.subtitle || state.subtitle,
+            wakeTime: parsed.wakeTime || "06:00",
+            sleepTime: parsed.sleepTime || "22:00",
+            categories: Array.isArray(parsed.categories) ? parsed.categories : state.categories,
+            events: parsed.events,
+            completedIds: Array.isArray(parsed.completedIds) ? parsed.completedIds : []
+          };
+          saveState();
+          renderAll();
+          closeExportModal();
+          showToast("Расписание успешно импортировано!");
+        }
+      } catch (err) {
+        const notice = document.getElementById("exportNotice");
+        notice.textContent = "Ошибка: неверный формат JSON-файла.";
+        notice.classList.remove("hidden");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  // ПОМОДОРО-ТАЙМЕР ФОКУСИРОВКИ
+  let pomoMode = "work"; // "work" (25m) | "break" (5m)
+  let pomoSecondsLeft = 25 * 60;
+  let pomoInterval = null;
+
+  function updatePomoUI() {
+    const m = String(Math.floor(pomoSecondsLeft / 60)).padStart(2, "0");
+    const s = String(pomoSecondsLeft % 60).padStart(2, "0");
+    document.getElementById("pomoDisplay").textContent = `${m}:${s}`;
+    document.getElementById("pomoModeIcon").textContent = pomoMode === "work" ? "🍅" : "☕";
+  }
+
+  function togglePomodoro() {
+    const btn = document.getElementById("pomoToggleBtn");
+    if (pomoInterval) {
+      clearInterval(pomoInterval);
+      pomoInterval = null;
+      btn.textContent = "Старт";
+      btn.classList.replace("bg-amber-400", "bg-emerald-500");
+    } else {
+      btn.textContent = "Пауза";
+      btn.classList.replace("bg-emerald-500", "bg-amber-400");
+      pomoInterval = setInterval(() => {
+        if (pomoSecondsLeft > 0) {
+          pomoSecondsLeft--;
+          updatePomoUI();
+        } else {
+          clearInterval(pomoInterval);
+          pomoInterval = null;
+          btn.textContent = "Старт";
+          btn.classList.replace("bg-amber-400", "bg-emerald-500");
+          showToast(pomoMode === "work" ? "🍅 Фокус-сессия завершена! Сделайте перерыв." : "☕ Перерыв окончен! Пора за работу.");
+          switchPomodoroMode();
+        }
+      }, 1000);
     }
   }
 
-  document.getElementById("modalBackdrop").addEventListener("click", (e) => {
-    if (e.target.id === "modalBackdrop") closeModal();
+  function resetPomodoro() {
+    clearInterval(pomoInterval);
+    pomoInterval = null;
+    const btn = document.getElementById("pomoToggleBtn");
+    btn.textContent = "Старт";
+    btn.classList.replace("bg-amber-400", "bg-emerald-500");
+    pomoSecondsLeft = pomoMode === "work" ? 25 * 60 : 5 * 60;
+    updatePomoUI();
+  }
+
+  function switchPomodoroMode() {
+    pomoMode = pomoMode === "work" ? "break" : "work";
+    resetPomodoro();
+    showToast(pomoMode === "work" ? "Режим фокусировки: 25 минут" : "Режим перерыва: 5 минут");
+  }
+
+  // Закрытие модалок по клику на фон
+  ["eventModalBackdrop", "settingsModalBackdrop", "exportModalBackdrop"].forEach(id => {
+    document.getElementById(id).addEventListener("click", (e) => {
+      if (e.target.id === id) {
+        e.target.classList.add("hidden");
+        e.target.classList.remove("flex");
+      }
+    });
   });
 
-  render();
+  // Автовыбор сегодняшнего дня недели для вкладки "Чек-лист дня"
+  const jsDay = new Date().getDay(); // 0 = Вс, 1 = Пн...
+  const ruDayIdx = jsDay === 0 ? 6 : jsDay - 1;
+  document.getElementById("checklistDaySelect").value = ruDayIdx;
+
+  // Первый запуск
+  renderAll();
 </script>
 </body>
 </html>
