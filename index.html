@@ -22,7 +22,6 @@
       --text-muted: #64748b;
       --accent: #4f46e5;
       --accent-soft: #eef2ff;
-      --accent-text: #4338ca;
       --excel-zoom: 1;
       --excel-row-h: calc(28px * var(--excel-zoom));
       --excel-col-w: calc(165px * var(--excel-zoom));
@@ -41,37 +40,19 @@
       --text-main: #f1f5f9;
       --text-muted: #94a3b8;
       --accent-soft: rgba(99, 102, 241, 0.18);
-      --accent-text: #a5b4fc;
     }
 
-    * {
-      font-family: var(--app-font) !important;
-      box-sizing: border-box;
-    }
-
+    * { font-family: var(--app-font) !important; box-sizing: border-box; }
     body {
       background-color: var(--bg-main);
-      background-image:
-        radial-gradient(at 0% 0%, var(--bg-mesh-1) 0px, transparent 50%),
-        radial-gradient(at 100% 0%, var(--bg-mesh-2) 0px, transparent 50%);
-      background-attachment: fixed;
-      color: var(--text-main);
-      transition: background-color 0.25s ease, color 0.25s ease;
+      background-image: radial-gradient(at 0% 0%, var(--bg-mesh-1) 0px, transparent 50%), radial-gradient(at 100% 0%, var(--bg-mesh-2) 0px, transparent 50%);
+      background-attachment: fixed; color: var(--text-main); transition: background-color 0.25s ease, color 0.25s ease;
     }
-
     .bento-card {
-      background: var(--surface-card);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--border-color);
-      box-shadow: 0 10px 30px -12px rgba(15, 23, 42, 0.08);
-      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+      background: var(--surface-card); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border-color); box-shadow: 0 10px 30px -12px rgba(15, 23, 42, 0.08);
     }
-
-    html.dark .bento-card {
-      box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.45);
-    }
-
+    html.dark .bento-card { box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.45); }
     .surface-sub { background-color: var(--surface-sub); border-color: var(--border-color); }
     .surface-solid { background-color: var(--surface-solid); border-color: var(--border-color); }
     .text-main { color: var(--text-main); }
@@ -79,117 +60,64 @@
     .border-theme { border-color: var(--border-color); }
 
     .excel-viewport {
-      overflow: auto;
-      max-height: 74vh;
-      border-radius: 1rem;
-      border: 1px solid var(--border-color);
-      background: var(--surface-solid);
-      position: relative;
-      touch-action: pan-x pan-y;
-      user-select: none;
+      overflow: auto; max-height: 74vh; border-radius: 1rem; border: 1px solid var(--border-color);
+      background: var(--surface-solid); position: relative; touch-action: pan-x pan-y; user-select: none;
     }
-
-    .excel-grid-table {
-      border-collapse: separate;
-      border-spacing: 0;
-      width: max-content;
-      min-width: 100%;
-      table-layout: fixed;
-    }
-
+    .excel-grid-table { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; table-layout: fixed; }
     .excel-th-corner {
-      position: sticky; top: 0; left: 0; z-index: 30;
-      width: var(--excel-time-w); min-width: var(--excel-time-w);
-      background: var(--surface-sub);
-      border-right: 1px solid var(--border-color);
-      border-bottom: 1px solid var(--border-color);
-      font-size: calc(11px * var(--excel-zoom));
+      position: sticky; top: 0; left: 0; z-index: 30; width: var(--excel-time-w); min-width: var(--excel-time-w);
+      background: var(--surface-sub); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); font-size: calc(11px * var(--excel-zoom));
     }
-
     .excel-th-day {
-      position: sticky; top: 0; z-index: 20;
-      width: var(--excel-col-w); min-width: var(--excel-col-w);
-      background: var(--surface-sub);
-      border-right: 1px solid var(--border-color);
-      border-bottom: 1px solid var(--border-color);
-      padding: calc(8px * var(--excel-zoom)) calc(10px * var(--excel-zoom));
-      font-size: calc(12px * var(--excel-zoom));
+      position: sticky; top: 0; z-index: 20; width: var(--excel-col-w); min-width: var(--excel-col-w);
+      background: var(--surface-sub); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);
+      padding: calc(8px * var(--excel-zoom)) calc(10px * var(--excel-zoom)); font-size: calc(12px * var(--excel-zoom));
     }
-
     .excel-td-time {
-      position: sticky; left: 0; z-index: 15;
-      width: var(--excel-time-w); min-width: var(--excel-time-w);
-      height: var(--excel-row-h);
-      background: var(--surface-solid);
-      border-right: 1px solid var(--border-color);
-      border-bottom: 1px solid var(--border-color);
-      font-size: calc(10.5px * var(--excel-zoom));
-      text-align: center; vertical-align: top;
-      padding-top: calc(2px * var(--excel-zoom));
+      position: sticky; left: 0; z-index: 15; width: var(--excel-time-w); min-width: var(--excel-time-w); height: var(--excel-row-h);
+      background: var(--surface-solid); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);
+      font-size: calc(10.5px * var(--excel-zoom)); text-align: center; vertical-align: top; padding-top: calc(2px * var(--excel-zoom));
     }
-
     .excel-td-slot {
-      width: var(--excel-col-w); min-width: var(--excel-col-w);
-      height: var(--excel-row-h);
-      border-right: 1px solid var(--border-color);
-      border-bottom: 1px dashed var(--border-color);
-      position: relative; vertical-align: top; padding: 0;
-      transition: background-color 0.12s ease;
+      width: var(--excel-col-w); min-width: var(--excel-col-w); height: var(--excel-row-h);
+      border-right: 1px solid var(--border-color); border-bottom: 1px dashed var(--border-color);
+      position: relative; vertical-align: top; padding: 0; transition: background-color 0.12s ease;
     }
-
     .excel-td-slot.hour-start { border-top: 1px solid var(--border-color); }
     .excel-td-slot:hover { background-color: var(--accent-soft); cursor: pointer; }
 
     .excel-event-block {
-      position: absolute;
-      left: calc(3px * var(--excel-zoom)); right: calc(3px * var(--excel-zoom));
-      top: calc(2px * var(--excel-zoom)); z-index: 10;
-      border-radius: calc(8px * var(--excel-zoom));
-      padding: calc(4px * var(--excel-zoom)) calc(6px * var(--excel-zoom));
-      font-size: var(--excel-font); line-height: 1.2;
+      position: absolute; left: calc(3px * var(--excel-zoom)); right: calc(3px * var(--excel-zoom));
+      top: calc(2px * var(--excel-zoom)); z-index: 10; border-radius: calc(8px * var(--excel-zoom));
+      padding: calc(4px * var(--excel-zoom)) calc(6px * var(--excel-zoom)); font-size: var(--excel-font); line-height: 1.2;
       overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-      border-left-width: calc(3.5px * var(--excel-zoom));
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); border-left-width: calc(3.5px * var(--excel-zoom));
       transition: transform 0.12s ease, box-shadow 0.12s ease;
     }
-
     .excel-event-block:hover { z-index: 18; transform: scale(1.015); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16); }
-
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     input[type="range"] { accent-color: var(--accent); }
-
-    @keyframes pulseSoft { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
-    .animate-pulse-soft { animation: pulseSoft 2s infinite; }
-
-    @media print {
-      .no-print { display: none !important; }
-      body { background: #fff !important; color: #000 !important; }
-      .bento-card { box-shadow: none !important; border: 1px solid #cbd5e1 !important; }
-    }
+    @media print { .no-print { display: none !important; } }
   </style>
 </head>
 <body class="min-h-screen pb-24 md:pb-10 antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- Toast Notification Container -->
   <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
 
-  <!-- Main App Wrapper -->
   <div class="max-w-[1440px] mx-auto px-3 sm:px-6 pt-4 sm:pt-6 space-y-5">
 
     <!-- TOP COMMAND BAR -->
     <header class="bento-card rounded-3xl p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
       <div class="flex items-start sm:items-center justify-between gap-3">
         <div class="flex items-center gap-3.5">
-          <div id="brand-badge" class="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-extrabold text-lg shadow-lg shrink-0 cursor-pointer" onclick="openRenameModal()" title="Нажмите, чтобы переименовать тайм-менеджер" style="background: linear-gradient(135deg, var(--accent), #06b6d4);">
+          <div id="brand-badge" class="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-extrabold text-lg shadow-lg shrink-0 cursor-pointer" onclick="openRenameModal()" title="Нажмите, чтобы переименовать" style="background: linear-gradient(135deg, var(--accent), #06b6d4);">
             26дд
           </div>
           <div>
             <div class="flex flex-wrap items-center gap-2">
-              <h1 id="header-app-title" onclick="openRenameModal()" class="text-lg sm:text-xl font-extrabold tracking-tight text-main cursor-pointer hover:opacity-80 transition" title="Нажмите для редактирования названия">Мой тайм-менеджер — ИСУ 26дд-1</h1>
-              <span id="week-parity-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20">
-                Чётная неделя
-              </span>
+              <h1 id="header-app-title" onclick="openRenameModal()" class="text-lg sm:text-xl font-extrabold tracking-tight text-main cursor-pointer hover:opacity-85 transition" title="Нажмите для редактирования названия">Мой тайм-менеджер — ИСУ 26дд-1</h1>
+              <span id="week-parity-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20">Чётная неделя</span>
             </div>
             <p class="text-xs sm:text-sm text-muted mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1">
               <span id="live-clock" class="font-semibold text-main"></span>
@@ -198,140 +126,85 @@
             </p>
           </div>
         </div>
-
-        <button onclick="toggleDarkMode()" title="Переключить тему" class="lg:hidden p-2.5 rounded-2xl surface-sub border border-theme text-main hover:opacity-80 transition">
+        <button onclick="toggleDarkMode()" title="Переключить тему" class="lg:hidden p-2.5 rounded-2xl surface-sub border border-theme text-main">
           <span class="dark-mode-icon text-base">🌙</span>
         </button>
       </div>
 
-      <!-- Global Quick Stats + Actions -->
       <div class="flex flex-wrap items-center gap-2 sm:gap-2.5">
         <button onclick="switchTab('finance')" class="flex items-center gap-2 px-3.5 py-2 rounded-2xl surface-sub border border-theme hover:border-emerald-500/40 transition text-left">
           <span class="text-base">💳</span>
           <div>
-            <div class="text-[10px] uppercase tracking-wider text-muted font-bold">Баланс</div>
+            <div class="text-[10px] uppercase tracking-wider text-muted font-bold">Баланс / Капитал</div>
             <div id="header-total-balance" class="text-xs sm:text-sm font-extrabold text-emerald-600 dark:text-emerald-400">0 ₸</div>
           </div>
         </button>
 
-        <button onclick="switchTab('finance')" class="flex items-center gap-2 px-3.5 py-2 rounded-2xl surface-sub border border-theme hover:border-amber-500/40 transition text-left">
-          <span class="text-base">💼</span>
-          <div>
-            <div class="text-[10px] uppercase tracking-wider text-muted font-bold">Подработки (нед)</div>
-            <div id="header-sidejob-stats" class="text-xs sm:text-sm font-extrabold text-amber-600 dark:text-amber-400">0 / 0 ₸</div>
-          </div>
+        <button onclick="openCapitalSettingsModal()" class="flex items-center gap-1.5 px-3 py-2.5 rounded-2xl surface-sub border border-theme text-xs font-bold text-main hover:opacity-85 transition" title="Настроить капитал и счета">
+          <span>⚙️</span>
+          <span class="hidden sm:inline">Капитал</span>
         </button>
 
-        <button onclick="toggleWeekParity()" class="px-3 py-2.5 rounded-2xl surface-sub border border-theme text-xs font-bold text-main hover:opacity-85 transition flex items-center gap-1.5" title="Сменить чётную/нечётную неделю">
+        <button onclick="toggleWeekParity()" class="px-3 py-2.5 rounded-2xl surface-sub border border-theme text-xs font-bold text-main hover:opacity-85 transition flex items-center gap-1.5">
           <span>🔄</span>
           <span class="hidden sm:inline">Неделя</span>
         </button>
 
-        <button onclick="toggleDarkMode()" title="Светлая / Тёмная тема" class="hidden lg:flex items-center justify-center w-10 h-10 rounded-2xl surface-sub border border-theme text-main hover:opacity-85 transition">
+        <button onclick="toggleDarkMode()" title="Светлая / Тёмная тема" class="hidden lg:flex items-center justify-center w-10 h-10 rounded-2xl surface-sub border border-theme text-main">
           <span class="dark-mode-icon text-base">🌙</span>
         </button>
 
-        <button onclick="openAppearanceModal()" title="Настройки и стиль" class="flex items-center gap-1.5 px-3 py-2.5 rounded-2xl surface-sub border border-theme text-xs font-bold text-main hover:opacity-85 transition">
-          <span>⚙️</span>
-          <span class="hidden md:inline">Настройки</span>
+        <button onclick="openAppearanceModal()" title="Настройки" class="flex items-center gap-1.5 px-3 py-2.5 rounded-2xl surface-sub border border-theme text-xs font-bold text-main">
+          <span>🎨</span>
+          <span class="hidden md:inline">Стиль</span>
         </button>
 
         <button onclick="openEventModal()" style="background-color: var(--accent);" class="px-4 py-2.5 rounded-2xl text-white text-xs sm:text-sm font-bold shadow-md hover:brightness-110 active:scale-95 transition flex items-center gap-1.5">
           <span class="text-base leading-none">+</span>
           <span>Добавить дело</span>
-          <kbd class="hidden xl:inline-block text-[10px] bg-white/20 px-1.5 py-0.5 rounded ml-1">N</kbd>
         </button>
       </div>
     </header>
 
-    <!-- SMART INPUT COMMAND BAR + SEARCH & FILTERS -->
+    <!-- SEARCH & FILTERS -->
     <section class="bento-card rounded-3xl p-3.5 sm:p-4 space-y-3 no-print">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-3">
         <div class="lg:col-span-7 relative flex items-center">
           <span class="absolute left-3.5 text-base select-none">⚡</span>
-          <input
-            id="smart-input"
-            type="text"
-            placeholder='Быстрый ввод: "Пн 16:00-18:30 Репетиторство +5000" или "Ср 19:00 Зал -1500"'
-            class="w-full pl-10 pr-24 py-2.5 rounded-2xl surface-sub border border-theme text-xs sm:text-sm text-main placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition"
-            onkeydown="if(event.key==='Enter') handleSmartInput()"
-          />
-          <button
-            onclick="handleSmartInput()"
-            style="background-color: var(--accent);"
-            class="absolute right-1.5 px-3 py-1.5 rounded-xl text-white text-xs font-bold hover:brightness-110 transition">
-            Создать
-          </button>
+          <input id="smart-input" type="text" placeholder='Быстрый ввод: "Пн 16:00 Репетиторство +5000"' class="w-full pl-10 pr-24 py-2.5 rounded-2xl surface-sub border border-theme text-xs sm:text-sm text-main placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition" onkeydown="if(event.key==='Enter') handleSmartInput()" />
+          <button onclick="handleSmartInput()" style="background-color: var(--accent);" class="absolute right-1.5 px-3 py-1.5 rounded-xl text-white text-xs font-bold">Создать</button>
         </div>
-
         <div class="lg:col-span-5 relative flex items-center">
           <span class="absolute left-3.5 text-sm select-none">🔍</span>
-          <input
-            id="search-input"
-            type="text"
-            oninput="renderAll()"
-            placeholder="Поиск по названию, аудитории, заметке... (Ctrl+K)"
-            class="w-full pl-9 pr-8 py-2.5 rounded-2xl surface-sub border border-theme text-xs sm:text-sm text-main placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition"
-          />
-          <button id="clear-search-btn" onclick="clearSearch()" class="hidden absolute right-3 text-xs text-muted hover:text-main font-bold">✕</button>
+          <input id="search-input" type="text" oninput="renderAll()" placeholder="Поиск по расписанию..." class="w-full pl-9 pr-8 py-2.5 rounded-2xl surface-sub border border-theme text-xs sm:text-sm text-main placeholder:text-muted focus:outline-none" />
         </div>
       </div>
-
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-2.5 pt-1 border-t border-theme">
-        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="filter-pills">
-          <button data-filter="all" onclick="setFilter('all')" class="filter-pill active px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0">Все дела</button>
-          <button data-filter="income" onclick="setFilter('income')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0">💼 С доходом</button>
-          <button data-filter="important" onclick="setFilter('important')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0">🔴 Важные</button>
-          <button data-filter="study" onclick="setFilter('study')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0">📚 Учёба</button>
-          <button data-filter="work" onclick="setFilter('work')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0">💸 Работа</button>
-          <button data-filter="free" onclick="setFilter('free')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0">⏳ Свободные окна</button>
-        </div>
-
-        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-          <span class="text-[11px] font-bold text-muted shrink-0 mr-1">Авто-окно:</span>
-          <button onclick="smartAddTemplate('hw')" class="px-2.5 py-1 rounded-xl surface-sub border border-theme hover:border-indigo-500/50 text-[11px] font-bold text-main shrink-0 transition">+ 📚 ДЗ (1.5ч)</button>
-          <button onclick="smartAddTemplate('work')" class="px-2.5 py-1 rounded-xl surface-sub border border-theme hover:border-emerald-500/50 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 shrink-0 transition">+ 💼 Смена (3ч)</button>
-          <button onclick="smartAddTemplate('sport')" class="px-2.5 py-1 rounded-xl surface-sub border border-theme hover:border-amber-500/50 text-[11px] font-bold text-main shrink-0 transition">+ 💪 Спорт (1ч)</button>
-          <button onclick="smartAddTemplate('lang')" class="px-2.5 py-1 rounded-xl surface-sub border border-theme hover:border-sky-500/50 text-[11px] font-bold text-main shrink-0 transition">+ 🌍 Язык (1ч)</button>
-        </div>
+      <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="filter-pills">
+        <button data-filter="all" onclick="setFilter('all')" class="filter-pill active px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 text-white" style="background-color: var(--accent);">Все дела</button>
+        <button data-filter="income" onclick="setFilter('income')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold surface-sub border border-theme shrink-0">💼 С доходом</button>
+        <button data-filter="important" onclick="setFilter('important')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold surface-sub border border-theme shrink-0">🔴 Важные</button>
+        <button data-filter="study" onclick="setFilter('study')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold surface-sub border border-theme shrink-0">📚 Учёба</button>
+        <button data-filter="work" onclick="setFilter('work')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold surface-sub border border-theme shrink-0">💸 Работа</button>
+        <button data-filter="free" onclick="setFilter('free')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold surface-sub border border-theme shrink-0">⏳ Свободные окна</button>
       </div>
     </section>
 
-    <!-- NAVIGATION TABS (Desktop & Tablet) -->
+    <!-- NAVIGATION TABS -->
     <nav class="hidden md:flex items-center justify-between bento-card rounded-2xl p-1.5 no-print">
       <div class="flex items-center gap-1.5">
-        <button onclick="switchTab('excel')" data-tab="excel" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2">
-          <span>📊</span> Excel-сетка (Зум)
-        </button>
-        <button onclick="switchTab('days')" data-tab="days" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2">
-          <span>📅</span> По дням (Drag & Drop)
-        </button>
-        <button onclick="switchTab('finance')" data-tab="finance" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2">
-          <span>💰</span> Финансы и Подработки
-        </button>
-        <button onclick="switchTab('focus')" data-tab="focus" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2">
-          <span>🍅</span> Фокус и Привычки
-        </button>
-        <button onclick="switchTab('notes')" data-tab="notes" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2">
-          <span>📝</span> Заметки
-        </button>
+        <button onclick="switchTab('excel')" data-tab="excel" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-white" style="background-color: var(--accent);"><span>📊</span> Excel-сетка</button>
+        <button onclick="switchTab('days')" data-tab="days" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-muted"><span>📅</span> По дням</button>
+        <button onclick="switchTab('finance')" data-tab="finance" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-muted"><span>💰</span> Финансы и Капитал</button>
+        <button onclick="switchTab('focus')" data-tab="focus" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-muted"><span>🍅</span> Фокус и Привычки</button>
+        <button onclick="switchTab('notes')" data-tab="notes" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-muted"><span>📝</span> Заметки</button>
       </div>
-
       <div class="flex items-center gap-2 pr-2">
-        <button onclick="exportCSV()" class="px-3 py-1.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main hover:opacity-80 transition" title="Скачать таблицу в Excel CSV">
-          📥 CSV
-        </button>
-        <button onclick="exportJSON()" class="px-3 py-1.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main hover:opacity-80 transition" title="Резервная копия JSON">
-          💾 Бэкап
-        </button>
-        <label class="px-3 py-1.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main hover:opacity-80 transition cursor-pointer" title="Восстановить из JSON">
-          📂 Импорт
-          <input type="file" accept=".json" class="hidden" onchange="importJSON(event)" />
-        </label>
+        <button onclick="exportJSON()" class="px-3 py-1.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main">💾 Бэкап</button>
+        <label class="px-3 py-1.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main cursor-pointer">📂 Импорт<input type="file" accept=".json" class="hidden" onchange="importJSON(event)" /></label>
       </div>
     </nav>
 
-    <!-- TAB 1: EXCEL SCHEDULE GRID -->
+    <!-- TAB 1: EXCEL GRID -->
     <main id="tab-excel" class="tab-content space-y-4">
       <div class="bento-card rounded-3xl p-4 sm:p-5 space-y-4">
         <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-3 pb-3 border-b border-theme">
@@ -340,92 +213,67 @@
               <span>📊 Интерактивная Excel-таблица занятости</span>
               <span id="excel-visible-count" class="text-xs font-bold px-2 py-0.5 rounded-lg surface-sub text-muted">0 дел</span>
             </h2>
-            <p class="text-xs text-muted mt-0.5">Нажмите на пустую ячейку для добавления • Зум: щипком, колесом мыши с Ctrl или кнопками</p>
+            <p class="text-xs text-muted mt-0.5">Кликните по ячейке для добавления занятия</p>
           </div>
-
-          <div class="flex flex-wrap items-center gap-2 bg-slate-500/5 p-2 rounded-2xl border border-theme">
-            <span class="text-xs font-bold text-muted px-1 hidden sm:inline">Масштаб:</span>
-            <button onclick="adjustExcelZoom(-0.1)" class="w-8 h-8 rounded-xl surface-solid border border-theme flex items-center justify-center font-extrabold text-base text-main hover:bg-indigo-500 hover:text-white transition">−</button>
-            <input id="excel-zoom-slider" type="range" min="50" max="150" step="5" value="100" oninput="setExcelZoom(this.value / 100)" class="w-24 sm:w-32 cursor-pointer" />
-            <button onclick="setExcelZoom(1)" id="excel-zoom-label" class="min-w-[52px] px-2 py-1 rounded-xl surface-solid border border-theme text-xs font-extrabold text-main text-center">100%</button>
-            <button onclick="adjustExcelZoom(0.1)" class="w-8 h-8 rounded-xl surface-solid border border-theme flex items-center justify-center font-extrabold text-base text-main hover:bg-indigo-500 hover:text-white transition">+</button>
-            <div class="h-5 w-[1px] bg-slate-300 dark:bg-slate-700 mx-0.5 hidden sm:block"></div>
-            <button onclick="fitWholeWeekZoom()" class="px-2.5 py-1.5 rounded-xl surface-solid border border-theme text-[11px] font-bold text-main hover:border-indigo-500 transition">🔭 Вся неделя</button>
+          <div class="flex items-center gap-2 bg-slate-500/5 p-2 rounded-2xl border border-theme">
+            <span class="text-xs font-bold text-muted">Зум:</span>
+            <button onclick="adjustExcelZoom(-0.1)" class="w-8 h-8 rounded-xl surface-solid border font-extrabold text-main">−</button>
+            <input id="excel-zoom-slider" type="range" min="50" max="150" step="5" value="100" oninput="setExcelZoom(this.value / 100)" class="w-24 cursor-pointer" />
+            <button onclick="setExcelZoom(1)" id="excel-zoom-label" class="px-2 py-1 rounded-xl surface-solid border text-xs font-extrabold">100%</button>
+            <button onclick="adjustExcelZoom(0.1)" class="w-8 h-8 rounded-xl surface-solid border font-extrabold text-main">+</button>
           </div>
         </div>
-
         <div id="free-windows-panel" class="hidden p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-extrabold text-emerald-700 dark:text-emerald-300">⏳ Свободные окна недели (от 60 минут, с 08:00 до 22:00):</span>
-            <button onclick="setFilter('all')" class="text-xs font-bold text-muted hover:text-main">Закрыть ✕</button>
-          </div>
+          <div class="flex items-center justify-between"><span class="text-xs font-extrabold text-emerald-700 dark:text-emerald-300">⏳ Свободные окна недели:</span><button onclick="setFilter('all')" class="text-xs font-bold text-muted">Закрыть ✕</button></div>
           <div id="free-windows-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2"></div>
         </div>
-
         <div id="excel-viewport" class="excel-viewport">
           <table class="excel-grid-table" id="excel-grid-table"></table>
         </div>
-
-        <div class="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs text-muted">
-          <div class="flex flex-wrap items-center gap-3">
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span> Лекции / Пары</span>
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Подработка / Доход</span>
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Спорт / Личное</span>
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Важное / Дедлайн</span>
-          </div>
-          <div id="excel-hours-summary" class="font-bold text-main"></div>
-        </div>
+        <div id="excel-hours-summary" class="text-xs font-bold text-muted"></div>
       </div>
     </main>
 
-    <!-- TAB 2: DAY-BY-DAY KANBAN -->
+    <!-- TAB 2: DAYS KANBAN -->
     <section id="tab-days" class="tab-content hidden space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
-        <div>
-          <h2 class="text-lg font-extrabold text-main">📅 Расписание по дням недели (Drag & Drop)</h2>
-          <p class="text-xs text-muted">Перетаскивайте карточки между днями, сдвигайте время кнопками ±30м или зачисляйте оплату за смены.</p>
-        </div>
-        <button onclick="resetDefaultSchedule()" class="self-start px-3 py-1.5 rounded-xl surface-sub border border-theme text-xs font-bold text-muted hover:text-rose-500 transition">
-          ↺ Сбросить базовые пары ИСУ 26дд-1
-        </button>
+      <div class="flex justify-between items-center">
+        <h2 class="text-lg font-extrabold text-main">📅 Расписание по дням недели</h2>
+        <button onclick="resetDefaultSchedule()" class="px-3 py-1.5 rounded-xl surface-sub border border-theme text-xs font-bold text-muted hover:text-rose-500">↺ Сбросить расписание</button>
       </div>
       <div id="days-kanban-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
     </section>
 
-    <!-- TAB 3: FINANCE & SIDE-HUSTLES -->
+    <!-- TAB 3: FINANCE & CAPITAL -->
     <section id="tab-finance" class="tab-content hidden space-y-5">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bento-card rounded-3xl p-4 sm:p-5 space-y-2">
-          <div class="flex items-center justify-between"><span class="text-xs font-bold text-muted uppercase tracking-wider">Общий капитал</span><span class="text-lg">🏦</span></div>
-          <div id="fin-total-capital" class="text-2xl font-extrabold text-main">0 ₸</div>
-          <div class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold" id="fin-safe-daily">Безопасно в день: 0 ₸</div>
+      <div class="flex justify-between items-center">
+        <h2 class="text-lg font-extrabold text-main">💰 Управление финансами и капиталом</h2>
+        <button onclick="openCapitalSettingsModal()" style="background-color: var(--accent);" class="px-4 py-2 rounded-xl text-white text-xs font-extrabold shadow-md hover:brightness-110">⚙️ Настроить счета и капитал</button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="bento-card rounded-3xl p-5 space-y-2">
+          <div class="text-xs font-bold text-muted uppercase">Общий капитал</div>
+          <div id="fin-total-capital" class="text-3xl font-extrabold text-main">0 ₸</div>
         </div>
-        <div class="bento-card rounded-3xl p-4 sm:p-5 space-y-2">
-          <div class="flex items-center justify-between"><span class="text-xs font-bold text-muted uppercase tracking-wider">Подработки за неделю</span><span class="text-lg">💼</span></div>
-          <div id="fin-sidejob-credited" class="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">0 ₸</div>
-          <div class="text-xs text-muted font-semibold">План по расписанию: <span id="fin-sidejob-planned" class="text-main font-bold">0 ₸</span></div>
+        <div class="bento-card rounded-3xl p-5 space-y-2">
+          <div class="text-xs font-bold text-muted uppercase">Подработки за неделю</div>
+          <div id="fin-sidejob-credited" class="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">0 ₸</div>
         </div>
-        <div class="bento-card rounded-3xl p-4 sm:p-5 space-y-2">
-          <div class="flex items-center justify-between"><span class="text-xs font-bold text-muted uppercase tracking-wider">Реальная ставка часа</span><span class="text-lg">⏱️</span></div>
-          <div id="fin-real-hourly" class="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400">0 ₸/ч</div>
-          <div class="text-xs text-muted font-semibold" id="fin-hours-breakdown">Работа: 0ч • Учёба: 0ч</div>
-        </div>
-        <div class="bento-card rounded-3xl p-4 sm:p-5 space-y-2">
-          <div class="flex items-center justify-between"><span class="text-xs font-bold text-muted uppercase tracking-wider">Баланс трат (50/30/20)</span><span class="text-lg">📊</span></div>
-          <div id="fin-month-expense" class="text-2xl font-extrabold text-rose-500">0 ₸</div>
-          <div class="text-xs text-muted font-semibold">Доходы (журнал): <span id="fin-month-income" class="text-emerald-500 font-bold">0 ₸</span></div>
+        <div class="bento-card rounded-3xl p-5 space-y-2">
+          <div class="text-xs font-bold text-muted uppercase">Реальная ставка часа</div>
+          <div id="fin-real-hourly" class="text-3xl font-extrabold text-indigo-600 dark:text-indigo-400">0 ₸/ч</div>
         </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        <div class="lg:col-span-7 bento-card rounded-3xl p-4 sm:p-5 space-y-4">
+        <div class="lg:col-span-7 bento-card rounded-3xl p-5 space-y-4">
           <div class="flex items-center justify-between">
             <h3 class="text-base font-extrabold text-main">💳 Счета и кошельки</h3>
-            <button onclick="openTransactionModal()" style="background-color: var(--accent);" class="px-3.5 py-1.5 rounded-xl text-white text-xs font-bold hover:brightness-110 transition">+ Операция</button>
+            <button onclick="openTransactionModal()" style="background-color: var(--accent);" class="px-3.5 py-1.5 rounded-xl text-white text-xs font-bold">+ Операция</button>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div class="p-3.5 rounded-2xl surface-sub border border-theme space-y-1">
-              <div class="text-xs font-bold text-muted">💳 Карта (Основной)</div>
+              <div class="text-xs font-bold text-muted">💳 Карта</div>
               <div id="acc-card-val" class="text-lg font-extrabold text-main">0 ₸</div>
             </div>
             <div class="p-3.5 rounded-2xl surface-sub border border-theme space-y-1">
@@ -437,90 +285,46 @@
               <div id="acc-savings-val" class="text-lg font-extrabold text-emerald-600 dark:text-emerald-400">0 ₸</div>
             </div>
           </div>
-
-          <div class="p-3.5 rounded-2xl surface-sub border border-theme space-y-2.5">
-            <div class="text-xs font-extrabold text-main">🔄 Перевод между счетами</div>
-            <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
-              <select id="transfer-from" class="px-3 py-2 rounded-xl surface-solid border border-theme text-xs font-bold text-main">
-                <option value="card">С Карты</option><option value="cash">С Наличных</option><option value="savings">С Накопительного</option>
-              </select>
-              <select id="transfer-to" class="px-3 py-2 rounded-xl surface-solid border border-theme text-xs font-bold text-main">
-                <option value="savings">На Накопительный</option><option value="card">На Карту</option><option value="cash">На Наличные</option>
-              </select>
-              <input id="transfer-amount" type="number" placeholder="Сумма ₸" class="px-3 py-2 rounded-xl surface-solid border border-theme text-xs font-bold text-main" />
-              <button onclick="executeTransfer()" class="px-3 py-2 rounded-xl bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 text-xs font-extrabold hover:opacity-90 transition">Перевести</button>
-            </div>
-          </div>
         </div>
 
-        <div class="lg:col-span-5 space-y-4">
-          <div class="bento-card rounded-3xl p-4 sm:p-5 space-y-3">
-            <h3 class="text-base font-extrabold text-main">⏳ Цена в часах жизни</h3>
-            <input id="life-cost-input" type="number" oninput="updateLifeHoursCalc()" placeholder="Цена товара в ₸ (напр. 25000)" class="w-full px-3.5 py-2 rounded-xl surface-sub border border-theme text-xs sm:text-sm font-bold text-main" />
-            <div id="life-cost-result" class="p-3 rounded-2xl surface-sub border border-theme text-xs font-bold text-main">Введи сумму покупки для расчета.</div>
-          </div>
-          <div class="bento-card rounded-3xl p-4 sm:p-5 space-y-3">
-            <div class="flex items-center justify-between">
-              <h3 class="text-base font-extrabold text-main">🎯 Цели и копилки</h3>
-              <button onclick="addSavingsGoalPrompt()" class="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline">+ Цель</button>
-            </div>
-            <div id="savings-goals-list" class="space-y-3"></div>
-          </div>
+        <div class="lg:col-span-5 bento-card rounded-3xl p-5 space-y-3">
+          <h3 class="text-base font-extrabold text-main">🎯 Цели</h3>
+          <div id="savings-goals-list" class="space-y-2"></div>
         </div>
       </div>
 
-      <div class="bento-card rounded-3xl p-4 sm:p-5 space-y-3">
-        <div class="flex items-center justify-between"><h3 class="text-base font-extrabold text-main">🧾 Журнал операций</h3><span id="tx-count-badge" class="text-xs font-bold text-muted">0 записей</span></div>
-        <div id="transactions-list" class="divide-y divide-slate-200/70 dark:divide-slate-700/70 max-h-80 overflow-y-auto"></div>
+      <div class="bento-card rounded-3xl p-5 space-y-3">
+        <h3 class="text-base font-extrabold text-main">🧾 Журнал операций</h3>
+        <div id="transactions-list" class="divide-y divide-slate-200 dark:divide-slate-700 max-h-60 overflow-y-auto"></div>
       </div>
     </section>
 
-    <!-- TAB 4: POMODORO & HABITS -->
+    <!-- TAB 4: FOCUS & HABITS -->
     <section id="tab-focus" class="tab-content hidden space-y-5">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        <div class="lg:col-span-5 bento-card rounded-3xl p-5 flex flex-col justify-between space-y-5">
-          <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <h3 class="text-base font-extrabold text-main">🍅 Фокус-таймер Помодоро</h3>
-              <span id="pomo-sessions-badge" class="px-2.5 py-1 rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-300 text-xs font-extrabold">Сессий: 0</span>
-            </div>
-            <div class="grid grid-cols-3 gap-1.5 p-1 rounded-2xl surface-sub border border-theme">
-              <button onclick="setPomodoroMode(25, 'Фокус 25м')" class="pomo-mode-btn py-1.5 rounded-xl text-xs font-extrabold bg-white dark:bg-slate-800 shadow-sm text-main">Фокус 25м</button>
-              <button onclick="setPomodoroMode(5, 'Перерыв 5м')" class="pomo-mode-btn py-1.5 rounded-xl text-xs font-bold text-muted">Перерыв 5м</button>
-              <button onclick="setPomodoroMode(50, 'Глубокий 50м')" class="pomo-mode-btn py-1.5 rounded-xl text-xs font-bold text-muted">Глубокий 50м</button>
-            </div>
-            <div class="py-6 rounded-3xl surface-sub border border-theme text-center space-y-1">
-              <div id="pomo-mode-label" class="text-xs font-bold uppercase tracking-widest text-muted">Фокус 25м</div>
-              <div id="pomo-display" class="text-5xl sm:text-6xl font-extrabold tracking-tight text-main tabular-nums">25:00</div>
-            </div>
-            <div class="flex items-center justify-center gap-3">
-              <button id="pomo-start-btn" onclick="togglePomodoro()" style="background-color: var(--accent);" class="px-6 py-3 rounded-2xl text-white text-sm font-extrabold shadow-md hover:brightness-110 transition">▶ Старт</button>
-              <button onclick="resetPomodoro()" class="px-4 py-3 rounded-2xl surface-sub border border-theme text-sm font-bold text-main">↺ Сброс</button>
-            </div>
+        <div class="lg:col-span-5 bento-card rounded-3xl p-5 space-y-5">
+          <h3 class="text-base font-extrabold text-main">🍅 Помодоро</h3>
+          <div class="py-6 rounded-3xl surface-sub border text-center space-y-1">
+            <div id="pomo-display" class="text-5xl font-extrabold tracking-tight text-main">25:00</div>
+          </div>
+          <div class="flex justify-center gap-3">
+            <button id="pomo-start-btn" onclick="togglePomodoro()" style="background-color: var(--accent);" class="px-6 py-3 rounded-2xl text-white text-sm font-extrabold">▶ Старт</button>
+            <button onclick="resetPomodoro()" class="px-4 py-3 rounded-2xl surface-sub border text-sm font-bold text-main">↺ Сброс</button>
           </div>
         </div>
-
-        <div class="lg:col-span-7 space-y-4">
-          <div class="bento-card rounded-3xl p-4 sm:p-5 space-y-3">
-            <div class="flex items-center justify-between">
-              <h3 class="text-base font-extrabold text-main">🔥 Трекер привычек недели</h3>
-              <button onclick="addCustomHabitPrompt()" class="px-3 py-1.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main">+ Привычка</button>
-            </div>
-            <div class="overflow-x-auto"><table class="w-full text-xs text-left border-collapse" id="habits-table"></table></div>
-          </div>
+        <div class="lg:col-span-7 bento-card rounded-3xl p-5 space-y-3">
+          <h3 class="text-base font-extrabold text-main">🔥 Привычки</h3>
+          <div class="overflow-x-auto"><table class="w-full text-xs text-left" id="habits-table"></table></div>
         </div>
       </div>
     </section>
 
-    <!-- TAB 5: NEW NOTES & SCRATCHPAD TAB -->
+    <!-- TAB 5: NOTES -->
     <section id="tab-notes" class="tab-content hidden space-y-4">
       <div class="bento-card rounded-3xl p-5 space-y-4">
-        <div class="flex items-center justify-between pb-3 border-b border-theme">
-          <div>
-            <h2 class="text-lg font-extrabold text-main">📝 Быстрые заметки и идеи</h2>
-            <p class="text-xs text-muted">Записывайте важные ссылки, мысли, задачи по учебе или проекты. Сохраняется автоматически.</p>
-          </div>
-          <button onclick="addNewNote()" style="background-color: var(--accent);" class="px-4 py-2 rounded-xl text-white text-xs font-extrabold shadow-md hover:brightness-110 transition">+ Новая заметка</button>
+        <div class="flex justify-between items-center pb-3 border-b border-theme">
+          <h2 class="text-lg font-extrabold text-main">📝 Быстрые заметки</h2>
+          <button onclick="addNewNote()" style="background-color: var(--accent);" class="px-4 py-2 rounded-xl text-white text-xs font-extrabold">+ Заметка</button>
         </div>
         <div id="notes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
       </div>
@@ -528,72 +332,72 @@
 
   </div>
 
-  <!-- FLOATING MOBILE BOTTOM NAVIGATION -->
+  <!-- BOTTOM MOBILE NAV -->
   <nav class="md:hidden fixed bottom-3 left-3 right-3 z-40 bento-card rounded-2xl p-1.5 flex items-center justify-around shadow-2xl no-print">
-    <button onclick="switchTab('excel')" data-tab="excel" class="nav-tab flex-1 py-2 rounded-xl flex flex-col items-center gap-0.5 text-[11px] font-bold"><span class="text-base">📊</span><span>Excel</span></button>
-    <button onclick="switchTab('days')" data-tab="days" class="nav-tab flex-1 py-2 rounded-xl flex flex-col items-center gap-0.5 text-[11px] font-bold"><span class="text-base">📅</span><span>Дни</span></button>
-    <button onclick="switchTab('finance')" data-tab="finance" class="nav-tab flex-1 py-2 rounded-xl flex flex-col items-center gap-0.5 text-[11px] font-bold"><span class="text-base">💰</span><span>Финансы</span></button>
-    <button onclick="switchTab('focus')" data-tab="focus" class="nav-tab flex-1 py-2 rounded-xl flex flex-col items-center gap-0.5 text-[11px] font-bold"><span class="text-base">🍅</span><span>Фокус</span></button>
-    <button onclick="switchTab('notes')" data-tab="notes" class="nav-tab flex-1 py-2 rounded-xl flex flex-col items-center gap-0.5 text-[11px] font-bold"><span class="text-base">📝</span><span>Заметки</span></button>
+    <button onclick="switchTab('excel')" data-tab="excel" class="nav-tab flex-1 py-2 rounded-xl flex flex-col items-center gap-0.5 text-[11px] font-bold text-white" style="background-color: var(--accent);"><span>📊</span><span>Excel</span></button>
+    <button onclick="switchTab('days')" data-tab="days" class="nav-tab flex-1 py-2 rounded-xl flex flex-col items-center gap-0.5 text-[11px] font-bold text-muted"><span>📅</span><span>Дни</span></button>
+    <button onclick="switchTab('finance')" data-tab="finance" class="nav-tab flex-1 py-2 rounded-xl flex flex-col items-center gap-0.5 text-[11px] font-bold text-muted"><span>💰</span><span>Финансы</span></button>
+    <button onclick="switchTab('focus')" data-tab="focus" class="nav-tab flex-1 py-2 rounded-xl flex flex-col items-center gap-0.5 text-[11px] font-bold text-muted"><span>🍅</span><span>Фокус</span></button>
+    <button onclick="switchTab('notes')" data-tab="notes" class="nav-tab flex-1 py-2 rounded-xl flex flex-col items-center gap-0.5 text-[11px] font-bold text-muted"><span>📝</span><span>Заметки</span></button>
   </nav>
 
-  <!-- MODAL: EVENT EDIT -->
-  <div id="event-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto">
-    <div class="surface-solid border border-theme rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4 my-auto">
+  <!-- MODAL: CAPITAL & ACCOUNTS SETTINGS -->
+  <div id="capital-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 backdrop-blur-sm p-4">
+    <div class="surface-solid border border-theme rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b border-theme pb-3">
-        <h3 id="event-modal-title" class="text-lg font-extrabold text-main">Новое занятие / Дело</h3>
+        <h3 class="text-lg font-extrabold text-main">⚙️ Настройка капитала и счетов</h3>
+        <button onclick="closeCapitalSettingsModal()" class="w-8 h-8 rounded-xl surface-sub text-muted font-bold">✕</button>
+      </div>
+      <div class="space-y-3">
+        <p class="text-xs text-muted">Введите актуальное количество денег на ваших счетах на текущий момент:</p>
+        <div>
+          <label class="block text-xs font-bold text-muted mb-1">💳 Карта (Основной счет)</label>
+          <input id="set-card-val" type="number" step="100" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border border-theme text-sm font-extrabold text-main" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-muted mb-1">💵 Наличные деньги</label>
+          <input id="set-cash-val" type="number" step="100" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border border-theme text-sm font-extrabold text-main" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-muted mb-1">🐷 Накопительный счет / Копилка</label>
+          <input id="set-savings-val" type="number" step="100" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border border-theme text-sm font-extrabold text-main" />
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2 border-t border-theme">
+        <button onclick="closeCapitalSettingsModal()" class="px-4 py-2.5 rounded-xl surface-sub border text-xs font-bold text-main">Отмена</button>
+        <button onclick="saveCapitalSettings()" style="background-color: var(--accent);" class="px-5 py-2.5 rounded-xl text-white text-xs font-extrabold shadow-md">Сохранить баланс</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: EVENT EDIT -->
+  <div id="event-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 backdrop-blur-sm p-4 overflow-y-auto">
+    <div class="surface-solid border border-theme rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 my-auto">
+      <div class="flex items-center justify-between border-b border-theme pb-3">
+        <h3 id="event-modal-title" class="text-lg font-extrabold text-main">Занятие / Дело</h3>
         <button onclick="closeEventModal()" class="w-8 h-8 rounded-xl surface-sub text-muted font-bold">✕</button>
       </div>
       <input type="hidden" id="ev-id" />
       <div class="space-y-3">
         <div>
-          <label class="block text-xs font-bold text-muted mb-1">Название занятия или подработки *</label>
-          <input id="ev-title" type="text" placeholder="Например: Репетиторство" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border border-theme text-sm font-semibold text-main" />
+          <label class="block text-xs font-bold text-muted mb-1">Название *</label>
+          <input id="ev-title" type="text" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border text-sm font-semibold text-main" />
         </div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-          <div>
-            <label class="block text-xs font-bold text-muted mb-1">День</label>
-            <select id="ev-day" class="w-full px-3 py-2.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main">
-              <option value="0">Понедельник</option><option value="1">Вторник</option><option value="2">Среда</option><option value="3">Четверг</option><option value="4">Пятница</option><option value="5">Суббота</option><option value="6">Воскресенье</option>
-            </select>
-          </div>
-          <div><label class="block text-xs font-bold text-muted mb-1">Начало</label><input id="ev-start" type="time" value="14:00" class="w-full px-3 py-2 rounded-xl surface-sub border border-theme text-xs font-bold text-main" /></div>
-          <div><label class="block text-xs font-bold text-muted mb-1">Конец</label><input id="ev-end" type="time" value="16:00" class="w-full px-3 py-2 rounded-xl surface-sub border border-theme text-xs font-bold text-main" /></div>
+        <div class="grid grid-cols-3 gap-2">
+          <div><label class="block text-xs font-bold text-muted mb-1">День</label><select id="ev-day" class="w-full px-3 py-2 rounded-xl surface-sub border text-xs"><option value="0">Пн</option><option value="1">Вт</option><option value="2">Ср</option><option value="3">Чт</option><option value="4">Пт</option><option value="5">Сб</option><option value="6">Вс</option></select></div>
+          <div><label class="block text-xs font-bold text-muted mb-1">Начало</label><input id="ev-start" type="time" value="14:00" class="w-full px-3 py-2 rounded-xl surface-sub border text-xs" /></div>
+          <div><label class="block text-xs font-bold text-muted mb-1">Конец</label><input id="ev-end" type="time" value="15:30" class="w-full px-3 py-2 rounded-xl surface-sub border text-xs" /></div>
         </div>
-        <div class="grid grid-cols-2 gap-2.5">
-          <div>
-            <label class="block text-xs font-bold text-muted mb-1">Категория</label>
-            <select id="ev-category" class="w-full px-3 py-2.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main">
-              <option value="study">📚 Учёба / Пара</option><option value="work">💼 Подработка / Смена</option><option value="sport">💪 Спорт</option><option value="personal">✨ Личное</option><option value="deadline">🔥 Важный дедлайн</option>
-            </select>
-          </div>
-          <div><label class="block text-xs font-bold text-muted mb-1">Аудитория</label><input id="ev-room" type="text" placeholder="Ауд. 305" class="w-full px-3 py-2.5 rounded-xl surface-sub border border-theme text-xs font-semibold text-main" /></div>
-        </div>
-        <div class="p-3.5 rounded-2xl surface-sub border border-theme space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-extrabold text-main">💰 Доход / Расход</span>
-            <select id="ev-money-type" onchange="toggleMoneyFields()" class="px-2.5 py-1 rounded-xl surface-solid border border-theme text-xs font-extrabold text-main">
-              <option value="none">Без денег</option><option value="income">+ Доход</option><option value="expense">− Расход</option>
-            </select>
-          </div>
-          <div id="ev-money-details" class="hidden space-y-2.5 pt-1 border-t border-theme">
-            <div class="grid grid-cols-2 gap-2">
-              <select id="ev-rate-mode" class="w-full px-2.5 py-2 rounded-xl surface-solid border border-theme text-xs font-bold text-main">
-                <option value="fixed">Фиксированная сумма</option><option value="hourly">Почасовая ставка (₸/ч)</option>
-              </select>
-              <input id="ev-amount" type="number" value="0" class="w-full px-2.5 py-2 rounded-xl surface-solid border border-theme text-xs font-extrabold text-main" />
-            </div>
-            <select id="ev-account" class="w-full px-2.5 py-2 rounded-xl surface-solid border border-theme text-xs font-bold text-main">
-              <option value="card">💳 Карта</option><option value="cash">💵 Наличные</option><option value="savings">🐷 Накопительный</option>
-            </select>
-          </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div><label class="block text-xs font-bold text-muted mb-1">Категория</label><select id="ev-category" class="w-full px-3 py-2 rounded-xl surface-sub border text-xs"><option value="study">📚 Учёба</option><option value="work">💼 Работа</option><option value="sport">💪 Спорт</option><option value="personal">✨ Личное</option></select></div>
+          <div><label class="block text-xs font-bold text-muted mb-1">Аудитория</label><input id="ev-room" type="text" class="w-full px-3 py-2 rounded-xl surface-sub border text-xs" /></div>
         </div>
       </div>
-      <div class="flex items-center justify-between gap-2 pt-2 border-t border-theme">
-        <button id="ev-delete-btn" type="button" onclick="deleteCurrentEvent()" class="hidden px-3.5 py-2.5 rounded-xl bg-rose-500/15 text-rose-600 text-xs font-extrabold">🗑 Удалить</button>
-        <div class="flex items-center gap-2 ml-auto">
-          <button type="button" onclick="closeEventModal()" class="px-4 py-2.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main">Отмена</button>
-          <button type="button" onclick="saveEventFromModal()" style="background-color: var(--accent);" class="px-5 py-2.5 rounded-xl text-white text-xs font-extrabold">Сохранить</button>
+      <div class="flex justify-between items-center pt-2 border-t border-theme">
+        <button id="ev-delete-btn" onclick="deleteCurrentEvent()" class="hidden px-3 py-2 rounded-xl bg-rose-500/15 text-rose-600 text-xs font-bold">🗑 Удалить</button>
+        <div class="flex gap-2 ml-auto">
+          <button onclick="closeEventModal()" class="px-4 py-2 rounded-xl surface-sub border text-xs font-bold">Отмена</button>
+          <button onclick="saveEventFromModal()" style="background-color: var(--accent);" class="px-5 py-2 rounded-xl text-white text-xs font-extrabold">Сохранить</button>
         </div>
       </div>
     </div>
@@ -604,37 +408,32 @@
     <div class="surface-solid border border-theme rounded-3xl max-w-md w-full p-5 shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b border-theme pb-3">
         <h3 class="text-lg font-extrabold text-main">Новая операция</h3>
-        <button onclick="closeTransactionModal()" class="w-8 h-8 rounded-xl surface-sub text-muted font-bold">✕</button>
+        <button onclick="closeTransactionModal()" class="w-8 h-8 rounded-xl surface-sub text-muted">✕</button>
       </div>
       <div class="space-y-3">
-        <select id="tx-type" class="w-full px-3 py-2.5 rounded-xl surface-sub border border-theme text-xs font-extrabold text-main">
-          <option value="expense">− Расход</option><option value="income">+ Доход</option>
-        </select>
-        <input id="tx-title" type="text" placeholder="Описание" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border border-theme text-sm font-semibold text-main" />
-        <input id="tx-amount" type="number" placeholder="Сумма в ₸" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border border-theme text-sm font-extrabold text-main" />
+        <select id="tx-type" class="w-full px-3 py-2.5 rounded-xl surface-sub border text-xs font-extrabold"><option value="expense">− Расход</option><option value="income">+ Доход</option></select>
+        <select id="tx-account" class="w-full px-3 py-2.5 rounded-xl surface-sub border text-xs font-bold"><option value="card">💳 Карта</option><option value="cash">💵 Наличные</option><option value="savings">🐷 Накопительный</option></select>
+        <input id="tx-title" type="text" placeholder="Описание" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border text-sm font-semibold" />
+        <input id="tx-amount" type="number" placeholder="Сумма в ₸" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border text-sm font-extrabold" />
       </div>
       <div class="flex justify-end gap-2 pt-2">
-        <button onclick="closeTransactionModal()" class="px-4 py-2.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main">Отмена</button>
-        <button onclick="saveManualTransaction()" style="background-color: var(--accent);" class="px-5 py-2.5 rounded-xl text-white text-xs font-extrabold">Добавить</button>
+        <button onclick="closeTransactionModal()" class="px-4 py-2 rounded-xl surface-sub border text-xs font-bold">Отмена</button>
+        <button onclick="saveManualTransaction()" style="background-color: var(--accent);" class="px-5 py-2 rounded-xl text-white text-xs font-extrabold">Добавить</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL: APPEARANCE & RENAME SETTINGS -->
+  <!-- MODAL: APPEARANCE & RENAME -->
   <div id="appearance-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 backdrop-blur-sm p-4">
     <div class="surface-solid border border-theme rounded-3xl max-w-md w-full p-5 shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b border-theme pb-3">
         <h3 class="text-lg font-extrabold text-main">⚙️ Настройки и оформление</h3>
-        <button onclick="closeAppearanceModal()" class="w-8 h-8 rounded-xl surface-sub text-muted font-bold">✕</button>
+        <button onclick="closeAppearanceModal()" class="w-8 h-8 rounded-xl surface-sub text-muted">✕</button>
       </div>
       <div class="space-y-4">
         <div>
-          <label class="block text-xs font-extrabold text-muted uppercase tracking-wider mb-2">Название тайм-менеджера</label>
-          <input id="settings-app-title" type="text" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border border-theme text-sm font-bold text-main" />
-        </div>
-        <div>
-          <label class="block text-xs font-extrabold text-muted uppercase tracking-wider mb-2">Цветовая тема</label>
-          <div id="theme-swatches" class="grid grid-cols-4 gap-2"></div>
+          <label class="block text-xs font-extrabold text-muted mb-2">Название тайм-менеджера</label>
+          <input id="settings-app-title" type="text" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border text-sm font-bold text-main" />
         </div>
       </div>
       <div class="flex justify-end pt-2">
@@ -644,33 +443,21 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'isu_26dd1_timemanager_pro_v3';
+    const STORAGE_KEY = 'isu_26dd1_timemanager_pro_v4';
     const DAYS_SHORT = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
     const DAYS_FULL = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
 
-    const THEMES = [
-      { id: 'indigo', name: 'Индиго', accent: '#4f46e5', soft: 'rgba(79, 70, 229, 0.14)' },
-      { id: 'emerald', name: 'Изумруд', accent: '#059669', soft: 'rgba(5, 150, 105, 0.14)' },
-      { id: 'sky', name: 'Небо', accent: '#0284c7', soft: 'rgba(2, 132, 199, 0.14)' },
-      { id: 'rose', name: 'Рубин', accent: '#e11d48', soft: 'rgba(225, 29, 72, 0.14)' },
-      { id: 'amber', name: 'Янтарь', accent: '#d97706', soft: 'rgba(217, 119, 6, 0.14)' }
-    ];
-
     const DEFAULT_EVENTS = [
-      { id: 'isu-1', title: 'Высшая математика (Лекция)', day: 0, start: '09:00', end: '10:30', category: 'study', room: 'ГК-214', parity: 'all', important: false, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'ИСУ 26дд-1 • Обязательная лекция' },
-      { id: 'isu-2', title: 'Алгоритмы и структуры данных', day: 0, start: '10:45', end: '12:15', category: 'study', room: 'ЛК-402', parity: 'all', important: true, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'Лабораторная работа №3' },
-      { id: 'isu-3', title: 'Репетиторство (Математика)', day: 0, start: '16:00', end: '18:00', category: 'work', room: 'Онлайн Zoom', parity: 'all', important: false, moneyType: 'income', rateMode: 'hourly', amount: 3500, account: 'card', autoCredit: true, credited: false, completed: false, note: 'Подготовка к ЕНТ (2 часа)' },
-      { id: 'isu-4', title: 'Иностранный язык (English B2)', day: 1, start: '09:00', end: '10:30', category: 'study', room: 'Ауд. 118', parity: 'all', important: false, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'Speaking Club' },
-      { id: 'isu-5', title: 'Архитектура ЭВМ и ОС', day: 1, start: '12:30', end: '14:00', category: 'study', room: 'ЛК-309', parity: 'even', important: false, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'Чётная неделя' },
-      { id: 'isu-6', title: 'Тренажёрный зал', day: 1, start: '18:30', end: '20:00', category: 'sport', room: 'FitNation', parity: 'all', important: false, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'Силовая тренировка' },
-      { id: 'isu-7', title: 'Программирование на Python / Web', day: 2, start: '10:45', end: '12:15', category: 'study', room: 'Комп. класс 5', parity: 'all', important: true, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'Защита пет-проекта' },
-      { id: 'isu-8', title: 'Смена: Бариста / Кофейня', day: 2, start: '15:00', end: '19:00', category: 'work', room: 'Центр', parity: 'all', important: false, moneyType: 'income', rateMode: 'hourly', amount: 1800, account: 'cash', autoCredit: true, credited: false, completed: false, note: 'Вечерняя смена + чаевые' },
-      { id: 'isu-9', title: 'Дискретная математика', day: 3, start: '09:00', end: '10:30', category: 'study', room: 'ГК-301', parity: 'all', important: false, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'Семинар' },
-      { id: 'isu-10', title: 'Физическая культура', day: 3, start: '14:15', end: '15:45', category: 'sport', room: 'Спорткомплекс', parity: 'all', important: false, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'Спортивная форма' },
-      { id: 'isu-11', title: 'Базы данных и SQL', day: 4, start: '10:45', end: '12:15', category: 'study', room: 'ЛК-210', parity: 'all', important: false, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'Проектирование схем' },
-      { id: 'isu-12', title: 'Фриланс: Вёрстка лендинга', day: 4, start: '16:30', end: '19:00', category: 'work', room: 'Дома', parity: 'all', important: true, moneyType: 'income', rateMode: 'fixed', amount: 12000, account: 'card', autoCredit: true, credited: false, completed: false, note: 'Сдача этапа заказчику' },
-      { id: 'isu-13', title: 'Кураторский час ИСУ 26дд-1', day: 5, start: '11:00', end: '12:00', category: 'study', room: 'Ауд. 204', parity: 'odd', important: false, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'Нечётная неделя' },
-      { id: 'isu-14', title: 'Подработка (Выходной день)', day: 5, start: '14:00', end: '18:00', category: 'work', room: 'ТРЦ Dostyk', parity: 'all', important: false, moneyType: 'income', rateMode: 'hourly', amount: 2200, account: 'card', autoCredit: true, credited: false, completed: false, note: '4 часа × 2200 ₸' }
+      { id: 'isu-1', title: 'Высшая математика (Лекция)', day: 0, start: '09:00', end: '10:30', category: 'study', room: 'ГК-214', parity: 'all', important: false, moneyType: 'none', amount: 0, account: 'card' },
+      { id: 'isu-2', title: 'Алгоритмы и структуры данных', day: 0, start: '10:45', end: '12:15', category: 'study', room: 'ЛК-402', parity: 'all', important: true, moneyType: 'none', amount: 0, account: 'card' },
+      { id: 'isu-3', title: 'Репетиторство (Математика)', day: 0, start: '16:00', end: '18:00', category: 'work', room: 'Zoom', parity: 'all', important: false, moneyType: 'income', rateMode: 'hourly', amount: 3500, account: 'card' },
+      { id: 'isu-4', title: 'Иностранный язык (English B2)', day: 1, start: '09:00', end: '10:30', category: 'study', room: 'Ауд. 118', parity: 'all', important: false, moneyType: 'none', amount: 0, account: 'card' },
+      { id: 'isu-5', title: 'Тренажёрный зал', day: 1, start: '18:30', end: '20:00', category: 'sport', room: 'FitNation', parity: 'all', important: false, moneyType: 'none', amount: 0, account: 'card' },
+      { id: 'isu-6', title: 'Программирование на Python', day: 2, start: '10:45', end: '12:15', category: 'study', room: 'Комп. класс 5', parity: 'all', important: true, moneyType: 'none', amount: 0, account: 'card' },
+      { id: 'isu-7', title: 'Смена: Бариста / Кофейня', day: 2, start: '15:00', end: '19:00', category: 'work', room: 'Центр', parity: 'all', important: false, moneyType: 'income', rateMode: 'hourly', amount: 1800, account: 'cash' },
+      { id: 'isu-8', title: 'Дискретная математика', day: 3, start: '09:00', end: '10:30', category: 'study', room: 'ГК-301', parity: 'all', important: false, moneyType: 'none', amount: 0, account: 'card' },
+      { id: 'isu-9', title: 'Базы данных и SQL', day: 4, start: '10:45', end: '12:15', category: 'study', room: 'ЛК-210', parity: 'all', important: false, moneyType: 'none', amount: 0, account: 'card' },
+      { id: 'isu-10', title: 'Фриланс: Вёрстка лендинга', day: 4, start: '16:30', end: '19:00', category: 'work', room: 'Дома', parity: 'all', important: true, moneyType: 'income', amount: 12000, account: 'card' }
     ];
 
     const DEFAULT_STATE = {
@@ -678,19 +465,16 @@
       activeTab: 'excel',
       weekParity: 'even',
       darkMode: false,
-      themeId: 'indigo',
       excelZoom: 1,
       filter: 'all',
       events: DEFAULT_EVENTS,
       accounts: { card: 45000, cash: 12000, savings: 85000 },
       transactions: [
-        { id: 'tx-1', title: 'Стипендия', amount: 47135, type: 'income', account: 'card', bucket: 'save', date: '10.11.2026' },
-        { id: 'tx-2', title: 'Проездной', amount: 6500, type: 'expense', account: 'card', bucket: 'needs', date: '11.11.2026' }
+        { id: 'tx-1', title: 'Стипендия', amount: 47135, type: 'income', account: 'card', date: '10.11.2026' }
       ],
       goals: [{ id: 'g-1', title: '💻 Новый ноутбук', current: 85000, target: 350000 }],
       habits: [{ id: 'h-1', name: '💧 2 литра воды', days: [true, true, true, false, true, false, false] }],
-      notes: [{ id: 'n-1', title: 'Идеи по проектам', text: 'Закончить лабораторную по базам данных и подготовить презентацию.' }],
-      pomoSessionsToday: 2
+      notes: [{ id: 'n-1', title: 'Идеи по проектам', text: 'Завершить задачи по ИСУ.' }]
     };
 
     let state = loadState();
@@ -739,7 +523,7 @@
       const container = document.getElementById('toast-container');
       const colors = { success: 'bg-emerald-600 text-white', warning: 'bg-amber-600 text-white', error: 'bg-rose-600 text-white', info: 'bg-slate-900 text-white' };
       const el = document.createElement('div');
-      el.className = `px-4 py-3 rounded-2xl shadow-xl text-xs font-bold flex items-center justify-between gap-3 ${colors[type] || colors.info}`;
+      el.className = `px-4 py-3 rounded-2xl shadow-xl text-xs font-bold ${colors[type] || colors.info}`;
       el.innerHTML = `<span>${message}</span>`;
       container.appendChild(el);
       setTimeout(() => el.remove(), 3000);
@@ -748,10 +532,6 @@
     function applyAppearance() {
       const html = document.documentElement;
       if (state.darkMode) html.classList.add('dark'); else html.classList.remove('dark');
-      const theme = THEMES.find(t => t.id === state.themeId) || THEMES[0];
-      html.style.setProperty('--accent', theme.accent);
-      html.style.setProperty('--accent-soft', theme.soft);
-
       document.getElementById('header-app-title').textContent = state.appTitle || 'Мой тайм-менеджер';
       document.getElementById('page-meta-title').textContent = state.appTitle || 'Тайм-менеджер';
     }
@@ -762,36 +542,44 @@
       applyAppearance();
     }
 
-    function openRenameModal() {
-      document.getElementById('settings-app-title').value = state.appTitle || '';
-      openAppearanceModal();
+    // Modal Capital Settings
+    function openCapitalSettingsModal() {
+      document.getElementById('set-card-val').value = state.accounts.card || 0;
+      document.getElementById('set-cash-val').value = state.accounts.cash || 0;
+      document.getElementById('set-savings-val').value = state.accounts.savings || 0;
+      const modal = document.getElementById('capital-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
     }
 
+    function closeCapitalSettingsModal() {
+      const modal = document.getElementById('capital-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function saveCapitalSettings() {
+      state.accounts.card = Number(document.getElementById('set-card-val').value) || 0;
+      state.accounts.cash = Number(document.getElementById('set-cash-val').value) || 0;
+      state.accounts.savings = Number(document.getElementById('set-savings-val').value) || 0;
+      saveState();
+      closeCapitalSettingsModal();
+      renderAll();
+      showToast('✅ Капитал и счета успешно обновлены!', 'success');
+    }
+
+    function openRenameModal() { openAppearanceModal(); }
     function openAppearanceModal() {
       document.getElementById('settings-app-title').value = state.appTitle || '';
-      const swatches = document.getElementById('theme-swatches');
-      swatches.innerHTML = THEMES.map(t => `
-        <button onclick="selectTheme('${t.id}')" class="p-2 rounded-2xl border ${state.themeId === t.id ? 'border-indigo-500 ring-2 ring-indigo-500/35' : 'border-theme'} surface-sub flex flex-col items-center gap-1">
-          <span class="w-6 h-6 rounded-full" style="background:${t.accent}"></span>
-          <span class="text-[10px] font-bold text-main">${t.name}</span>
-        </button>
-      `).join('');
-      document.getElementById('appearance-modal').classList.remove('hidden');
-      document.getElementById('appearance-modal').classList.add('flex');
+      const modal = document.getElementById('appearance-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
     }
-
     function closeAppearanceModal() {
-      document.getElementById('appearance-modal').classList.add('hidden');
-      document.getElementById('appearance-modal').classList.remove('flex');
+      const modal = document.getElementById('appearance-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
     }
-
-    function selectTheme(id) {
-      state.themeId = id;
-      saveState();
-      applyAppearance();
-      openAppearanceModal();
-    }
-
     function saveAppearanceSettings() {
       const newTitle = document.getElementById('settings-app-title').value.trim();
       if (newTitle) state.appTitle = newTitle;
@@ -808,20 +596,13 @@
       document.getElementById('excel-zoom-label').textContent = `${Math.round(state.excelZoom * 100)}%`;
       saveState();
     }
-
     function adjustExcelZoom(delta) { setExcelZoom((state.excelZoom || 1) + delta); }
-
-    function fitWholeWeekZoom() {
-      const vp = document.getElementById('excel-viewport');
-      if (!vp) return;
-      setExcelZoom(Math.max(0.5, Math.min(1.1, (vp.clientWidth - 8) / 1225)));
-    }
 
     function getFilteredEvents() {
       const q = (document.getElementById('search-input')?.value || '').trim().toLowerCase();
       return state.events.filter(ev => {
         if (ev.parity && ev.parity !== 'all' && ev.parity !== state.weekParity) return false;
-        if (q && !`${ev.title} ${ev.room || ''} ${ev.note || ''}`.toLowerCase().includes(q)) return false;
+        if (q && !`${ev.title} ${ev.room || ''}`.toLowerCase().includes(q)) return false;
         if (state.filter === 'income') return ev.moneyType === 'income';
         if (state.filter === 'important') return !!ev.important;
         if (state.filter === 'study') return ev.category === 'study';
@@ -874,27 +655,12 @@
       showToast('⚡ Дело добавлено', 'success');
     }
 
-    function smartAddTemplate(type) {
-      const presets = {
-        hw: { title: 'Выполнение ДЗ', cat: 'study', mins: 90 },
-        work: { title: 'Подработка', cat: 'work', mins: 180, money: 2500, type: 'income' },
-        sport: { title: 'Тренировка', cat: 'sport', mins: 60 },
-        lang: { title: 'Иностранный язык', cat: 'study', mins: 60 }
-      };
-      const p = presets[type];
-      state.events.push({ id: 'ev-' + Date.now(), title: p.title, day: 0, start: '15:00', end: minsToTime(15*60 + p.mins), category: p.cat, moneyType: p.type || 'none', amount: p.money || 0, account: 'card' });
-      saveState();
-      renderAll();
-      showToast(`✨ «${p.title}» добавлено`, 'success');
-    }
-
     function getCategoryStyle(cat) {
       const map = {
-        study: { bg: 'bg-indigo-500/15', border: 'border-indigo-500', text: 'text-indigo-950 dark:text-indigo-100', badge: '📚' },
-        work: { bg: 'bg-emerald-500/15', border: 'border-emerald-500', text: 'text-emerald-950 dark:text-emerald-100', badge: '💼' },
-        sport: { bg: 'bg-amber-500/15', border: 'border-amber-500', text: 'text-amber-950 dark:text-amber-100', badge: '💪' },
-        deadline: { bg: 'bg-rose-500/15', border: 'border-rose-500', text: 'text-rose-950 dark:text-rose-100', badge: '🔥' },
-        personal: { bg: 'bg-sky-500/15', border: 'border-sky-500', text: 'text-sky-950 dark:text-sky-100', badge: '✨' }
+        study: { bg: 'bg-indigo-500/15', border: 'border-indigo-500', text: 'text-indigo-950 dark:text-indigo-100' },
+        work: { bg: 'bg-emerald-500/15', border: 'border-emerald-500', text: 'text-emerald-950 dark:text-emerald-100' },
+        sport: { bg: 'bg-amber-500/15', border: 'border-amber-500', text: 'text-amber-950 dark:text-amber-100' },
+        personal: { bg: 'bg-sky-500/15', border: 'border-sky-500', text: 'text-sky-950 dark:text-sky-100' }
       };
       return map[cat] || map.personal;
     }
@@ -904,14 +670,6 @@
       if (!table) return;
       const filtered = getFilteredEvents();
       document.getElementById('excel-visible-count').textContent = `${filtered.length} дел`;
-
-      let studyH = 0, workH = 0;
-      filtered.forEach(e => {
-        const h = getEventDurationHours(e);
-        if (e.category === 'study') studyH += h;
-        if (e.category === 'work') workH += h;
-      });
-      document.getElementById('excel-hours-summary').textContent = `Учёба: ${studyH.toFixed(1)} ч • Подработка: ${workH.toFixed(1)} ч`;
 
       let html = `<thead><tr><th class="excel-th-corner text-muted font-extrabold">Время</th>`;
       for (let d = 0; d < 7; d++) html += `<th class="excel-th-day text-left font-extrabold text-main">${DAYS_FULL[d]}</th>`;
@@ -968,7 +726,7 @@
     }
 
     function renderFinance() {
-      const cap = (state.accounts.card || 0) + (state.accounts.cash || 0) + (state.accounts.savings || 0);
+      const cap = (Number(state.accounts.card) || 0) + (Number(state.accounts.cash) || 0) + (Number(state.accounts.savings) || 0);
       document.getElementById('header-total-balance').textContent = formatMoney(cap);
       document.getElementById('fin-total-capital').textContent = formatMoney(cap);
       document.getElementById('acc-card-val').textContent = formatMoney(state.accounts.card);
@@ -1001,7 +759,7 @@
       grid.innerHTML = state.notes.map((n, idx) => `
         <div class="bento-card rounded-2xl p-4 space-y-2 relative">
           <input type="text" value="${n.title}" oninput="updateNote(${idx}, 'title', this.value)" class="w-full font-extrabold text-sm surface-sub px-2 py-1 rounded border border-theme" />
-          <textarea oninput="updateNote(${idx}, 'text', this.value)" rows="4" class="w-full text-xs surface-sub p-2 rounded border border-theme resize-none">${n.text}</textarea>
+          <textarea oninput="updateNote(${idx}, 'text', this.value)" rows="3" class="w-full text-xs surface-sub p-2 rounded border border-theme resize-none">${n.text}</textarea>
           <button onclick="deleteNote(${idx})" class="absolute top-3 right-3 text-xs text-muted hover:text-rose-500">✕</button>
         </div>`).join('');
     }
@@ -1011,37 +769,46 @@
       saveState();
       renderNotes();
     }
-
-    function updateNote(idx, field, val) {
-      state.notes[idx][field] = val;
-      saveState();
-    }
-
-    function deleteNote(idx) {
-      state.notes.splice(idx, 1);
-      saveState();
-      renderNotes();
-    }
-
-    function toggleHabit(hIdx, dayIdx) {
-      state.habits[hIdx].days[dayIdx] = !state.habits[hIdx].days[dayIdx];
-      saveState();
-      renderHabits();
-    }
+    function updateNote(idx, field, val) { state.notes[idx][field] = val; saveState(); }
+    function deleteNote(idx) { state.notes.splice(idx, 1); saveState(); renderNotes(); }
+    function toggleHabit(hIdx, dayIdx) { state.habits[hIdx].days[dayIdx] = !state.habits[hIdx].days[dayIdx]; saveState(); renderHabits(); }
 
     function openEventModal(id = null, day = 0, start = '14:00') {
-      document.getElementById('event-modal').classList.remove('hidden');
-      document.getElementById('event-modal').classList.add('flex');
+      const modal = document.getElementById('event-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
     }
     function closeEventModal() {
-      document.getElementById('event-modal').classList.add('hidden');
-      document.getElementById('event-modal').classList.remove('flex');
+      const modal = document.getElementById('event-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
     }
     function saveEventFromModal() { closeEventModal(); renderAll(); showToast('Сохранено', 'success'); }
     function deleteCurrentEvent() { closeEventModal(); renderAll(); }
-    function openTransactionModal() { document.getElementById('tx-modal').classList.remove('hidden'); document.getElementById('tx-modal').classList.add('flex'); }
-    function closeTransactionModal() { document.getElementById('tx-modal').classList.add('hidden'); document.getElementById('tx-modal').classList.remove('flex'); }
-    function saveManualTransaction() { closeTransactionModal(); renderFinance(); showToast('Операция записана', 'success'); }
+    function openTransactionModal() {
+      const modal = document.getElementById('tx-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+    function closeTransactionModal() {
+      const modal = document.getElementById('tx-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+    function saveManualTransaction() {
+      const title = document.getElementById('tx-title').value;
+      const amount = Number(document.getElementById('tx-amount').value) || 0;
+      const type = document.getElementById('tx-type').value;
+      const account = document.getElementById('tx-account').value;
+      if (!title || amount <= 0) return;
+      if (type === 'income') state.accounts[account] += amount;
+      else state.accounts[account] -= amount;
+      state.transactions.unshift({ id: 'tx-' + Date.now(), title, amount, type, account, date: new Date().toLocaleDateString('ru-RU') });
+      saveState();
+      closeTransactionModal();
+      renderAll();
+      showToast('Операция записана', 'success');
+    }
 
     function switchTab(tabId) {
       state.activeTab = tabId;
@@ -1051,13 +818,14 @@
         const active = btn.dataset.tab === tabId;
         btn.style.backgroundColor = active ? 'var(--accent)' : '';
         btn.classList.toggle('text-white', active);
+        btn.classList.toggle('text-muted', !active);
       });
       saveState();
     }
 
     function updateClockAndNextClass() {
       const now = new Date();
-      document.getElementById('live-clock').textContent = `${now.toLocaleDateString('ru-RU', {weekday: 'short'})}, ${now.toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit[span_2](start_span)'[span_2](end_span)})}`;
+      document.getElementById('live-clock').textContent = `${now.toLocaleDateString('ru-RU', {weekday: 'short'})}, ${now.toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit[span_0](start_span)'[span_0](end_span)})}`;
     }
 
     function renderAll() {
