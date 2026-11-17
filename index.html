@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-  <title id="page-meta-title">Мой тайм-менеджер — ИСУ 26дд-1 | Pro Command Center</title>
+  <title>Мой тайм-менеджер — ИСУ 26дд-1 | Pro Command Center</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,6 +22,7 @@
       --text-muted: #64748b;
       --accent: #4f46e5;
       --accent-soft: #eef2ff;
+      --accent-text: #4338ca;
       --excel-zoom: 1;
       --excel-row-h: calc(28px * var(--excel-zoom));
       --excel-col-w: calc(165px * var(--excel-zoom));
@@ -40,84 +41,203 @@
       --text-main: #f1f5f9;
       --text-muted: #94a3b8;
       --accent-soft: rgba(99, 102, 241, 0.18);
+      --accent-text: #a5b4fc;
     }
 
-    * { font-family: var(--app-font) !important; box-sizing: border-box; }
+    * {
+      font-family: var(--app-font) !important;
+      box-sizing: border-box;
+    }
+
     body {
       background-color: var(--bg-main);
-      background-image: radial-gradient(at 0% 0%, var(--bg-mesh-1) 0px, transparent 50%), radial-gradient(at 100% 0%, var(--bg-mesh-2) 0px, transparent 50%);
-      background-attachment: fixed; color: var(--text-main); transition: background-color 0.25s ease, color 0.25s ease;
+      background-image:
+        radial-gradient(at 0% 0%, var(--bg-mesh-1) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, var(--bg-mesh-2) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      transition: background-color 0.25s ease, color 0.25s ease;
     }
+
     .bento-card {
-      background: var(--surface-card); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--border-color); box-shadow: 0 10px 30px -12px rgba(15, 23, 42, 0.08);
+      background: var(--surface-card);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 10px 30px -12px rgba(15, 23, 42, 0.08);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
     }
-    html.dark .bento-card { box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.45); }
-    .surface-sub { background-color: var(--surface-sub); border-color: var(--border-color); }
-    .surface-solid { background-color: var(--surface-solid); border-color: var(--border-color); }
+
+    html.dark .bento-card {
+      box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.45);
+    }
+
+    .surface-sub {
+      background-color: var(--surface-sub);
+      border-color: var(--border-color);
+    }
+
+    .surface-solid {
+      background-color: var(--surface-solid);
+      border-color: var(--border-color);
+    }
+
     .text-main { color: var(--text-main); }
     .text-muted { color: var(--text-muted); }
     .border-theme { border-color: var(--border-color); }
 
+    /* Excel Table Zoomable Architecture (Preserves Sticky Headers & Columns) */
     .excel-viewport {
-      overflow: auto; max-height: 74vh; border-radius: 1rem; border: 1px solid var(--border-color);
-      background: var(--surface-solid); position: relative; touch-action: pan-x pan-y; user-select: none;
+      overflow: auto;
+      max-height: 74vh;
+      border-radius: 1rem;
+      border: 1px solid var(--border-color);
+      background: var(--surface-solid);
+      position: relative;
+      touch-action: pan-x pan-y;
+      user-select: none;
     }
-    .excel-grid-table { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; table-layout: fixed; }
+
+    .excel-grid-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: max-content;
+      min-width: 100%;
+      table-layout: fixed;
+    }
+
     .excel-th-corner {
-      position: sticky; top: 0; left: 0; z-index: 30; width: var(--excel-time-w); min-width: var(--excel-time-w);
-      background: var(--surface-sub); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); font-size: calc(11px * var(--excel-zoom));
+      position: sticky;
+      top: 0;
+      left: 0;
+      z-index: 30;
+      width: var(--excel-time-w);
+      min-width: var(--excel-time-w);
+      background: var(--surface-sub);
+      border-right: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      font-size: calc(11px * var(--excel-zoom));
     }
+
     .excel-th-day {
-      position: sticky; top: 0; z-index: 20; width: var(--excel-col-w); min-width: var(--excel-col-w);
-      background: var(--surface-sub); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);
-      padding: calc(8px * var(--excel-zoom)) calc(10px * var(--excel-zoom)); font-size: calc(12px * var(--excel-zoom));
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      width: var(--excel-col-w);
+      min-width: var(--excel-col-w);
+      background: var(--surface-sub);
+      border-right: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      padding: calc(8px * var(--excel-zoom)) calc(10px * var(--excel-zoom));
+      font-size: calc(12px * var(--excel-zoom));
     }
+
     .excel-td-time {
-      position: sticky; left: 0; z-index: 15; width: var(--excel-time-w); min-width: var(--excel-time-w); height: var(--excel-row-h);
-      background: var(--surface-solid); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);
-      font-size: calc(10.5px * var(--excel-zoom)); text-align: center; vertical-align: top; padding-top: calc(2px * var(--excel-zoom));
+      position: sticky;
+      left: 0;
+      z-index: 15;
+      width: var(--excel-time-w);
+      min-width: var(--excel-time-w);
+      height: var(--excel-row-h);
+      background: var(--surface-solid);
+      border-right: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      font-size: calc(10.5px * var(--excel-zoom));
+      text-align: center;
+      vertical-align: top;
+      padding-top: calc(2px * var(--excel-zoom));
     }
+
     .excel-td-slot {
-      width: var(--excel-col-w); min-width: var(--excel-col-w); height: var(--excel-row-h);
-      border-right: 1px solid var(--border-color); border-bottom: 1px dashed var(--border-color);
-      position: relative; vertical-align: top; padding: 0; transition: background-color 0.12s ease;
+      width: var(--excel-col-w);
+      min-width: var(--excel-col-w);
+      height: var(--excel-row-h);
+      border-right: 1px solid var(--border-color);
+      border-bottom: 1px dashed var(--border-color);
+      position: relative;
+      vertical-align: top;
+      padding: 0;
+      transition: background-color 0.12s ease;
     }
-    .excel-td-slot.hour-start { border-top: 1px solid var(--border-color); }
-    .excel-td-slot:hover { background-color: var(--accent-soft); cursor: pointer; }
+
+    .excel-td-slot.hour-start {
+      border-top: 1px solid var(--border-color);
+    }
+
+    .excel-td-slot:hover {
+      background-color: var(--accent-soft);
+      cursor: pointer;
+    }
 
     .excel-event-block {
-      position: absolute; left: calc(3px * var(--excel-zoom)); right: calc(3px * var(--excel-zoom));
-      top: calc(2px * var(--excel-zoom)); z-index: 10; border-radius: calc(8px * var(--excel-zoom));
-      padding: calc(4px * var(--excel-zoom)) calc(6px * var(--excel-zoom)); font-size: var(--excel-font); line-height: 1.2;
-      overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); border-left-width: calc(3.5px * var(--excel-zoom));
+      position: absolute;
+      left: calc(3px * var(--excel-zoom));
+      right: calc(3px * var(--excel-zoom));
+      top: calc(2px * var(--excel-zoom));
+      z-index: 10;
+      border-radius: calc(8px * var(--excel-zoom));
+      padding: calc(4px * var(--excel-zoom)) calc(6px * var(--excel-zoom));
+      font-size: var(--excel-font);
+      line-height: 1.2;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      border-left-width: calc(3.5px * var(--excel-zoom));
       transition: transform 0.12s ease, box-shadow 0.12s ease;
     }
-    .excel-event-block:hover { z-index: 18; transform: scale(1.015); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16); }
+
+    .excel-event-block:hover {
+      z-index: 18;
+      transform: scale(1.015);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+    }
+
+    /* Hide scrollbar for clean horizontal pills */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    input[type="range"] { accent-color: var(--accent); }
-    @media print { .no-print { display: none !important; } }
+
+    /* Custom range slider */
+    input[type="range"] {
+      accent-color: var(--accent);
+    }
+
+    @keyframes pulseSoft {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.55; }
+    }
+    .animate-pulse-soft { animation: pulseSoft 2s infinite; }
+
+    /* Print optimization */
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #fff !important; color: #000 !important; }
+      .bento-card { box-shadow: none !important; border: 1px solid #cbd5e1 !important; }
+    }
   </style>
 </head>
 <body class="min-h-screen pb-24 md:pb-10 antialiased selection:bg-indigo-500 selection:text-white">
 
+  <!-- Toast Notification Container -->
   <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
 
+  <!-- Main App Wrapper -->
   <div class="max-w-[1440px] mx-auto px-3 sm:px-6 pt-4 sm:pt-6 space-y-5">
 
     <!-- TOP COMMAND BAR -->
     <header class="bento-card rounded-3xl p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
       <div class="flex items-start sm:items-center justify-between gap-3">
         <div class="flex items-center gap-3.5">
-          <div id="brand-badge" class="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-extrabold text-lg shadow-lg shrink-0 cursor-pointer" onclick="openRenameModal()" title="Нажмите, чтобы переименовать" style="background: linear-gradient(135deg, var(--accent), #06b6d4);">
+          <div id="brand-badge" class="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-extrabold text-lg shadow-lg shrink-0" style="background: linear-gradient(135deg, var(--accent), #06b6d4);">
             26дд
           </div>
           <div>
             <div class="flex flex-wrap items-center gap-2">
-              <h1 id="header-app-title" onclick="openRenameModal()" class="text-lg sm:text-xl font-extrabold tracking-tight text-main cursor-pointer hover:opacity-85 transition" title="Нажмите для редактирования названия">Мой тайм-менеджер — ИСУ 26дд-1</h1>
-              <span id="week-parity-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20">Чётная неделя</span>
+              <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-main">Мой тайм-менеджер — ИСУ 26дд-1</h1>
+              <span id="week-parity-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20">
+                Чётная неделя
+              </span>
             </div>
             <p class="text-xs sm:text-sm text-muted mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1">
               <span id="live-clock" class="font-semibold text-main"></span>
@@ -126,355 +246,829 @@
             </p>
           </div>
         </div>
-        <button onclick="toggleDarkMode()" title="Переключить тему" class="lg:hidden p-2.5 rounded-2xl surface-sub border border-theme text-main">
+
+        <!-- Mobile Quick Theme Toggle -->
+        <button onclick="toggleDarkMode()" title="Переключить тему" class="lg:hidden p-2.5 rounded-2xl surface-sub border border-theme text-main hover:opacity-80 transition">
           <span class="dark-mode-icon text-base">🌙</span>
         </button>
       </div>
 
+      <!-- Global Quick Stats + Actions -->
       <div class="flex flex-wrap items-center gap-2 sm:gap-2.5">
+        <!-- Balance Pill -->
         <button onclick="switchTab('finance')" class="flex items-center gap-2 px-3.5 py-2 rounded-2xl surface-sub border border-theme hover:border-emerald-500/40 transition text-left">
           <span class="text-base">💳</span>
           <div>
-            <div class="text-[10px] uppercase tracking-wider text-muted font-bold">Баланс / Капитал</div>
+            <div class="text-[10px] uppercase tracking-wider text-muted font-bold">Баланс</div>
             <div id="header-total-balance" class="text-xs sm:text-sm font-extrabold text-emerald-600 dark:text-emerald-400">0 ₸</div>
           </div>
         </button>
 
-        <button onclick="openCapitalSettingsModal()" class="flex items-center gap-1.5 px-3 py-2.5 rounded-2xl surface-sub border border-theme text-xs font-bold text-main hover:opacity-85 transition" title="Настроить капитал и счета">
-          <span>⚙️</span>
-          <span class="hidden sm:inline">Капитал</span>
+        <!-- Weekly Side-Hustle Pill -->
+        <button onclick="switchTab('finance')" class="flex items-center gap-2 px-3.5 py-2 rounded-2xl surface-sub border border-theme hover:border-amber-500/40 transition text-left">
+          <span class="text-base">💼</span>
+          <div>
+            <div class="text-[10px] uppercase tracking-wider text-muted font-bold">Подработки (нед)</div>
+            <div id="header-sidejob-stats" class="text-xs sm:text-sm font-extrabold text-amber-600 dark:text-amber-400">0 / 0 ₸</div>
+          </div>
         </button>
 
-        <button onclick="toggleWeekParity()" class="px-3 py-2.5 rounded-2xl surface-sub border border-theme text-xs font-bold text-main hover:opacity-85 transition flex items-center gap-1.5">
+        <!-- Parity Switcher -->
+        <button onclick="toggleWeekParity()" class="px-3 py-2.5 rounded-2xl surface-sub border border-theme text-xs font-bold text-main hover:opacity-85 transition flex items-center gap-1.5" title="Сменить чётную/нечётную неделю">
           <span>🔄</span>
           <span class="hidden sm:inline">Неделя</span>
         </button>
 
-        <button onclick="toggleDarkMode()" title="Светлая / Тёмная тема" class="hidden lg:flex items-center justify-center w-10 h-10 rounded-2xl surface-sub border border-theme text-main">
+        <!-- Dark/Light Toggle -->
+        <button onclick="toggleDarkMode()" title="Светлая / Тёмная тема" class="hidden lg:flex items-center justify-center w-10 h-10 rounded-2xl surface-sub border border-theme text-main hover:opacity-85 transition">
           <span class="dark-mode-icon text-base">🌙</span>
         </button>
 
-        <button onclick="openAppearanceModal()" title="Настройки" class="flex items-center gap-1.5 px-3 py-2.5 rounded-2xl surface-sub border border-theme text-xs font-bold text-main">
+        <!-- Appearance Settings -->
+        <button onclick="openAppearanceModal()" title="Темы и шрифты" class="flex items-center gap-1.5 px-3 py-2.5 rounded-2xl surface-sub border border-theme text-xs font-bold text-main hover:opacity-85 transition">
           <span>🎨</span>
           <span class="hidden md:inline">Стиль</span>
         </button>
 
+        <!-- Primary Add Event Button -->
         <button onclick="openEventModal()" style="background-color: var(--accent);" class="px-4 py-2.5 rounded-2xl text-white text-xs sm:text-sm font-bold shadow-md hover:brightness-110 active:scale-95 transition flex items-center gap-1.5">
           <span class="text-base leading-none">+</span>
           <span>Добавить дело</span>
+          <kbd class="hidden xl:inline-block text-[10px] bg-white/20 px-1.5 py-0.5 rounded ml-1">N</kbd>
         </button>
       </div>
     </header>
 
-    <!-- SEARCH & FILTERS -->
+    <!-- SMART INPUT COMMAND BAR + SEARCH & FILTERS -->
     <section class="bento-card rounded-3xl p-3.5 sm:p-4 space-y-3 no-print">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-3">
+        <!-- Smart Parser Input -->
         <div class="lg:col-span-7 relative flex items-center">
           <span class="absolute left-3.5 text-base select-none">⚡</span>
-          <input id="smart-input" type="text" placeholder='Быстрый ввод: "Пн 16:00 Репетиторство +5000"' class="w-full pl-10 pr-24 py-2.5 rounded-2xl surface-sub border border-theme text-xs sm:text-sm text-main placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition" onkeydown="if(event.key==='Enter') handleSmartInput()" />
-          <button onclick="handleSmartInput()" style="background-color: var(--accent);" class="absolute right-1.5 px-3 py-1.5 rounded-xl text-white text-xs font-bold">Создать</button>
+          <input
+            id="smart-input"
+            type="text"
+            placeholder='Быстрый ввод: "Пн 16:00-18:30 Репетиторство +5000" или "Ср 19:00 Зал -1500"'
+            class="w-full pl-10 pr-24 py-2.5 rounded-2xl surface-sub border border-theme text-xs sm:text-sm text-main placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition"
+            onkeydown="if(event.key==='Enter') handleSmartInput()"
+          />
+          <button
+            onclick="handleSmartInput()"
+            style="background-color: var(--accent);"
+            class="absolute right-1.5 px-3 py-1.5 rounded-xl text-white text-xs font-bold hover:brightness-110 transition">
+            Создать
+          </button>
         </div>
+
+        <!-- Search Input -->
         <div class="lg:col-span-5 relative flex items-center">
           <span class="absolute left-3.5 text-sm select-none">🔍</span>
-          <input id="search-input" type="text" oninput="renderAll()" placeholder="Поиск по расписанию..." class="w-full pl-9 pr-8 py-2.5 rounded-2xl surface-sub border border-theme text-xs sm:text-sm text-main placeholder:text-muted focus:outline-none" />
+          <input
+            id="search-input"
+            type="text"
+            oninput="renderAll()"
+            placeholder="Поиск по названию, аудитории, заметке... (Ctrl+K)"
+            class="w-full pl-9 pr-8 py-2.5 rounded-2xl surface-sub border border-theme text-xs sm:text-sm text-main placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition"
+          />
+          <button id="clear-search-btn" onclick="clearSearch()" class="hidden absolute right-3 text-xs text-muted hover:text-main font-bold">✕</button>
         </div>
       </div>
-      <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="filter-pills">
-        <button data-filter="all" onclick="setFilter('all')" class="filter-pill active px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 text-white" style="background-color: var(--accent);">Все дела</button>
-        <button data-filter="income" onclick="setFilter('income')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold surface-sub border border-theme shrink-0">💼 С доходом</button>
-        <button data-filter="important" onclick="setFilter('important')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold surface-sub border border-theme shrink-0">🔴 Важные</button>
-        <button data-filter="study" onclick="setFilter('study')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold surface-sub border border-theme shrink-0">📚 Учёба</button>
-        <button data-filter="work" onclick="setFilter('work')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold surface-sub border border-theme shrink-0">💸 Работа</button>
-        <button data-filter="free" onclick="setFilter('free')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold surface-sub border border-theme shrink-0">⏳ Свободные окна</button>
+
+      <!-- Quick Filters & Smart Templates Row -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-2.5 pt-1 border-t border-theme">
+        <!-- Filter Pills -->
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="filter-pills">
+          <button data-filter="all" onclick="setFilter('all')" class="filter-pill active px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0">Все дела</button>
+          <button data-filter="income" onclick="setFilter('income')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0">💼 С доходом</button>
+          <button data-filter="important" onclick="setFilter('important')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0">🔴 Важные</button>
+          <button data-filter="study" onclick="setFilter('study')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0">📚 Учёба</button>
+          <button data-filter="work" onclick="setFilter('work')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0">💸 Работа</button>
+          <button data-filter="free" onclick="setFilter('free')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0">⏳ Свободные окна</button>
+        </div>
+
+        <!-- Smart Auto-Slot Templates -->
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+          <span class="text-[11px] font-bold text-muted shrink-0 mr-1">Авто-окно:</span>
+          <button onclick="smartAddTemplate('hw')" class="px-2.5 py-1 rounded-xl surface-sub border border-theme hover:border-indigo-500/50 text-[11px] font-bold text-main shrink-0 transition">+ 📚 ДЗ (1.5ч)</button>
+          <button onclick="smartAddTemplate('work')" class="px-2.5 py-1 rounded-xl surface-sub border border-theme hover:border-emerald-500/50 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 shrink-0 transition">+ 💼 Смена (3ч)</button>
+          <button onclick="smartAddTemplate('sport')" class="px-2.5 py-1 rounded-xl surface-sub border border-theme hover:border-amber-500/50 text-[11px] font-bold text-main shrink-0 transition">+ 💪 Спорт (1ч)</button>
+          <button onclick="smartAddTemplate('lang')" class="px-2.5 py-1 rounded-xl surface-sub border border-theme hover:border-sky-500/50 text-[11px] font-bold text-main shrink-0 transition">+ 🌍 Язык (1ч)</button>
+        </div>
       </div>
     </section>
 
-    <!-- NAVIGATION TABS -->
+    <!-- NAVIGATION TABS (Desktop & Tablet) -->
     <nav class="hidden md:flex items-center justify-between bento-card rounded-2xl p-1.5 no-print">
       <div class="flex items-center gap-1.5">
-        <button onclick="switchTab('excel')" data-tab="excel" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-white" style="background-color: var(--accent);"><span>📊</span> Excel-сетка</button>
-        <button onclick="switchTab('days')" data-tab="days" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-muted"><span>📅</span> По дням</button>
-        <button onclick="switchTab('finance')" data-tab="finance" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-muted"><span>💰</span> Финансы и Капитал</button>
-        <button onclick="switchTab('focus')" data-tab="focus" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-muted"><span>🍅</span> Фокус и Привычки</button>
-        <button onclick="switchTab('notes')" data-tab="notes" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-muted"><span>📝</span> Заметки</button>
+        <button onclick="switchTab('excel')" data-tab="excel" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2">
+          <span>📊</span> Excel-сетка (Зум)
+        </button>
+        <button onclick="switchTab('days')" data-tab="days" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2">
+          <span>📅</span> По дням (Drag & Drop)
+        </button>
+        <button onclick="switchTab('finance')" data-tab="finance" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2">
+          <span>💰</span> Финансы и Подработки
+        </button>
+        <button onclick="switchTab('focus')" data-tab="focus" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2">
+          <span>🍅</span> Фокус, Привычки и Чек-лист
+        </button>
       </div>
+
       <div class="flex items-center gap-2 pr-2">
-        <button onclick="exportJSON()" class="px-3 py-1.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main">💾 Бэкап</button>
-        <label class="px-3 py-1.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main cursor-pointer">📂 Импорт<input type="file" accept=".json" class="hidden" onchange="importJSON(event)" /></label>
+        <button onclick="exportCSV()" class="px-3 py-1.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main hover:opacity-80 transition" title="Скачать таблицу в Excel CSV">
+          📥 CSV
+        </button>
+        <button onclick="exportJSON()" class="px-3 py-1.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main hover:opacity-80 transition" title="Резервная копия JSON">
+          💾 Бэкап
+        </button>
+        <label class="px-3 py-1.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main hover:opacity-80 transition cursor-pointer" title="Восстановить из JSON">
+          📂 Импорт
+          <input type="file" accept=".json" class="hidden" onchange="importJSON(event)" />
+        </label>
       </div>
     </nav>
 
-    <!-- TAB 1: EXCEL GRID -->
+    <!-- ========================================================= -->
+    <!-- TAB 1: EXCEL SCHEDULE GRID WITH FULL ZOOM CONTROL         -->
+    <!-- ========================================================= -->
     <main id="tab-excel" class="tab-content space-y-4">
       <div class="bento-card rounded-3xl p-4 sm:p-5 space-y-4">
+        <!-- Excel Zoom & Toolbar Header -->
         <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-3 pb-3 border-b border-theme">
           <div>
             <h2 class="text-base sm:text-lg font-extrabold text-main flex items-center gap-2">
               <span>📊 Интерактивная Excel-таблица занятости</span>
               <span id="excel-visible-count" class="text-xs font-bold px-2 py-0.5 rounded-lg surface-sub text-muted">0 дел</span>
             </h2>
-            <p class="text-xs text-muted mt-0.5">Кликните по ячейке для добавления занятия</p>
+            <p class="text-xs text-muted mt-0.5">Нажмите на пустую ячейку для быстрого добавления • Используйте зум, щипок двумя пальцами или <kbd class="px-1 py-0.5 rounded surface-sub border border-theme text-[10px]">Ctrl + Колесо</kbd></p>
           </div>
-          <div class="flex items-center gap-2 bg-slate-500/5 p-2 rounded-2xl border border-theme">
-            <span class="text-xs font-bold text-muted">Зум:</span>
-            <button onclick="adjustExcelZoom(-0.1)" class="w-8 h-8 rounded-xl surface-solid border font-extrabold text-main">−</button>
-            <input id="excel-zoom-slider" type="range" min="50" max="150" step="5" value="100" oninput="setExcelZoom(this.value / 100)" class="w-24 cursor-pointer" />
-            <button onclick="setExcelZoom(1)" id="excel-zoom-label" class="px-2 py-1 rounded-xl surface-solid border text-xs font-extrabold">100%</button>
-            <button onclick="adjustExcelZoom(0.1)" class="w-8 h-8 rounded-xl surface-solid border font-extrabold text-main">+</button>
+
+          <!-- ZOOM CONTROL BAR -->
+          <div class="flex flex-wrap items-center gap-2 bg-slate-500/5 p-2 rounded-2xl border border-theme">
+            <span class="text-xs font-bold text-muted px-1 hidden sm:inline">Масштаб:</span>
+
+            <!-- Zoom Out -->
+            <button onclick="adjustExcelZoom(-0.1)" title="Отдалить (−10%)" class="w-8 h-8 rounded-xl surface-solid border border-theme flex items-center justify-center font-extrabold text-base text-main hover:bg-indigo-500 hover:text-white transition active:scale-90">
+              −
+            </button>
+
+            <!-- Zoom Slider -->
+            <input
+              id="excel-zoom-slider"
+              type="range"
+              min="50"
+              max="150"
+              step="5"
+              value="100"
+              oninput="setExcelZoom(this.value / 100)"
+              class="w-24 sm:w-32 cursor-pointer"
+              title="Масштаб от 50% до 150%"
+            />
+
+            <!-- Clickable Percentage Reset -->
+            <button onclick="setExcelZoom(1)" id="excel-zoom-label" title="Нажмите для сброса на 100%" class="min-w-[52px] px-2 py-1 rounded-xl surface-solid border border-theme text-xs font-extrabold text-main hover:border-indigo-500 transition text-center">
+              100%
+            </button>
+
+            <!-- Zoom In -->
+            <button onclick="adjustExcelZoom(0.1)" title="Приблизить (+10%)" class="w-8 h-8 rounded-xl surface-solid border border-theme flex items-center justify-center font-extrabold text-base text-main hover:bg-indigo-500 hover:text-white transition active:scale-90">
+              +
+            </button>
+
+            <div class="h-5 w-[1px] bg-slate-300 dark:bg-slate-700 mx-0.5 hidden sm:block"></div>
+
+            <!-- Zoom Presets -->
+            <button onclick="fitWholeWeekZoom()" class="px-2.5 py-1.5 rounded-xl surface-solid border border-theme text-[11px] font-bold text-main hover:border-indigo-500 transition flex items-center gap-1" title="Поместить всю неделю на экран">
+              <span>🔭</span> Вся неделя
+            </button>
+            <button onclick="setExcelZoom(1.2)" class="px-2.5 py-1.5 rounded-xl surface-solid border border-theme text-[11px] font-bold text-main hover:border-indigo-500 transition" title="Крупный масштаб 120%">
+              🔍 120%
+            </button>
           </div>
         </div>
+
+        <!-- Free Windows Banner (Shown when filter === 'free') -->
         <div id="free-windows-panel" class="hidden p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 space-y-2">
-          <div class="flex items-center justify-between"><span class="text-xs font-extrabold text-emerald-700 dark:text-emerald-300">⏳ Свободные окна недели:</span><button onclick="setFilter('all')" class="text-xs font-bold text-muted">Закрыть ✕</button></div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold text-emerald-700 dark:text-emerald-300">⏳ Свободные окна недели (от 60 минут, с 08:00 до 22:00):</span>
+            <button onclick="setFilter('all')" class="text-xs font-bold text-muted hover:text-main">Закрыть ✕</button>
+          </div>
           <div id="free-windows-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2"></div>
         </div>
+
+        <!-- Excel Table Viewport -->
         <div id="excel-viewport" class="excel-viewport">
-          <table class="excel-grid-table" id="excel-grid-table"></table>
+          <table class="excel-grid-table" id="excel-grid-table">
+            <!-- Rendered dynamically via JS -->
+          </table>
         </div>
-        <div id="excel-hours-summary" class="text-xs font-bold text-muted"></div>
+
+        <!-- Legend & Summary Footer -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs text-muted">
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span> Лекции / Пары</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Подработка / Доход</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Спорт / Личное</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Важное / Дедлайн</span>
+          </div>
+          <div id="excel-hours-summary" class="font-bold text-main"></div>
+        </div>
       </div>
     </main>
 
-    <!-- TAB 2: DAYS KANBAN -->
+    <!-- ========================================================= -->
+    <!-- TAB 2: DAY-BY-DAY KANBAN WITH DRAG & DROP                 -->
+    <!-- ========================================================= -->
     <section id="tab-days" class="tab-content hidden space-y-4">
-      <div class="flex justify-between items-center">
-        <h2 class="text-lg font-extrabold text-main">📅 Расписание по дням недели</h2>
-        <button onclick="resetDefaultSchedule()" class="px-3 py-1.5 rounded-xl surface-sub border border-theme text-xs font-bold text-muted hover:text-rose-500">↺ Сбросить расписание</button>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
+        <div>
+          <h2 class="text-lg font-extrabold text-main">📅 Расписание по дням недели (Drag & Drop)</h2>
+          <p class="text-xs text-muted">Перетаскивайте карточки между днями, сдвигайте время кнопками ±30м или зачисляйте оплату за смены в один клик.</p>
+        </div>
+        <button onclick="resetDefaultSchedule()" class="self-start px-3 py-1.5 rounded-xl surface-sub border border-theme text-xs font-bold text-muted hover:text-rose-500 transition">
+          ↺ Сбросить базовые пары ИСУ 26дд-1
+        </button>
       </div>
-      <div id="days-kanban-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+
+      <div id="days-kanban-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <!-- Rendered dynamically -->
+      </div>
     </section>
 
-    <!-- TAB 3: FINANCE & CAPITAL -->
+    <!-- ========================================================= -->
+    <!-- TAB 3: FINANCE, SIDE-HUSTLES & REAL HOURLY RATE           -->
+    <!-- ========================================================= -->
     <section id="tab-finance" class="tab-content hidden space-y-5">
-      <div class="flex justify-between items-center">
-        <h2 class="text-lg font-extrabold text-main">💰 Управление финансами и капиталом</h2>
-        <button onclick="openCapitalSettingsModal()" style="background-color: var(--accent);" class="px-4 py-2 rounded-xl text-white text-xs font-extrabold shadow-md hover:brightness-110">⚙️ Настроить счета и капитал</button>
+      <!-- Top Financial KPIs -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Total Balance -->
+        <div class="bento-card rounded-3xl p-4 sm:p-5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-muted uppercase tracking-wider">Общий капитал</span>
+            <span class="text-lg">🏦</span>
+          </div>
+          <div id="fin-total-capital" class="text-2xl font-extrabold text-main">0 ₸</div>
+          <div class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold" id="fin-safe-daily">Безопасно в день: 0 ₸</div>
+        </div>
+
+        <!-- Side-Hustle Weekly Income -->
+        <div class="bento-card rounded-3xl p-4 sm:p-5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-muted uppercase tracking-wider">Подработки за неделю</span>
+            <span class="text-lg">💼</span>
+          </div>
+          <div id="fin-sidejob-credited" class="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">0 ₸</div>
+          <div class="text-xs text-muted font-semibold">План по расписанию: <span id="fin-sidejob-planned" class="text-main font-bold">0 ₸</span></div>
+        </div>
+
+        <!-- Real Hourly Rate Calculator -->
+        <div class="bento-card rounded-3xl p-4 sm:p-5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-muted uppercase tracking-wider">Реальная ставка часа</span>
+            <span class="text-lg">⏱️</span>
+          </div>
+          <div id="fin-real-hourly" class="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400">0 ₸/ч</div>
+          <div class="text-xs text-muted font-semibold" id="fin-hours-breakdown">Работа: 0ч • Учёба: 0ч</div>
+        </div>
+
+        <!-- 50/30/20 Rule Health -->
+        <div class="bento-card rounded-3xl p-4 sm:p-5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-muted uppercase tracking-wider">Баланс трат (50/30/20)</span>
+            <span class="text-lg">📊</span>
+          </div>
+          <div id="fin-month-expense" class="text-2xl font-extrabold text-rose-500">0 ₸</div>
+          <div class="text-xs text-muted font-semibold">Доходы (журнал): <span id="fin-month-income" class="text-emerald-500 font-bold">0 ₸</span></div>
+        </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div class="bento-card rounded-3xl p-5 space-y-2">
-          <div class="text-xs font-bold text-muted uppercase">Общий капитал</div>
-          <div id="fin-total-capital" class="text-3xl font-extrabold text-main">0 ₸</div>
-        </div>
-        <div class="bento-card rounded-3xl p-5 space-y-2">
-          <div class="text-xs font-bold text-muted uppercase">Подработки за неделю</div>
-          <div id="fin-sidejob-credited" class="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">0 ₸</div>
-        </div>
-        <div class="bento-card rounded-3xl p-5 space-y-2">
-          <div class="text-xs font-bold text-muted uppercase">Реальная ставка часа</div>
-          <div id="fin-real-hourly" class="text-3xl font-extrabold text-indigo-600 dark:text-indigo-400">0 ₸/ч</div>
-        </div>
-      </div>
-
+      <!-- Accounts + Transfer + Price in Hours of Life -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        <div class="lg:col-span-7 bento-card rounded-3xl p-5 space-y-4">
+        <!-- 3 Wallets -->
+        <div class="lg:col-span-7 bento-card rounded-3xl p-4 sm:p-5 space-y-4">
           <div class="flex items-center justify-between">
             <h3 class="text-base font-extrabold text-main">💳 Счета и кошельки</h3>
-            <button onclick="openTransactionModal()" style="background-color: var(--accent);" class="px-3.5 py-1.5 rounded-xl text-white text-xs font-bold">+ Операция</button>
+            <button onclick="openTransactionModal()" style="background-color: var(--accent);" class="px-3.5 py-1.5 rounded-xl text-white text-xs font-bold hover:brightness-110 transition">
+              + Операция
+            </button>
           </div>
+
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div class="p-3.5 rounded-2xl surface-sub border border-theme space-y-1">
-              <div class="text-xs font-bold text-muted">💳 Карта</div>
+              <div class="text-xs font-bold text-muted flex items-center justify-between"><span>💳 Карта (Основной)</span></div>
               <div id="acc-card-val" class="text-lg font-extrabold text-main">0 ₸</div>
             </div>
             <div class="p-3.5 rounded-2xl surface-sub border border-theme space-y-1">
-              <div class="text-xs font-bold text-muted">💵 Наличные</div>
+              <div class="text-xs font-bold text-muted flex items-center justify-between"><span>💵 Наличные</span></div>
               <div id="acc-cash-val" class="text-lg font-extrabold text-main">0 ₸</div>
             </div>
             <div class="p-3.5 rounded-2xl surface-sub border border-theme space-y-1">
-              <div class="text-xs font-bold text-muted">🐷 Накопительный</div>
+              <div class="text-xs font-bold text-muted flex items-center justify-between"><span>🐷 Накопительный</span></div>
               <div id="acc-savings-val" class="text-lg font-extrabold text-emerald-600 dark:text-emerald-400">0 ₸</div>
+            </div>
+          </div>
+
+          <!-- Quick Transfer Between Wallets -->
+          <div class="p-3.5 rounded-2xl surface-sub border border-theme space-y-2.5">
+            <div class="text-xs font-extrabold text-main">🔄 Быстрый перевод между счетами</div>
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
+              <select id="transfer-from" class="px-3 py-2 rounded-xl surface-solid border border-theme text-xs font-bold text-main">
+                <option value="card">С Карты</option>
+                <option value="cash">С Наличных</option>
+                <option value="savings">С Накопительного</option>
+              </select>
+              <select id="transfer-to" class="px-3 py-2 rounded-xl surface-solid border border-theme text-xs font-bold text-main">
+                <option value="savings">На Накопительный</option>
+                <option value="card">На Карту</option>
+                <option value="cash">На Наличные</option>
+              </select>
+              <input id="transfer-amount" type="number" placeholder="Сумма ₸" class="px-3 py-2 rounded-xl surface-solid border border-theme text-xs font-bold text-main" />
+              <button onclick="executeTransfer()" class="px-3 py-2 rounded-xl bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 text-xs font-extrabold hover:opacity-90 transition">
+                Перевести
+              </button>
+            </div>
+          </div>
+
+          <!-- 50/30/20 Progress Bars -->
+          <div class="space-y-2.5 pt-1">
+            <div class="flex items-center justify-between text-xs font-bold">
+              <span class="text-main">📐 Распределение расходов по правилу 50 / 30 / 20</span>
+              <span class="text-muted">База / Желания / Накопления</span>
+            </div>
+            <div class="space-y-2 text-xs">
+              <div>
+                <div class="flex justify-between mb-1"><span class="font-semibold text-main">🏠 Базовые нужды (цель 50%)</span><span id="rule-needs-label" class="font-bold text-muted">0%</span></div>
+                <div class="w-full h-2 rounded-full surface-sub overflow-hidden"><div id="rule-needs-bar" class="h-full bg-indigo-500 rounded-full transition-all" style="width: 0%"></div></div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1"><span class="font-semibold text-main">🎮 Желания и досуг (цель 30%)</span><span id="rule-wants-label" class="font-bold text-muted">0%</span></div>
+                <div class="w-full h-2 rounded-full surface-sub overflow-hidden"><div id="rule-wants-bar" class="h-full bg-amber-500 rounded-full transition-all" style="width: 0%"></div></div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1"><span class="font-semibold text-main">🚀 Инвестиции и копилка (цель 20%)</span><span id="rule-save-label" class="font-bold text-muted">0%</span></div>
+                <div class="w-full h-2 rounded-full surface-sub overflow-hidden"><div id="rule-save-bar" class="h-full bg-emerald-500 rounded-full transition-all" style="width: 0%"></div></div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="lg:col-span-5 bento-card rounded-3xl p-5 space-y-3">
-          <h3 class="text-base font-extrabold text-main">🎯 Цели</h3>
-          <div id="savings-goals-list" class="space-y-2"></div>
+        <!-- Right Column: Life-Hours Calculator + Savings Goals -->
+        <div class="lg:col-span-5 space-y-4">
+          <!-- Price in Hours of Life -->
+          <div class="bento-card rounded-3xl p-4 sm:p-5 space-y-3">
+            <h3 class="text-base font-extrabold text-main">⏳ Калькулятор «Цена в часах жизни»</h3>
+            <p class="text-xs text-muted">Узнай, сколько часов подработки стоит желанная покупка исходя из твоей текущей ставки.</p>
+            <div class="flex gap-2">
+              <input id="life-cost-input" type="number" oninput="updateLifeHoursCalc()" placeholder="Цена товара в ₸ (напр. 25000)" class="flex-1 px-3.5 py-2 rounded-xl surface-sub border border-theme text-xs sm:text-sm font-bold text-main" />
+            </div>
+            <div id="life-cost-result" class="p-3 rounded-2xl surface-sub border border-theme text-xs font-bold text-main">
+              Введи сумму покупки, чтобы увидеть её стоимость в твоих рабочих часах.
+            </div>
+          </div>
+
+          <!-- Savings Goals -->
+          <div class="bento-card rounded-3xl p-4 sm:p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-base font-extrabold text-main">🎯 Финансовые цели и копилки</h3>
+              <button onclick="addSavingsGoalPrompt()" class="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline">+ Цель</button>
+            </div>
+            <div id="savings-goals-list" class="space-y-3"></div>
+          </div>
         </div>
       </div>
 
-      <div class="bento-card rounded-3xl p-5 space-y-3">
-        <h3 class="text-base font-extrabold text-main">🧾 Журнал операций</h3>
-        <div id="transactions-list" class="divide-y divide-slate-200 dark:divide-slate-700 max-h-60 overflow-y-auto"></div>
+      <!-- Transactions Log -->
+      <div class="bento-card rounded-3xl p-4 sm:p-5 space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-base font-extrabold text-main">🧾 Журнал финансовых операций</h3>
+          <span id="tx-count-badge" class="text-xs font-bold text-muted">0 записей</span>
+        </div>
+        <div id="transactions-list" class="divide-y divide-slate-200/70 dark:divide-slate-700/70 max-h-80 overflow-y-auto"></div>
       </div>
     </section>
 
-    <!-- TAB 4: FOCUS & HABITS -->
+    <!-- ========================================================= -->
+    <!-- TAB 4: POMODORO + AMBIENT SOUND + HABITS + CHECKLIST      -->
+    <!-- ========================================================= -->
     <section id="tab-focus" class="tab-content hidden space-y-5">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        <div class="lg:col-span-5 bento-card rounded-3xl p-5 space-y-5">
-          <h3 class="text-base font-extrabold text-main">🍅 Помодоро</h3>
-          <div class="py-6 rounded-3xl surface-sub border text-center space-y-1">
-            <div id="pomo-display" class="text-5xl font-extrabold tracking-tight text-main">25:00</div>
-          </div>
-          <div class="flex justify-center gap-3">
-            <button id="pomo-start-btn" onclick="togglePomodoro()" style="background-color: var(--accent);" class="px-6 py-3 rounded-2xl text-white text-sm font-extrabold">▶ Старт</button>
-            <button onclick="resetPomodoro()" class="px-4 py-3 rounded-2xl surface-sub border text-sm font-bold text-main">↺ Сброс</button>
-          </div>
-        </div>
-        <div class="lg:col-span-7 bento-card rounded-3xl p-5 space-y-3">
-          <h3 class="text-base font-extrabold text-main">🔥 Привычки</h3>
-          <div class="overflow-x-auto"><table class="w-full text-xs text-left" id="habits-table"></table></div>
-        </div>
-      </div>
-    </section>
+        <!-- Pomodoro + Web Audio Soundscape -->
+        <div class="lg:col-span-5 bento-card rounded-3xl p-5 flex flex-col justify-between space-y-5">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-base font-extrabold text-main">🍅 Фокус-таймер Помодоро</h3>
+              <span id="pomo-sessions-badge" class="px-2.5 py-1 rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-300 text-xs font-extrabold">
+                Сессий сегодня: 0
+              </span>
+            </div>
 
-    <!-- TAB 5: NOTES -->
-    <section id="tab-notes" class="tab-content hidden space-y-4">
-      <div class="bento-card rounded-3xl p-5 space-y-4">
-        <div class="flex justify-between items-center pb-3 border-b border-theme">
-          <h2 class="text-lg font-extrabold text-main">📝 Быстрые заметки</h2>
-          <button onclick="addNewNote()" style="background-color: var(--accent);" class="px-4 py-2 rounded-xl text-white text-xs font-extrabold">+ Заметка</button>
+            <!-- Mode Selector -->
+            <div class="grid grid-cols-3 gap-1.5 p-1 rounded-2xl surface-sub border border-theme">
+              <button onclick="setPomodoroMode(25, 'Фокус 25м')" class="pomo-mode-btn py-1.5 rounded-xl text-xs font-extrabold transition bg-white dark:bg-slate-800 shadow-sm text-main">Фокус 25м</button>
+              <button onclick="setPomodoroMode(5, 'Перерыв 5м')" class="pomo-mode-btn py-1.5 rounded-xl text-xs font-bold text-muted transition">Перерыв 5м</button>
+              <button onclick="setPomodoroMode(50, 'Глубокий 50м')" class="pomo-mode-btn py-1.5 rounded-xl text-xs font-bold text-muted transition">Глубокий 50м</button>
+            </div>
+
+            <!-- Big Timer Display -->
+            <div class="py-6 rounded-3xl surface-sub border border-theme text-center space-y-1">
+              <div id="pomo-mode-label" class="text-xs font-bold uppercase tracking-widest text-muted">Фокус 25м</div>
+              <div id="pomo-display" class="text-5xl sm:text-6xl font-extrabold tracking-tight text-main tabular-nums">25:00</div>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex items-center justify-center gap-3">
+              <button id="pomo-start-btn" onclick="togglePomodoro()" style="background-color: var(--accent);" class="px-6 py-3 rounded-2xl text-white text-sm font-extrabold shadow-md hover:brightness-110 transition">
+                ▶ Старт
+              </button>
+              <button onclick="resetPomodoro()" class="px-4 py-3 rounded-2xl surface-sub border border-theme text-sm font-bold text-main hover:opacity-80 transition">
+                ↺ Сброс
+              </button>
+            </div>
+          </div>
+
+          <!-- Ambient Noise Generator (Web Audio API) -->
+          <div class="p-4 rounded-2xl surface-sub border border-theme space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-main">🎧 Фоновый генератор звука (без интернета)</span>
+              <span id="ambient-status" class="text-[11px] font-bold text-muted">Выкл</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+              <button onclick="toggleAmbientSound('brown')" data-sound="brown" class="ambient-btn py-2 px-2 rounded-xl surface-solid border border-theme text-xs font-bold text-main hover:border-indigo-500 transition">🌊 Коричневый шум</button>
+              <button onclick="toggleAmbientSound('rain')" data-sound="rain" class="ambient-btn py-2 px-2 rounded-xl surface-solid border border-theme text-xs font-bold text-main hover:border-indigo-500 transition">🌧️ Дождь</button>
+              <button onclick="toggleAmbientSound('drone')" data-sound="drone" class="ambient-btn py-2 px-2 rounded-xl surface-solid border border-theme text-xs font-bold text-main hover:border-indigo-500 transition">🌌 Эмбиент</button>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-xs">🔈</span>
+              <input id="ambient-volume" type="range" min="0" max="100" value="35" oninput="updateAmbientVolume(this.value)" class="flex-1" />
+              <span class="text-xs">🔊</span>
+            </div>
+          </div>
         </div>
-        <div id="notes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+
+        <!-- Habit Tracker + Daily Checklist -->
+        <div class="lg:col-span-7 space-y-4">
+          <!-- Weekly Habit Tracker -->
+          <div class="bento-card rounded-3xl p-4 sm:p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-base font-extrabold text-main">🔥 Трекер привычек недели</h3>
+                <p class="text-xs text-muted">Отмечай регулярные привычки в один клик для поддержания ритма.</p>
+              </div>
+              <button onclick="addCustomHabitPrompt()" class="px-3 py-1.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main hover:border-indigo-500 transition">+ Привычка</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left border-collapse" id="habits-table">
+                <!-- Rendered via JS -->
+              </table>
+            </div>
+          </div>
+
+          <!-- Daily Tasks Checklist with Auto-Credit Support -->
+          <div class="bento-card rounded-3xl p-4 sm:p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-base font-extrabold text-main">✅ Чек-лист задач и смен на сегодня</h3>
+                <p class="text-xs text-muted">При отметке смены с автозачислением оплата автоматически поступит на выбранный счёт.</p>
+              </div>
+              <select id="checklist-day-select" onchange="renderChecklist()" class="px-3 py-1.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main">
+                <option value="0">Понедельник</option>
+                <option value="1">Вторник</option>
+                <option value="2">Среда</option>
+                <option value="3">Четверг</option>
+                <option value="4">Пятница</option>
+                <option value="5">Суббота</option>
+                <option value="6">Воскресенье</option>
+              </select>
+            </div>
+            <div id="daily-checklist-list" class="space-y-2"></div>
+          </div>
+        </div>
       </div>
     </section>
 
   </div>
 
-  <!-- BOTTOM MOBILE NAV -->
+  <!-- FLOATING MOBILE BOTTOM NAVIGATION -->
   <nav class="md:hidden fixed bottom-3 left-3 right-3 z-40 bento-card rounded-2xl p-1.5 flex items-center justify-around shadow-2xl no-print">
-    <button onclick="switchTab('excel')" data-tab="excel" class="nav-tab flex-1 py-2 rounded-xl flex flex-col items-center gap-0.5 text-[11px] font-bold text-white" style="background-color: var(--accent);"><span>📊</span><span>Excel</span></button>
-    <button onclick="switchTab('days')" data-tab="days" class="nav-tab flex-1 py-2 rounded-xl flex flex-col items-center gap-0.5 text-[11px] font-bold text-muted"><span>📅</span><span>Дни</span></button>
-    <button onclick="switchTab('finance')" data-tab="finance" class="nav-tab flex-1 py-2 rounded-xl flex flex-col items-center gap-0.5 text-[11px] font-bold text-muted"><span>💰</span><span>Финансы</span></button>
-    <button onclick="switchTab('focus')" data-tab="focus" class="nav-tab flex-1 py-2 rounded-xl flex flex-col items-center gap-0.5 text-[11px] font-bold text-muted"><span>🍅</span><span>Фокус</span></button>
-    <button onclick="switchTab('notes')" data-tab="notes" class="nav-tab flex-1 py-2 rounded-xl flex flex-col items-center gap-0.5 text-[11px] font-bold text-muted"><span>📝</span><span>Заметки</span></button>
+    <button onclick="switchTab('excel')" data-tab="excel" class="nav-tab flex-1 py-2 rounded-xl flex flex-col items-center gap-0.5 text-[11px] font-bold">
+      <span class="text-base">📊</span>
+      <span>Excel</span>
+    </button>
+    <button onclick="switchTab('days')" data-tab="days" class="nav-tab flex-1 py-2 rounded-xl flex flex-col items-center gap-0.5 text-[11px] font-bold">
+      <span class="text-base">📅</span>
+      <span>Дни</span>
+    </button>
+    <button onclick="switchTab('finance')" data-tab="finance" class="nav-tab flex-1 py-2 rounded-xl flex flex-col items-center gap-0.5 text-[11px] font-bold">
+      <span class="text-base">💰</span>
+      <span>Финансы</span>
+    </button>
+    <button onclick="switchTab('focus')" data-tab="focus" class="nav-tab flex-1 py-2 rounded-xl flex flex-col items-center gap-0.5 text-[11px] font-bold">
+      <span class="text-base">🍅</span>
+      <span>Фокус</span>
+    </button>
   </nav>
 
-  <!-- MODAL: CAPITAL & ACCOUNTS SETTINGS -->
-  <div id="capital-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 backdrop-blur-sm p-4">
-    <div class="surface-solid border border-theme rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
+  <!-- ========================================================= -->
+  <!-- MODAL 1: CREATE / EDIT EVENT + SIDE-HUSTLE INCOME         -->
+  <!-- ========================================================= -->
+  <div id="event-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto">
+    <div class="surface-solid border border-theme rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4 my-auto">
       <div class="flex items-center justify-between border-b border-theme pb-3">
-        <h3 class="text-lg font-extrabold text-main">⚙️ Настройка капитала и счетов</h3>
-        <button onclick="closeCapitalSettingsModal()" class="w-8 h-8 rounded-xl surface-sub text-muted font-bold">✕</button>
+        <h3 id="event-modal-title" class="text-lg font-extrabold text-main">Новое занятие / Дело</h3>
+        <button onclick="closeEventModal()" class="w-8 h-8 rounded-xl surface-sub text-muted hover:text-main font-bold">✕</button>
       </div>
-      <div class="space-y-3">
-        <p class="text-xs text-muted">Введите актуальное количество денег на ваших счетах на текущий момент:</p>
-        <div>
-          <label class="block text-xs font-bold text-muted mb-1">💳 Карта (Основной счет)</label>
-          <input id="set-card-val" type="number" step="100" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border border-theme text-sm font-extrabold text-main" />
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-muted mb-1">💵 Наличные деньги</label>
-          <input id="set-cash-val" type="number" step="100" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border border-theme text-sm font-extrabold text-main" />
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-muted mb-1">🐷 Накопительный счет / Копилка</label>
-          <input id="set-savings-val" type="number" step="100" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border border-theme text-sm font-extrabold text-main" />
-        </div>
-      </div>
-      <div class="flex justify-end gap-2 pt-2 border-t border-theme">
-        <button onclick="closeCapitalSettingsModal()" class="px-4 py-2.5 rounded-xl surface-sub border text-xs font-bold text-main">Отмена</button>
-        <button onclick="saveCapitalSettings()" style="background-color: var(--accent);" class="px-5 py-2.5 rounded-xl text-white text-xs font-extrabold shadow-md">Сохранить баланс</button>
-      </div>
-    </div>
-  </div>
 
-  <!-- MODAL: EVENT EDIT -->
-  <div id="event-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 backdrop-blur-sm p-4 overflow-y-auto">
-    <div class="surface-solid border border-theme rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 my-auto">
-      <div class="flex items-center justify-between border-b border-theme pb-3">
-        <h3 id="event-modal-title" class="text-lg font-extrabold text-main">Занятие / Дело</h3>
-        <button onclick="closeEventModal()" class="w-8 h-8 rounded-xl surface-sub text-muted font-bold">✕</button>
-      </div>
       <input type="hidden" id="ev-id" />
+
       <div class="space-y-3">
         <div>
-          <label class="block text-xs font-bold text-muted mb-1">Название *</label>
-          <input id="ev-title" type="text" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border text-sm font-semibold text-main" />
+          <label class="block text-xs font-bold text-muted mb-1">Название занятия или подработки *</label>
+          <input id="ev-title" type="text" placeholder="Например: Репетиторство по математике / Алгоритмы" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border border-theme text-sm font-semibold text-main focus:outline-none focus:ring-2 focus:ring-indigo-500" />
         </div>
-        <div class="grid grid-cols-3 gap-2">
-          <div><label class="block text-xs font-bold text-muted mb-1">День</label><select id="ev-day" class="w-full px-3 py-2 rounded-xl surface-sub border text-xs"><option value="0">Пн</option><option value="1">Вт</option><option value="2">Ср</option><option value="3">Чт</option><option value="4">Пт</option><option value="5">Сб</option><option value="6">Вс</option></select></div>
-          <div><label class="block text-xs font-bold text-muted mb-1">Начало</label><input id="ev-start" type="time" value="14:00" class="w-full px-3 py-2 rounded-xl surface-sub border text-xs" /></div>
-          <div><label class="block text-xs font-bold text-muted mb-1">Конец</label><input id="ev-end" type="time" value="15:30" class="w-full px-3 py-2 rounded-xl surface-sub border text-xs" /></div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+          <div>
+            <label class="block text-xs font-bold text-muted mb-1">День недели</label>
+            <select id="ev-day" onchange="checkTimeConflict()" class="w-full px-3 py-2.5 rounded-xl surface-sub border border-theme text-xs sm:text-sm font-bold text-main">
+              <option value="0">Понедельник</option>
+              <option value="1">Вторник</option>
+              <option value="2">Среда</option>
+              <option value="3">Четверг</option>
+              <option value="4">Пятница</option>
+              <option value="5">Суббота</option>
+              <option value="6">Воскресенье</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-muted mb-1">Начало</label>
+            <input id="ev-start" type="time" value="14:00" onchange="recalcEventFinancePreview(); checkTimeConflict();" class="w-full px-3 py-2 rounded-xl surface-sub border border-theme text-xs sm:text-sm font-bold text-main" />
+          </div>
+          <div class="col-span-2 sm:col-span-1">
+            <label class="block text-xs font-bold text-muted mb-1">Конец</label>
+            <input id="ev-end" type="time" value="16:00" onchange="recalcEventFinancePreview(); checkTimeConflict();" class="w-full px-3 py-2 rounded-xl surface-sub border border-theme text-xs sm:text-sm font-bold text-main" />
+          </div>
         </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div><label class="block text-xs font-bold text-muted mb-1">Категория</label><select id="ev-category" class="w-full px-3 py-2 rounded-xl surface-sub border text-xs"><option value="study">📚 Учёба</option><option value="work">💼 Работа</option><option value="sport">💪 Спорт</option><option value="personal">✨ Личное</option></select></div>
-          <div><label class="block text-xs font-bold text-muted mb-1">Аудитория</label><input id="ev-room" type="text" class="w-full px-3 py-2 rounded-xl surface-sub border text-xs" /></div>
+
+        <!-- Quick Time Shift Buttons inside Modal -->
+        <div class="flex flex-wrap items-center gap-1.5">
+          <span class="text-[11px] font-bold text-muted mr-1">Быстрый сдвиг:</span>
+          <button type="button" onclick="shiftModalTime(-30)" class="px-2.5 py-1 rounded-lg surface-sub border border-theme text-[11px] font-bold text-main hover:border-indigo-500">−30 мин</button>
+          <button type="button" onclick="shiftModalTime(30)" class="px-2.5 py-1 rounded-lg surface-sub border border-theme text-[11px] font-bold text-main hover:border-indigo-500">+30 мин</button>
+          <button type="button" onclick="shiftModalDay(1)" class="px-2.5 py-1 rounded-lg surface-sub border border-theme text-[11px] font-bold text-main hover:border-indigo-500">+1 день</button>
+        </div>
+
+        <!-- Conflict Warning Banner -->
+        <div id="ev-conflict-warning" class="hidden p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-xs font-bold text-amber-700 dark:text-amber-300">
+          ⚠️ Внимание: время пересекается с другим занятием!
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-xs font-bold text-muted mb-1">Категория</label>
+            <select id="ev-category" class="w-full px-3 py-2.5 rounded-xl surface-sub border border-theme text-xs sm:text-sm font-bold text-main">
+              <option value="study">📚 Учёба / Пара</option>
+              <option value="work">💼 Подработка / Смена</option>
+              <option value="sport">💪 Спорт / Здоровье</option>
+              <option value="personal">✨ Личное / Отдых</option>
+              <option value="deadline">🔥 Важный дедлайн</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-muted mb-1">Аудитория / Место</label>
+            <input id="ev-room" type="text" placeholder="Ауд. 305 / Онлайн" class="w-full px-3 py-2.5 rounded-xl surface-sub border border-theme text-xs sm:text-sm font-semibold text-main" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-xs font-bold text-muted mb-1">Неделя</label>
+            <select id="ev-parity" class="w-full px-3 py-2 rounded-xl surface-sub border border-theme text-xs font-bold text-main">
+              <option value="all">Каждую неделю</option>
+              <option value="even">Только чётная</option>
+              <option value="odd">Только нечётная</option>
+            </select>
+          </div>
+          <div class="flex items-end pb-1">
+            <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-main">
+              <input id="ev-important" type="checkbox" class="w-4 h-4 rounded accent-rose-500" />
+              <span>🔴 Отметить как важное</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- FINANCIAL ATTACHMENT SECTION -->
+        <div class="p-3.5 rounded-2xl surface-sub border border-theme space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold text-main">💰 Финансовая привязка (Доход / Расход)</span>
+            <select id="ev-money-type" onchange="toggleMoneyFields()" class="px-2.5 py-1 rounded-xl surface-solid border border-theme text-xs font-extrabold text-main">
+              <option value="none">Без денег</option>
+              <option value="income">+ Доход / Подработка</option>
+              <option value="expense">− Расход / Оплата</option>
+            </select>
+          </div>
+
+          <div id="ev-money-details" class="hidden space-y-2.5 pt-1 border-t border-theme">
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[11px] font-bold text-muted mb-1">Режим расчёта</label>
+                <select id="ev-rate-mode" onchange="recalcEventFinancePreview()" class="w-full px-2.5 py-2 rounded-xl surface-solid border border-theme text-xs font-bold text-main">
+                  <option value="fixed">Фиксированная сумма</option>
+                  <option value="hourly">Почасовая ставка (₸/ч)</option>
+                </select>
+              </div>
+              <div>
+                <label id="ev-amount-label" class="block text-[11px] font-bold text-muted mb-1">Сумма (₸)</label>
+                <input id="ev-amount" type="number" min="0" step="100" value="0" oninput="recalcEventFinancePreview()" class="w-full px-2.5 py-2 rounded-xl surface-solid border border-theme text-xs font-extrabold text-main" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 items-center">
+              <div>
+                <label class="block text-[11px] font-bold text-muted mb-1">Счёт зачисления/списания</label>
+                <select id="ev-account" class="w-full px-2.5 py-2 rounded-xl surface-solid border border-theme text-xs font-bold text-main">
+                  <option value="card">💳 Карта</option>
+                  <option value="cash">💵 Наличные</option>
+                  <option value="savings">🐷 Накопительный</option>
+                </select>
+              </div>
+              <div class="p-2 rounded-xl surface-solid border border-theme text-right">
+                <div class="text-[10px] text-muted font-bold">Итоговая сумма:</div>
+                <div id="ev-calculated-total" class="text-sm font-extrabold text-emerald-600 dark:text-emerald-400">0 ₸</div>
+              </div>
+            </div>
+
+            <label class="flex items-center gap-2 cursor-pointer text-xs font-semibold text-main">
+              <input id="ev-auto-credit" type="checkbox" checked class="w-4 h-4 rounded accent-emerald-500" />
+              <span>Автозачисление в кошелёк при отметке в чек-листе</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-muted mb-1">Заметка / Ссылка на пару или клиента</label>
+          <input id="ev-note" type="text" placeholder="Дополнительные детали..." class="w-full px-3.5 py-2 rounded-xl surface-sub border border-theme text-xs text-main" />
         </div>
       </div>
-      <div class="flex justify-between items-center pt-2 border-t border-theme">
-        <button id="ev-delete-btn" onclick="deleteCurrentEvent()" class="hidden px-3 py-2 rounded-xl bg-rose-500/15 text-rose-600 text-xs font-bold">🗑 Удалить</button>
-        <div class="flex gap-2 ml-auto">
-          <button onclick="closeEventModal()" class="px-4 py-2 rounded-xl surface-sub border text-xs font-bold">Отмена</button>
-          <button onclick="saveEventFromModal()" style="background-color: var(--accent);" class="px-5 py-2 rounded-xl text-white text-xs font-extrabold">Сохранить</button>
+
+      <div class="flex items-center justify-between gap-2 pt-2 border-t border-theme">
+        <button id="ev-delete-btn" type="button" onclick="deleteCurrentEvent()" class="hidden px-3.5 py-2.5 rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400 text-xs font-extrabold hover:bg-rose-500 hover:text-white transition">
+          🗑 Удалить
+        </button>
+        <div class="flex items-center gap-2 ml-auto">
+          <button type="button" onclick="closeEventModal()" class="px-4 py-2.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main">Отмена</button>
+          <button type="button" onclick="saveEventFromModal()" style="background-color: var(--accent);" class="px-5 py-2.5 rounded-xl text-white text-xs font-extrabold shadow-md hover:brightness-110 transition">
+            Сохранить
+          </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- MODAL: TRANSACTION -->
+  <!-- ========================================================= -->
+  <!-- MODAL 2: MANUAL TRANSACTION MODAL                         -->
+  <!-- ========================================================= -->
   <div id="tx-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 backdrop-blur-sm p-4">
-    <div class="surface-solid border border-theme rounded-3xl max-w-md w-full p-5 shadow-2xl space-y-4">
+    <div class="surface-solid border border-theme rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b border-theme pb-3">
-        <h3 class="text-lg font-extrabold text-main">Новая операция</h3>
-        <button onclick="closeTransactionModal()" class="w-8 h-8 rounded-xl surface-sub text-muted">✕</button>
+        <h3 class="text-lg font-extrabold text-main">Новая финансовая операция</h3>
+        <button onclick="closeTransactionModal()" class="w-8 h-8 rounded-xl surface-sub text-muted hover:text-main font-bold">✕</button>
       </div>
+
       <div class="space-y-3">
-        <select id="tx-type" class="w-full px-3 py-2.5 rounded-xl surface-sub border text-xs font-extrabold"><option value="expense">− Расход</option><option value="income">+ Доход</option></select>
-        <select id="tx-account" class="w-full px-3 py-2.5 rounded-xl surface-sub border text-xs font-bold"><option value="card">💳 Карта</option><option value="cash">💵 Наличные</option><option value="savings">🐷 Накопительный</option></select>
-        <input id="tx-title" type="text" placeholder="Описание" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border text-sm font-semibold" />
-        <input id="tx-amount" type="number" placeholder="Сумма в ₸" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border text-sm font-extrabold" />
+        <div class="grid grid-cols-2 gap-2">
+          <select id="tx-type" class="px-3 py-2.5 rounded-xl surface-sub border border-theme text-xs font-extrabold text-main">
+            <option value="expense">− Расход</option>
+            <option value="income">+ Доход</option>
+          </select>
+          <select id="tx-account" class="px-3 py-2.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main">
+            <option value="card">💳 Карта</option>
+            <option value="cash">💵 Наличные</option>
+            <option value="savings">🐷 Накопительный</option>
+          </select>
+        </div>
+
+        <input id="tx-title" type="text" placeholder="Описание (например: Обед в столовой / Стипендия)" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border border-theme text-sm font-semibold text-main" />
+
+        <div class="grid grid-cols-2 gap-2">
+          <input id="tx-amount" type="number" placeholder="Сумма в ₸" class="px-3.5 py-2.5 rounded-xl surface-sub border border-theme text-sm font-extrabold text-main" />
+          <select id="tx-bucket" class="px-3 py-2.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main">
+            <option value="needs">🏠 База (50%)</option>
+            <option value="wants">🎮 Желания (30%)</option>
+            <option value="save">🚀 Накопления (20%)</option>
+          </select>
+        </div>
       </div>
+
       <div class="flex justify-end gap-2 pt-2">
-        <button onclick="closeTransactionModal()" class="px-4 py-2 rounded-xl surface-sub border text-xs font-bold">Отмена</button>
-        <button onclick="saveManualTransaction()" style="background-color: var(--accent);" class="px-5 py-2 rounded-xl text-white text-xs font-extrabold">Добавить</button>
+        <button onclick="closeTransactionModal()" class="px-4 py-2.5 rounded-xl surface-sub border border-theme text-xs font-bold text-main">Отмена</button>
+        <button onclick="saveManualTransaction()" style="background-color: var(--accent);" class="px-5 py-2.5 rounded-xl text-white text-xs font-extrabold">Добавить</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL: APPEARANCE & RENAME -->
+  <!-- ========================================================= -->
+  <!-- MODAL 3: APPEARANCE (8 THEMES & 5 FONTS)                  -->
+  <!-- ========================================================= -->
   <div id="appearance-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 backdrop-blur-sm p-4">
-    <div class="surface-solid border border-theme rounded-3xl max-w-md w-full p-5 shadow-2xl space-y-4">
+    <div class="surface-solid border border-theme rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b border-theme pb-3">
-        <h3 class="text-lg font-extrabold text-main">⚙️ Настройки и оформление</h3>
-        <button onclick="closeAppearanceModal()" class="w-8 h-8 rounded-xl surface-sub text-muted">✕</button>
+        <h3 class="text-lg font-extrabold text-main">🎨 Оформление и типографика</h3>
+        <button onclick="closeAppearanceModal()" class="w-8 h-8 rounded-xl surface-sub text-muted hover:text-main font-bold">✕</button>
       </div>
+
       <div class="space-y-4">
         <div>
-          <label class="block text-xs font-extrabold text-muted mb-2">Название тайм-менеджера</label>
-          <input id="settings-app-title" type="text" class="w-full px-3.5 py-2.5 rounded-xl surface-sub border text-sm font-bold text-main" />
+          <label class="block text-xs font-extrabold text-muted uppercase tracking-wider mb-2">Цветовая акцент-тема (8 вариантов)</label>
+          <div id="theme-swatches" class="grid grid-cols-4 gap-2"></div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-extrabold text-muted uppercase tracking-wider mb-2">Шрифт интерфейса (5 гарнитур)</label>
+          <div id="font-options" class="grid grid-cols-1 gap-1.5"></div>
         </div>
       </div>
+
       <div class="flex justify-end pt-2">
-        <button onclick="saveAppearanceSettings()" style="background-color: var(--accent);" class="px-5 py-2.5 rounded-xl text-white text-xs font-extrabold">Сохранить</button>
+        <button onclick="closeAppearanceModal()" style="background-color: var(--accent);" class="px-5 py-2.5 rounded-xl text-white text-xs font-extrabold">Готово</button>
       </div>
     </div>
   </div>
 
   <script>
-    const STORAGE_KEY = 'isu_26dd1_timemanager_pro_v4';
+    // =========================================================================
+    // 1. STATE & CONSTANTS (ИСУ 26дд-1 BASE SCHEDULE + PRO STORAGE)
+    // =========================================================================
+    const STORAGE_KEY = 'isu_26dd1_timemanager_pro_v2';
+
     const DAYS_SHORT = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
     const DAYS_FULL = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
 
+    const THEMES = [
+      { id: 'indigo', name: 'Индиго', accent: '#4f46e5', soft: 'rgba(79, 70, 229, 0.14)' },
+      { id: 'emerald', name: 'Изумруд', accent: '#059669', soft: 'rgba(5, 150, 105, 0.14)' },
+      { id: 'sky', name: 'Небо', accent: '#0284c7', soft: 'rgba(2, 132, 199, 0.14)' },
+      { id: 'violet', name: 'Аметист', accent: '#7c3aed', soft: 'rgba(124, 58, 237, 0.14)' },
+      { id: 'rose', name: 'Рубин', accent: '#e11d48', soft: 'rgba(225, 29, 72, 0.14)' },
+      { id: 'amber', name: 'Янтарь', accent: '#d97706', soft: 'rgba(217, 119, 6, 0.14)' },
+      { id: 'teal', name: 'Бирюза', accent: '#0d9488', soft: 'rgba(13, 148, 136, 0.14)' },
+      { id: 'slate', name: 'Графит', accent: '#334155', soft: 'rgba(51, 65, 85, 0.16)' }
+    ];
+
+    const FONTS = [
+      { id: 'Manrope', label: 'Manrope (Современный геометрический)' },
+      { id: 'Plus Jakarta Sans', label: 'Plus Jakarta Sans (Премиум Bento)' },
+      { id: 'Golos Text', label: 'Golos Text (Чёткий кириллический)' },
+      { id: 'Rubik', label: 'Rubik (Мягкий округлый)' },
+      { id: 'Inter', label: 'Inter (Классический системный)' }
+    ];
+
     const DEFAULT_EVENTS = [
-      { id: 'isu-1', title: 'Высшая математика (Лекция)', day: 0, start: '09:00', end: '10:30', category: 'study', room: 'ГК-214', parity: 'all', important: false, moneyType: 'none', amount: 0, account: 'card' },
-      { id: 'isu-2', title: 'Алгоритмы и структуры данных', day: 0, start: '10:45', end: '12:15', category: 'study', room: 'ЛК-402', parity: 'all', important: true, moneyType: 'none', amount: 0, account: 'card' },
-      { id: 'isu-3', title: 'Репетиторство (Математика)', day: 0, start: '16:00', end: '18:00', category: 'work', room: 'Zoom', parity: 'all', important: false, moneyType: 'income', rateMode: 'hourly', amount: 3500, account: 'card' },
-      { id: 'isu-4', title: 'Иностранный язык (English B2)', day: 1, start: '09:00', end: '10:30', category: 'study', room: 'Ауд. 118', parity: 'all', important: false, moneyType: 'none', amount: 0, account: 'card' },
-      { id: 'isu-5', title: 'Тренажёрный зал', day: 1, start: '18:30', end: '20:00', category: 'sport', room: 'FitNation', parity: 'all', important: false, moneyType: 'none', amount: 0, account: 'card' },
-      { id: 'isu-6', title: 'Программирование на Python', day: 2, start: '10:45', end: '12:15', category: 'study', room: 'Комп. класс 5', parity: 'all', important: true, moneyType: 'none', amount: 0, account: 'card' },
-      { id: 'isu-7', title: 'Смена: Бариста / Кофейня', day: 2, start: '15:00', end: '19:00', category: 'work', room: 'Центр', parity: 'all', important: false, moneyType: 'income', rateMode: 'hourly', amount: 1800, account: 'cash' },
-      { id: 'isu-8', title: 'Дискретная математика', day: 3, start: '09:00', end: '10:30', category: 'study', room: 'ГК-301', parity: 'all', important: false, moneyType: 'none', amount: 0, account: 'card' },
-      { id: 'isu-9', title: 'Базы данных и SQL', day: 4, start: '10:45', end: '12:15', category: 'study', room: 'ЛК-210', parity: 'all', important: false, moneyType: 'none', amount: 0, account: 'card' },
-      { id: 'isu-10', title: 'Фриланс: Вёрстка лендинга', day: 4, start: '16:30', end: '19:00', category: 'work', room: 'Дома', parity: 'all', important: true, moneyType: 'income', amount: 12000, account: 'card' }
+      { id: 'isu-1', title: 'Высшая математика (Лекция)', day: 0, start: '09:00', end: '10:30', category: 'study', room: 'ГК-214', parity: 'all', important: false, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'ИСУ 26дд-1 • Обязательная лекция' },
+      { id: 'isu-2', title: 'Алгоритмы и структуры данных', day: 0, start: '10:45', end: '12:15', category: 'study', room: 'ЛК-402', parity: 'all', important: true, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'Лабораторная работа №3' },
+      { id: 'isu-3', title: 'Репетиторство (Математика)', day: 0, start: '16:00', end: '18:00', category: 'work', room: 'Онлайн Zoom', parity: 'all', important: false, moneyType: 'income', rateMode: 'hourly', amount: 3500, account: 'card', autoCredit: true, credited: false, completed: false, note: 'Подготовка к ЕНТ (2 часа)' },
+      { id: 'isu-4', title: 'Иностранный язык (English B2)', day: 1, start: '09:00', end: '10:30', category: 'study', room: 'Ауд. 118', parity: 'all', important: false, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'Speaking Club' },
+      { id: 'isu-5', title: 'Архитектура ЭВМ и ОС', day: 1, start: '12:30', end: '14:00', category: 'study', room: 'ЛК-309', parity: 'even', important: false, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'Чётная неделя' },
+      { id: 'isu-6', title: 'Тренажёрный зал', day: 1, start: '18:30', end: '20:00', category: 'sport', room: 'FitNation', parity: 'all', important: false, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'Силовая тренировка' },
+      { id: 'isu-7', title: 'Программирование на Python / Web', day: 2, start: '10:45', end: '12:15', category: 'study', room: 'Комп. класс 5', parity: 'all', important: true, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'Защита пет-проекта' },
+      { id: 'isu-8', title: 'Смена: Бариста / Кофейня', day: 2, start: '15:00', end: '19:00', category: 'work', room: 'Центр', parity: 'all', important: false, moneyType: 'income', rateMode: 'hourly', amount: 1800, account: 'cash', autoCredit: true, credited: false, completed: false, note: 'Вечерняя смена + чаевые' },
+      { id: 'isu-9', title: 'Дискретная математика', day: 3, start: '09:00', end: '10:30', category: 'study', room: 'ГК-301', parity: 'all', important: false, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'Семинар' },
+      { id: 'isu-10', title: 'Физическая культура', day: 3, start: '14:15', end: '15:45', category: 'sport', room: 'Спорткомплекс', parity: 'all', important: false, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'Спортивная форма' },
+      { id: 'isu-11', title: 'Базы данных и SQL', day: 4, start: '10:45', end: '12:15', category: 'study', room: 'ЛК-210', parity: 'all', important: false, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'Проектирование схем' },
+      { id: 'isu-12', title: 'Фриланс: Вёрстка лендинга', day: 4, start: '16:30', end: '19:00', category: 'work', room: 'Дома', parity: 'all', important: true, moneyType: 'income', rateMode: 'fixed', amount: 12000, account: 'card', autoCredit: true, credited: false, completed: false, note: 'Сдача этапа заказчику' },
+      { id: 'isu-13', title: 'Кураторский час ИСУ 26дд-1', day: 5, start: '11:00', end: '12:00', category: 'study', room: 'Ауд. 204', parity: 'odd', important: false, moneyType: 'none', rateMode: 'fixed', amount: 0, account: 'card', autoCredit: false, credited: false, completed: false, note: 'Нечётная неделя' },
+      { id: 'isu-14', title: 'Подработка (Выходной день)', day: 5, start: '14:00', end: '18:00', category: 'work', room: 'ТРЦ Dostyk', parity: 'all', important: false, moneyType: 'income', rateMode: 'hourly', amount: 2200, account: 'card', autoCredit: true, credited: false, completed: false, note: '4 часа × 2200 ₸' }
     ];
 
     const DEFAULT_STATE = {
-      appTitle: 'Мой тайм-менеджер — ИСУ 26дд-1',
       activeTab: 'excel',
       weekParity: 'even',
       darkMode: false,
+      themeId: 'indigo',
+      fontFamily: 'Manrope',
       excelZoom: 1,
       filter: 'all',
       events: DEFAULT_EVENTS,
-      accounts: { card: 45000, cash: 12000, savings: 85000 },
+      accounts: {
+        card: 45000,
+        cash: 12000,
+        savings: 85000
+      },
       transactions: [
-        { id: 'tx-1', title: 'Стипендия', amount: 47135, type: 'income', account: 'card', date: '10.11.2026' }
+        { id: 'tx-1', title: 'Стипендия за месяц', amount: 47135, type: 'income', account: 'card', bucket: 'save', date: '10.11.2026' },
+        { id: 'tx-2', title: 'Проездной и обеды', amount: 6500, type: 'expense', account: 'card', bucket: 'needs', date: '11.11.2026' },
+        { id: 'tx-3', title: 'Кофе и кино с друзьями', amount: 4200, type: 'expense', account: 'cash', bucket: 'wants', date: '12.11.2026' }
       ],
-      goals: [{ id: 'g-1', title: '💻 Новый ноутбук', current: 85000, target: 350000 }],
-      habits: [{ id: 'h-1', name: '💧 2 литра воды', days: [true, true, true, false, true, false, false] }],
-      notes: [{ id: 'n-1', title: 'Идеи по проектам', text: 'Завершить задачи по ИСУ.' }]
+      goals: [
+        { id: 'g-1', title: '💻 Новый ноутбук для учёбы', current: 85000, target: 350000 },
+        { id: 'g-2', title: '🛡️ Финансовая подушка', current: 45000, target: 150000 }
+      ],
+      habits: [
+        { id: 'h-1', name: '💧 2 литра воды', days: [true, true, true, false, true, false, false] },
+        { id: 'h-2', name: '📖 Чтение / Конспект 30м', days: [true, false, true, true, false, false, false] },
+        { id: 'h-3', name: '🏃 Активность / 8000 шагов', days: [false, true, false, true, true, false, false] },
+        { id: 'h-4', name: '😴 Сон до 23:30', days: [true, true, false, false, false, false, false] }
+      ],
+      pomoSessionsToday: 2
     };
 
     let state = loadState();
@@ -483,16 +1077,28 @@
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
-        return { ...JSON.parse(JSON.stringify(DEFAULT_STATE)), ...JSON.parse(raw) };
+        const parsed = JSON.parse(raw);
+        return {
+          ...JSON.parse(JSON.stringify(DEFAULT_STATE)),
+          ...parsed,
+          accounts: { ...DEFAULT_STATE.accounts, ...(parsed.accounts || {}) }
+        };
       } catch (e) {
         return JSON.parse(JSON.stringify(DEFAULT_STATE));
       }
     }
 
     function saveState() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        console.warn('Storage save error', e);
+      }
     }
 
+    // =========================================================================
+    // 2. UTILITIES (TIME, MONEY, TOASTS)
+    // =========================================================================
     function formatMoney(num) {
       return Math.round(Number(num) || 0).toLocaleString('ru-RU') + ' ₸';
     }
@@ -504,109 +1110,205 @@
     }
 
     function minsToTime(mins) {
-      const h = String(Math.floor(mins / 60)).padStart(2, '0');
-      const m = String(mins % 60).padStart(2, '0');
+      const clamped = Math.max(0, Math.min(23 * 60 + 59, Math.round(mins)));
+      const h = String(Math.floor(clamped / 60)).padStart(2, '0');
+      const m = String(clamped % 60).padStart(2, '0');
       return `${h}:${m}`;
     }
 
     function getEventDurationHours(ev) {
-      return Math.max(15, timeToMins(ev.end) - timeToMins(ev.start)) / 60;
+      const diff = Math.max(15, timeToMins(ev.end) - timeToMins(ev.start));
+      return diff / 60;
     }
 
     function getEventTotalMoney(ev) {
       if (!ev || ev.moneyType === 'none') return 0;
       const amt = Number(ev.amount) || 0;
-      return ev.rateMode === 'hourly' ? Math.round(amt * getEventDurationHours(ev)) : Math.round(amt);
+      if (ev.rateMode === 'hourly') {
+        return Math.round(amt * getEventDurationHours(ev));
+      }
+      return Math.round(amt);
     }
 
     function showToast(message, type = 'info') {
       const container = document.getElementById('toast-container');
-      const colors = { success: 'bg-emerald-600 text-white', warning: 'bg-amber-600 text-white', error: 'bg-rose-600 text-white', info: 'bg-slate-900 text-white' };
+      const colors = {
+        success: 'bg-emerald-600 text-white border-emerald-400',
+        warning: 'bg-amber-600 text-white border-amber-400',
+        error: 'bg-rose-600 text-white border-rose-400',
+        info: 'bg-slate-900 dark:bg-slate-800 text-white border-slate-700'
+      };
       const el = document.createElement('div');
-      el.className = `px-4 py-3 rounded-2xl shadow-xl text-xs font-bold ${colors[type] || colors.info}`;
-      el.innerHTML = `<span>${message}</span>`;
+      el.className = `pointer-events-auto px-4 py-3 rounded-2xl border shadow-xl text-xs sm:text-sm font-bold flex items-center justify-between gap-3 transition-all duration-300 transform translate-y-0 ${colors[type] || colors.info}`;
+      el.innerHTML = `<span>${message}</span><button onclick="this.parentElement.remove()" class="opacity-75 hover:opacity-100">✕</button>`;
       container.appendChild(el);
-      setTimeout(() => el.remove(), 3000);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(-8px)';
+        setTimeout(() => el.remove(), 300);
+      }, 3600);
     }
 
+    // =========================================================================
+    // 3. THEME, DARK MODE & TYPOGRAPHY ENGINE
+    // =========================================================================
     function applyAppearance() {
       const html = document.documentElement;
-      if (state.darkMode) html.classList.add('dark'); else html.classList.remove('dark');
-      document.getElementById('header-app-title').textContent = state.appTitle || 'Мой тайм-менеджер';
-      document.getElementById('page-meta-title').textContent = state.appTitle || 'Тайм-менеджер';
+      if (state.darkMode) html.classList.add('dark');
+      else html.classList.remove('dark');
+
+      document.querySelectorAll('.dark-mode-icon').forEach(el => {
+        el.textContent = state.darkMode ? '☀️' : '🌙';
+      });
+
+      const theme = THEMES.find(t => t.id === state.themeId) || THEMES[0];
+      html.style.setProperty('--accent', theme.accent);
+      html.style.setProperty('--accent-soft', theme.soft);
+      html.style.setProperty('--app-font', `'${state.fontFamily}', 'Inter', system-ui, sans-serif`);
     }
 
     function toggleDarkMode() {
       state.darkMode = !state.darkMode;
       saveState();
       applyAppearance();
+      showToast(state.darkMode ? '🌙 Включена тёмная тема' : '☀️ Включена светлая тема');
     }
 
-    // Modal Capital Settings
-    function openCapitalSettingsModal() {
-      document.getElementById('set-card-val').value = state.accounts.card || 0;
-      document.getElementById('set-cash-val').value = state.accounts.cash || 0;
-      document.getElementById('set-savings-val').value = state.accounts.savings || 0;
-      const modal = document.getElementById('capital-modal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    }
-
-    function closeCapitalSettingsModal() {
-      const modal = document.getElementById('capital-modal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    }
-
-    function saveCapitalSettings() {
-      state.accounts.card = Number(document.getElementById('set-card-val').value) || 0;
-      state.accounts.cash = Number(document.getElementById('set-cash-val').value) || 0;
-      state.accounts.savings = Number(document.getElementById('set-savings-val').value) || 0;
-      saveState();
-      closeCapitalSettingsModal();
-      renderAll();
-      showToast('✅ Капитал и счета успешно обновлены!', 'success');
-    }
-
-    function openRenameModal() { openAppearanceModal(); }
     function openAppearanceModal() {
-      document.getElementById('settings-app-title').value = state.appTitle || '';
-      const modal = document.getElementById('appearance-modal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
+      const swatches = document.getElementById('theme-swatches');
+      swatches.innerHTML = THEMES.map(t => `
+        <button onclick="selectTheme('${t.id}')" class="p-2 rounded-2xl border ${state.themeId === t.id ? 'border-indigo-500 ring-2 ring-indigo-500/30' : 'border-theme'} surface-sub flex flex-col items-center gap-1.5 transition">
+          <span class="w-6 h-6 rounded-full shadow-sm" style="background:${t.accent}"></span>
+          <span class="text-[11px] font-bold text-main">${t.name}</span>
+        </button>
+      `).join('');
+
+      const fonts = document.getElementById('font-options');
+      fonts.innerHTML = FONTS.map(f => `
+        <button onclick="selectFont('${f.id}')" style="font-family: '${f.id}', sans-serif !important;" class="w-full text-left px-3.5 py-2.5 rounded-xl border ${state.fontFamily === f.id ? 'border-indigo-500 bg-indigo-500/10' : 'border-theme surface-sub'} text-xs font-bold text-main flex items-center justify-between">
+          <span>${f.label}</span>
+          ${state.fontFamily === f.id ? '<span>✓</span>' : ''}
+        </button>
+      `).join('');
+
+      document.getElementById('appearance-modal').classList.remove('hidden');
+      document.getElementById('appearance-modal').classList.add('flex');
     }
+
     function closeAppearanceModal() {
-      const modal = document.getElementById('appearance-modal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
+      document.getElementById('appearance-modal').classList.add('hidden');
+      document.getElementById('appearance-modal').classList.remove('flex');
     }
-    function saveAppearanceSettings() {
-      const newTitle = document.getElementById('settings-app-title').value.trim();
-      if (newTitle) state.appTitle = newTitle;
+
+    function selectTheme(id) {
+      state.themeId = id;
       saveState();
       applyAppearance();
-      closeAppearanceModal();
-      showToast('✅ Настройки сохранены', 'success');
+      openAppearanceModal();
     }
 
+    function selectFont(fontId) {
+      state.fontFamily = fontId;
+      saveState();
+      applyAppearance();
+      openAppearanceModal();
+    }
+
+    // =========================================================================
+    // 4. EXCEL ZOOM ENGINE (50% - 150%, PINCH-TO-ZOOM, CTRL+WHEEL, PRESETS)
+    // =========================================================================
     function setExcelZoom(val) {
-      state.excelZoom = Math.max(0.5, Math.min(1.5, val));
-      document.documentElement.style.setProperty('--excel-zoom', state.excelZoom);
-      document.getElementById('excel-zoom-slider').value = Math.round(state.excelZoom * 100);
-      document.getElementById('excel-zoom-label').textContent = `${Math.round(state.excelZoom * 100)}%`;
+      const clamped = Math.max(0.5, Math.min(1.5, Math.round(val * 100) / 100));
+      state.excelZoom = clamped;
+      document.documentElement.style.setProperty('--excel-zoom', clamped);
+      const pct = Math.round(clamped * 100);
+      const slider = document.getElementById('excel-zoom-slider');
+      const label = document.getElementById('excel-zoom-label');
+      if (slider) slider.value = pct;
+      if (label) label.textContent = `${pct}%`;
       saveState();
     }
-    function adjustExcelZoom(delta) { setExcelZoom((state.excelZoom || 1) + delta); }
 
+    function adjustExcelZoom(delta) {
+      setExcelZoom((state.excelZoom || 1) + delta);
+    }
+
+    function fitWholeWeekZoom() {
+      const vp = document.getElementById('excel-viewport');
+      if (!vp) return;
+      // Target: Time column (64px) + 7 day columns (165px each) = 1219px at 100%
+      const availableW = vp.clientWidth - 8;
+      const idealZoom = availableW / 1225;
+      setExcelZoom(Math.max(0.5, Math.min(1.1, idealZoom)));
+      showToast('🔭 Масштаб подобран для обзора всей недели');
+    }
+
+    function initExcelGestures() {
+      const vp = document.getElementById('excel-viewport');
+      if (!vp) return;
+
+      // Ctrl + Wheel Zoom
+      vp.addEventListener('wheel', (e) => {
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          const step = e.deltaY < 0 ? 0.08 : -0.08;
+          setExcelZoom((state.excelZoom || 1) + step);
+        }
+      }, { passive: false });
+
+      // Touch Pinch-to-Zoom
+      let initialPinchDist = null;
+      let initialZoom = 1;
+
+      vp.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+          const dx = e.touches[0].clientX - e.touches[1].clientX;
+          const dy = e.touches[0].clientY - e.touches[1].clientY;
+          initialPinchDist = Math.hypot(dx, dy);
+          initialZoom = state.excelZoom || 1;
+        }
+      }, { passive: true });
+
+      vp.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2 && initialPinchDist) {
+          e.preventDefault();
+          const dx = e.touches[0].clientX - e.touches[1].clientX;
+          const dy = e.touches[0].clientY - e.touches[1].clientY;
+          const dist = Math.hypot(dx, dy);
+          const scale = dist / initialPinchDist;
+          setExcelZoom(initialZoom * scale);
+        }
+      }, { passive: false });
+
+      vp.addEventListener('touchend', () => {
+        initialPinchDist = null;
+      });
+    }
+
+    // =========================================================================
+    // 5. FILTERING & SMART PARSER
+    // =========================================================================
     function getFilteredEvents() {
       const q = (document.getElementById('search-input')?.value || '').trim().toLowerCase();
+      const clearBtn = document.getElementById('clear-search-btn');
+      if (clearBtn) clearBtn.classList.toggle('hidden', !q);
+
       return state.events.filter(ev => {
+        // Parity check
         if (ev.parity && ev.parity !== 'all' && ev.parity !== state.weekParity) return false;
-        if (q && !`${ev.title} ${ev.room || ''}`.toLowerCase().includes(q)) return false;
+
+        // Search query
+        if (q) {
+          const hay = `${ev.title} ${ev.room || ''} ${ev.note || ''}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+
+        // Category/Type filter
         if (state.filter === 'income') return ev.moneyType === 'income';
         if (state.filter === 'important') return !!ev.important;
         if (state.filter === 'study') return ev.category === 'study';
         if (state.filter === 'work') return ev.category === 'work';
+
         return true;
       });
     }
@@ -615,52 +1317,213 @@
       state.filter = filterKey;
       document.querySelectorAll('.filter-pill').forEach(btn => {
         const isActive = btn.dataset.filter === filterKey;
+        btn.className = `filter-pill px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 ${
+          isActive
+            ? 'text-white shadow-sm'
+            : 'surface-sub border border-theme text-main hover:opacity-80'
+        }`;
         btn.style.backgroundColor = isActive ? 'var(--accent)' : '';
-        btn.className = `filter-pill px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 ${isActive ? 'text-white shadow-sm' : 'surface-sub border border-theme text-main'}`;
       });
+
       const freePanel = document.getElementById('free-windows-panel');
-      if (filterKey === 'free') { freePanel.classList.remove('hidden'); renderFreeWindows(); }
-      else { freePanel.classList.add('hidden'); }
+      if (filterKey === 'free') {
+        freePanel.classList.remove('hidden');
+        renderFreeWindows();
+      } else {
+        freePanel.classList.add('hidden');
+      }
+
       renderAll();
+    }
+
+    function clearSearch() {
+      const inp = document.getElementById('search-input');
+      if (inp) inp.value = '';
+      renderAll();
+    }
+
+    function computeFreeWindows() {
+      const windows = [];
+      for (let d = 0; d < 7; d++) {
+        const dayEvs = state.events
+          .filter(e => e.day === d && (e.parity === 'all' || e.parity === state.weekParity))
+          .map(e => ({ s: timeToMins(e.start), e: timeToMins(e.end) }))
+          .sort((a, b) => a.s - b.s);
+
+        let cursor = 8 * 60; // 08:00
+        const dayEnd = 22 * 60; // 22:00
+
+        dayEvs.forEach(item => {
+          if (item.s - cursor >= 60) {
+            windows.push({ day: d, start: minsToTime(cursor), end: minsToTime(item.s), mins: item.s - cursor });
+          }
+          cursor = Math.max(cursor, item.e);
+        });
+
+        if (dayEnd - cursor >= 60) {
+          windows.push({ day: d, start: minsToTime(cursor), end: minsToTime(dayEnd), mins: dayEnd - cursor });
+        }
+      }
+      return windows;
     }
 
     function renderFreeWindows() {
       const list = document.getElementById('free-windows-list');
-      const windows = [];
-      for (let d = 0; d < 7; d++) {
-        let cursor = 8 * 60;
-        state.events.filter(e => e.day === d && (e.parity === 'all' || e.parity === state.weekParity))
-          .sort((a, b) => timeToMins(a.start) - timeToMins(b.start))
-          .forEach(item => {
-            if (timeToMins(item.start) - cursor >= 60) windows.push({ day: d, start: minsToTime(cursor), end: item.start });
-            cursor = Math.max(cursor, timeToMins(item.end));
-          });
-        if (22 * 60 - cursor >= 60) windows.push({ day: d, start: minsToTime(cursor), end: '22:00' });
+      const windows = computeFreeWindows();
+      if (!windows.length) {
+        list.innerHTML = `<div class="text-xs text-muted col-span-full">Свободных окон от 1 часа не найдено.</div>`;
+        return;
       }
-      list.innerHTML = windows.length ? windows.map(w => `
+      list.innerHTML = windows.slice(0, 12).map(w => `
         <button onclick="openEventModal(null, ${w.day}, '${w.start}')" class="p-2.5 rounded-xl surface-solid border border-theme hover:border-emerald-500 text-left transition flex items-center justify-between">
-          <div><div class="text-xs font-extrabold text-main">${DAYS_SHORT[w.day]} • ${w.start}–${w.end}</div></div>
+          <div>
+            <div class="text-xs font-extrabold text-main">${DAYS_SHORT[w.day]} • ${w.start}–${w.end}</div>
+            <div class="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">Свободно ${(w.mins / 60).toFixed(1)} ч</div>
+          </div>
           <span class="text-xs font-extrabold text-indigo-500">+ Занять</span>
-        </button>`).join('') : '<div class="text-xs text-muted col-span-full">Нет свободных окон.</div>';
+        </button>
+      `).join('');
     }
 
     function handleSmartInput() {
       const inp = document.getElementById('smart-input');
-      const text = (inp.value || '').trim();
-      if (!text) return;
-      state.events.push({ id: 'ev-' + Date.now(), title: text, day: 0, start: '14:00', end: '15:30', category: 'personal', moneyType: 'none', amount: 0, account: 'card' });
-      inp.value = '';
+      const raw = (inp.value || '').trim();
+      if (!raw) return;
+
+      // 1. Detect day
+      const dayMap = { 'пн': 0, 'понед': 0, 'вт': 1, 'втор': 1, 'ср': 2, 'сред': 2, 'чт': 3, 'четв': 3, 'пт': 4, 'пятн': 4, 'сб': 5, 'субб': 5, 'вс': 6, 'воск': 6 };
+      let day = (new Date().getDay() + 6) % 7;
+      let text = raw;
+
+      for (const [k, idx] of Object.entries(dayMap)) {
+        const rx = new RegExp(`(^|\\s)${k}[а-я]*(\\s|$)`, 'i');
+        if (rx.test(text)) {
+          day = idx;
+          text = text.replace(rx, ' ').trim();
+          break;
+        }
+      }
+
+      // 2. Detect time range "16:00-18:30" or single "16:00"
+      let start = '15:00';
+      let end = '16:30';
+      const rangeRx = /(\d{1,2}[:.]\d{2})\s*[-–]\s*(\d{1,2}[:.]\d{2})/;
+      const singleRx = /(\d{1,2}[:.]\d{2})/;
+
+      if (rangeRx.test(text)) {
+        const m = text.match(rangeRx);
+        start = m[1].replace('.', ':').padStart(5, '0');
+        end = m[2].replace('.', ':').padStart(5, '0');
+        text = text.replace(rangeRx, ' ').trim();
+      } else if (singleRx.test(text)) {
+        const m = text.match(singleRx);
+        start = m[1].replace('.', ':').padStart(5, '0');
+        end = minsToTime(timeToMins(start) + 90);
+        text = text.replace(singleRx, ' ').trim();
+      }
+
+      // 3. Detect money (+5000 or -1500)
+      let moneyType = 'none';
+      let amount = 0;
+      const moneyRx = /([+-])\s*(\d+)/;
+      if (moneyRx.test(text)) {
+        const m = text.match(moneyRx);
+        moneyType = m[1] === '+' ? 'income' : 'expense';
+        amount = Number(m[2]) || 0;
+        text = text.replace(moneyRx, ' ').trim();
+      }
+
+      // 4. Auto category
+      let category = moneyType === 'income' ? 'work' : 'personal';
+      if (/пара|лекц|семин|дз|матем|англ|код|учеб/i.test(text)) category = 'study';
+      else if (/зал|спорт|бег|трен/i.test(text)) category = 'sport';
+      else if (/смен|репет|фриланс|работ/i.test(text)) category = 'work';
+
+      const newEv = {
+        id: 'ev-' + Date.now(),
+        title: text || 'Новое дело',
+        day,
+        start,
+        end,
+        category,
+        room: '',
+        parity: 'all',
+        important: /важн|срочн|дедлайн/i.test(raw),
+        moneyType,
+        rateMode: 'fixed',
+        amount,
+        account: 'card',
+        autoCredit: moneyType === 'income',
+        credited: false,
+        completed: false,
+        note: 'Создано через быстрый ввод'
+      };
+
+      state.events.push(newEv);
       saveState();
+      inp.value = '';
       renderAll();
-      showToast('⚡ Дело добавлено', 'success');
+      showToast(`⚡ Добавлено: ${DAYS_SHORT[day]} ${start} «${newEv.title}»`, 'success');
     }
 
+    function smartAddTemplate(type) {
+      const presets = {
+        hw: { title: 'Выполнение ДЗ и конспектов', mins: 90, category: 'study', moneyType: 'none', amount: 0, rateMode: 'fixed' },
+        work: { title: 'Подработка (Смена)', mins: 180, category: 'work', moneyType: 'income', amount: 2000, rateMode: 'hourly' },
+        sport: { title: 'Тренировка / Пробежка', mins: 60, category: 'sport', moneyType: 'none', amount: 0, rateMode: 'fixed' },
+        lang: { title: 'Практика иностранного языка', mins: 60, category: 'study', moneyType: 'none', amount: 0, rateMode: 'fixed' }
+      };
+      const p = presets[type];
+      if (!p) return;
+
+      const windows = computeFreeWindows().filter(w => w.mins >= p.mins);
+      if (!windows.length) {
+        showToast('Нет подходящего свободного окна для этого шаблона', 'warning');
+        return;
+      }
+
+      // Pick first free window starting from today
+      const todayIdx = (new Date().getDay() + 6) % 7;
+      const chosen = windows.find(w => w.day >= todayIdx) || windows[0];
+      const startMins = timeToMins(chosen.start);
+      const endMins = startMins + p.mins;
+
+      const ev = {
+        id: 'ev-' + Date.now(),
+        title: p.title,
+        day: chosen.day,
+        start: minsToTime(startMins),
+        end: minsToTime(endMins),
+        category: p.category,
+        room: '',
+        parity: 'all',
+        important: false,
+        moneyType: p.moneyType,
+        rateMode: p.rateMode,
+        amount: p.amount,
+        account: 'card',
+        autoCredit: p.moneyType === 'income',
+        credited: false,
+        completed: false,
+        note: 'Подобрано в свободное окно'
+      };
+
+      state.events.push(ev);
+      saveState();
+      renderAll();
+      showToast(`✨ «${p.title}» поставлено на ${DAYS_SHORT[chosen.day]} ${ev.start}–${ev.end}`, 'success');
+    }
+
+    // =========================================================================
+    // 6. RENDER EXCEL GRID (WITH ZOOM & INLINE MONEY BADGES)
+    // =========================================================================
     function getCategoryStyle(cat) {
       const map = {
-        study: { bg: 'bg-indigo-500/15', border: 'border-indigo-500', text: 'text-indigo-950 dark:text-indigo-100' },
-        work: { bg: 'bg-emerald-500/15', border: 'border-emerald-500', text: 'text-emerald-950 dark:text-emerald-100' },
-        sport: { bg: 'bg-amber-500/15', border: 'border-amber-500', text: 'text-amber-950 dark:text-amber-100' },
-        personal: { bg: 'bg-sky-500/15', border: 'border-sky-500', text: 'text-sky-950 dark:text-sky-100' }
+        study: { bg: 'bg-indigo-500/15 dark:bg-indigo-500/25', border: 'border-indigo-500', text: 'text-indigo-950 dark:text-indigo-100', badge: '📚' },
+        work: { bg: 'bg-emerald-500/15 dark:bg-emerald-500/25', border: 'border-emerald-500', text: 'text-emerald-950 dark:text-emerald-100', badge: '💼' },
+        sport: { bg: 'bg-amber-500/15 dark:bg-amber-500/25', border: 'border-amber-500', text: 'text-amber-950 dark:text-amber-100', badge: '💪' },
+        deadline: { bg: 'bg-rose-500/15 dark:bg-rose-500/25', border: 'border-rose-500', text: 'text-rose-950 dark:text-rose-100', badge: '🔥' },
+        personal: { bg: 'bg-sky-500/15 dark:bg-sky-500/25', border: 'border-sky-500', text: 'text-sky-950 dark:text-sky-100', badge: '✨' }
       };
       return map[cat] || map.personal;
     }
@@ -668,182 +1531,1112 @@
     function renderExcelGrid() {
       const table = document.getElementById('excel-grid-table');
       if (!table) return;
+
       const filtered = getFilteredEvents();
       document.getElementById('excel-visible-count').textContent = `${filtered.length} дел`;
 
+      // Calculate weekly hours summary
+      let studyH = 0, workH = 0;
+      filtered.forEach(e => {
+        const h = getEventDurationHours(e);
+        if (e.category === 'study') studyH += h;
+        if (e.category === 'work') workH += h;
+      });
+      document.getElementById('excel-hours-summary').textContent = `Учёба: ${studyH.toFixed(1)} ч • Подработка: ${workH.toFixed(1)} ч`;
+
+      const todayIdx = (new Date().getDay() + 6) % 7;
+
+      // Table Header
       let html = `<thead><tr><th class="excel-th-corner text-muted font-extrabold">Время</th>`;
-      for (let d = 0; d < 7; d++) html += `<th class="excel-th-day text-left font-extrabold text-main">${DAYS_FULL[d]}</th>`;
+      for (let d = 0; d < 7; d++) {
+        const isToday = d === todayIdx;
+        html += `
+          <th class="excel-th-day text-left ${isToday ? 'text-indigo-600 dark:text-indigo-300 bg-indigo-500/10' : 'text-main'}">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold">${DAYS_FULL[d]}</span>
+              ${isToday ? '<span class="px-1.5 py-0.5 rounded bg-indigo-500 text-white text-[9px] uppercase">Сегодня</span>' : ''}
+            </div>
+          </th>`;
+      }
       html += `</tr></thead><tbody>`;
 
-      const eventMap = {};
+      // Slots from 08:00 to 22:30 (30-min steps = 30 rows)
+      const startHour = 8;
+      const endHour = 23;
+      const totalSlots = (endHour - startHour) * 2;
+
+      // Pre-map events to their starting 30-min slot
+      const eventSlotMap = {};
       filtered.forEach(ev => {
-        const slot = Math.floor((timeToMins(ev.start) - 480) / 30);
-        const k = `${ev.day}-${slot}`;
-        if (!eventMap[k]) eventMap[k] = [];
-        eventMap[k].push(ev);
+        const sMins = timeToMins(ev.start);
+        const slotIdx = Math.max(0, Math.floor((sMins - startHour * 60) / 30));
+        const key = `${ev.day}-${slotIdx}`;
+        if (!eventSlotMap[key]) eventSlotMap[key] = [];
+        eventSlotMap[key].push(ev);
       });
 
-      for (let s = 0; s < 30; s++) {
-        const timeStr = minsToTime(480 + s * 30);
-        html += `<tr><td class="excel-td-time font-bold text-muted">${s % 2 === 0 ? timeStr : ''}</td>`;
+      for (let s = 0; s < totalSlots; s++) {
+        const mins = startHour * 60 + s * 30;
+        const timeStr = minsToTime(mins);
+        const isHour = s % 2 === 0;
+
+        html += `<tr>`;
+        html += `<td class="excel-td-time font-bold ${isHour ? 'text-main' : 'text-muted opacity-70'}">${isHour ? timeStr : ''}</td>`;
+
         for (let d = 0; d < 7; d++) {
-          const slotEvs = eventMap[`${d}-${s}`] || [];
-          let evHtml = '';
-          slotEvs.forEach(ev => {
-            const st = getCategoryStyle(ev.category);
-            const totalM = getEventTotalMoney(ev);
-            evHtml += `
-              <div onclick="openEventModal('${ev.id}')" style="height: calc(${(timeToMins(ev.end)-timeToMins(ev.start))/30} * var(--excel-row-h) - 4px);" class="excel-event-block ${st.bg} ${st.border} ${st.text} cursor-pointer">
-                <div class="font-extrabold truncate">${ev.title}</div>
-                <div class="flex justify-between text-[0.85em] opacity-85"><span>${ev.start}–${ev.end}</span>${totalM > 0 ? `<span>${formatMoney(totalM)}</span>` : ''}</div>
-              </div>`;
+          const key = `${d}-${s}`;
+          const slotEvents = eventSlotMap[key] || [];
+          let eventsHtml = '';
+
+          slotEvents.forEach((ev, idx) => {
+            const durMins = Math.max(30, timeToMins(ev.end) - timeToMins(ev.start));
+            const rowSpanFactor = durMins / 30;
+            const style = getCategoryStyle(ev.category);
+            const totalMoney = getEventTotalMoney(ev);
+            const offsetPct = slotEvents.length > 1 ? (idx * (100 / slotEvents.length)) : 0;
+            const widthPct = slotEvents.length > 1 ? (100 / slotEvents.length) : 100;
+
+            eventsHtml += `
+              <div
+                onclick="event.stopPropagation(); openEventModal('${ev.id}')"
+                style="height: calc(${rowSpanFactor} * var(--excel-row-h) - 4px); left: calc(${offsetPct}% + 2px); width: calc(${widthPct}% - 4px);"
+                class="excel-event-block ${style.bg} ${style.border} ${style.text} cursor-pointer"
+                title="${ev.title} (${ev.start}–${ev.end})"
+              >
+                <div class="font-extrabold truncate flex items-center justify-between gap-1">
+                  <span class="truncate">${ev.important ? '🔴 ' : ''}${ev.title}</span>
+                </div>
+                <div class="flex items-center justify-between gap-1 opacity-85 text-[0.85em] font-semibold">
+                  <span class="truncate">${ev.start}–${ev.end}${ev.room ? ' • ' + ev.room : ''}</span>
+                  ${totalMoney > 0 ? `<span class="px-1 rounded bg-emerald-600 text-white font-extrabold shrink-0">${ev.moneyType === 'income' ? '+' : '−'}${totalMoney.toLocaleString('ru-RU')}₸</span>` : ''}
+                </div>
+              </div>
+            `;
           });
-          html += `<td onclick="openEventModal(null, ${d}, '${timeStr}')" class="excel-td-slot ${s % 2 === 0 ? 'hour-start' : ''}">${evHtml}</td>`;
+
+          html += `
+            <td
+              onclick="openEventModal(null, ${d}, '${timeStr}')"
+              class="excel-td-slot ${isHour ? 'hour-start' : ''}"
+              title="Нажмите, чтобы добавить дело на ${DAYS_SHORT[d]} в ${timeStr}"
+            >
+              ${eventsHtml}
+            </td>
+          `;
         }
         html += `</tr>`;
       }
-      table.innerHTML = html + `</tbody>`;
+
+      html += `</tbody>`;
+      table.innerHTML = html;
+    }
+
+    // =========================================================================
+    // 7. RENDER DAY-BY-DAY KANBAN WITH DRAG & DROP + QUICK CREDITING
+    // =========================================================================
+    let draggedEventId = null;
+
+    function handleDragStart(e, id) {
+      draggedEventId = id;
+      e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.currentTarget.classList.add('ring-2', 'ring-indigo-500');
+    }
+
+    function handleDragLeave(e) {
+      e.currentTarget.classList.remove('ring-2', 'ring-indigo-500');
+    }
+
+    function handleDrop(e, targetDay) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('ring-2', 'ring-indigo-500');
+      if (!draggedEventId) return;
+      const ev = state.events.find(x => x.id === draggedEventId);
+      if (ev && ev.day !== targetDay) {
+        ev.day = targetDay;
+        saveState();
+        renderAll();
+        showToast(`📅 Перенесено на ${DAYS_FULL[targetDay]}`, 'info');
+      }
+      draggedEventId = null;
+    }
+
+    function quickShiftEvent(id, deltaMins) {
+      const ev = state.events.find(x => x.id === id);
+      if (!ev) return;
+      const s = timeToMins(ev.start) + deltaMins;
+      const e = timeToMins(ev.end) + deltaMins;
+      if (s < 0 || e > 24 * 60) return;
+      ev.start = minsToTime(s);
+      ev.end = minsToTime(e);
+      saveState();
+      renderAll();
+      showToast(`⏱️ Время сдвинуто: ${ev.start}–${ev.end}`);
+    }
+
+    function creditEventMoney(id) {
+      const ev = state.events.find(x => x.id === id);
+      if (!ev || ev.moneyType === 'none') return;
+      const total = getEventTotalMoney(ev);
+      if (total <= 0) return;
+
+      const acc = ev.account || 'card';
+      if (!ev.credited) {
+        if (ev.moneyType === 'income') {
+          state.accounts[acc] = (state.accounts[acc] || 0) + total;
+        } else {
+          state.accounts[acc] = (state.accounts[acc] || 0) - total;
+        }
+        ev.credited = true;
+        ev.completed = true;
+        state.transactions.unshift({
+          id: 'tx-ev-' + Date.now(),
+          title: `${ev.moneyType === 'income' ? 'Подработка' : 'Оплата'}: ${ev.title}`,
+          amount: total,
+          type: ev.moneyType,
+          account: acc,
+          bucket: ev.moneyType === 'income' ? 'save' : 'needs',
+          date: new Date().toLocaleDateString('ru-RU')
+        });
+        showToast(`💰 ${ev.moneyType === 'income' ? 'Зачислено' : 'Списано'} ${formatMoney(total)}`, 'success');
+      } else {
+        // Undo credit
+        if (ev.moneyType === 'income') {
+          state.accounts[acc] = (state.accounts[acc] || 0) - total;
+        } else {
+          state.accounts[acc] = (state.accounts[acc] || 0) + total;
+        }
+        ev.credited = false;
+        showToast(`↩️ Отменено зачисление ${formatMoney(total)}`, 'warning');
+      }
+
+      saveState();
+      renderAll();
     }
 
     function renderDaysKanban() {
       const container = document.getElementById('days-kanban-grid');
       if (!container) return;
+
       const filtered = getFilteredEvents();
-      container.innerHTML = DAYS_FULL.map((name, d) => `
-        <div class="bento-card rounded-3xl p-4 space-y-3">
-          <div class="flex items-center justify-between pb-2 border-b border-theme">
-            <h3 class="text-sm font-extrabold text-main">${name}</h3>
-            <button onclick="openEventModal(null, ${d}, '14:00')" class="w-7 h-7 rounded-xl surface-sub border text-xs font-bold">+</button>
+      const todayIdx = (new Date().getDay() + 6) % 7;
+
+      container.innerHTML = DAYS_FULL.map((dayName, d) => {
+        const isToday = d === todayIdx;
+        const dayEvents = filtered
+          .filter(e => e.day === d)
+          .sort((a, b) => timeToMins(a.start) - timeToMins(b.start));
+
+        const cardsHtml = dayEvents.length
+          ? dayEvents.map(ev => {
+              const st = getCategoryStyle(ev.category);
+              const totalMoney = getEventTotalMoney(ev);
+              return `
+                <div
+                  draggable="true"
+                  ondragstart="handleDragStart(event, '${ev.id}')"
+                  class="p-3 rounded-2xl surface-sub border border-theme hover:border-indigo-500/50 transition space-y-2 cursor-grab active:cursor-grabbing"
+                >
+                  <div class="flex items-start justify-between gap-2">
+                    <div onclick="openEventModal('${ev.id}')" class="cursor-pointer flex-1">
+                      <div class="text-[11px] font-extrabold text-indigo-600 dark:text-indigo-400">
+                        ${st.badge} ${ev.start} – ${ev.end} ${ev.room ? `• ${ev.room}` : ''}
+                      </div>
+                      <div class="text-xs sm:text-sm font-extrabold text-main mt-0.5 leading-snug">
+                        ${ev.important ? '🔴 ' : ''}${ev.title}
+                      </div>
+                    </div>
+                    <button onclick="openEventModal('${ev.id}')" class="text-xs text-muted hover:text-main p-1">✎</button>
+                  </div>
+
+                  ${ev.note ? `<div class="text-[11px] text-muted line-clamp-2">${ev.note}</div>` : ''}
+
+                  ${totalMoney > 0 ? `
+                    <div class="flex items-center justify-between gap-2 pt-1 border-t border-theme">
+                      <span class="text-xs font-extrabold ${ev.moneyType === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500'}">
+                        ${ev.moneyType === 'income' ? '+' : '−'}${formatMoney(totalMoney)}
+                        ${ev.rateMode === 'hourly' ? `<span class="text-[10px] font-normal text-muted">(${ev.amount}₸/ч)</span>` : ''}
+                      </span>
+                      <button
+                        onclick="creditEventMoney('${ev.id}')"
+                        class="px-2.5 py-1 rounded-xl text-[11px] font-extrabold transition ${
+                          ev.credited
+                            ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30'
+                            : 'bg-emerald-600 text-white hover:brightness-110 shadow-sm'
+                        }"
+                      >
+                        ${ev.credited ? '✓ В кошельке' : '💰 Зачислить'}
+                      </button>
+                    </div>
+                  ` : ''}
+
+                  <div class="flex items-center justify-between pt-1">
+                    <div class="flex items-center gap-1">
+                      <button onclick="quickShiftEvent('${ev.id}', -30)" class="px-2 py-0.5 rounded-lg surface-solid border border-theme text-[10px] font-bold text-muted hover:text-main">−30м</button>
+                      <button onclick="quickShiftEvent('${ev.id}', 30)" class="px-2 py-0.5 rounded-lg surface-solid border border-theme text-[10px] font-bold text-muted hover:text-main">+30м</button>
+                    </div>
+                    <span class="text-[10px] text-muted font-semibold">${getEventDurationHours(ev).toFixed(1)} ч</span>
+                  </div>
+                </div>
+              `;
+            }).join('')
+          : `<div class="py-8 text-center text-xs text-muted border border-dashed border-theme rounded-2xl">Нет запланированных дел</div>`;
+
+        return `
+          <div
+            ondragover="handleDragOver(event)"
+            ondragleave="handleDragLeave(event)"
+            ondrop="handleDrop(event, ${d})"
+            class="bento-card rounded-3xl p-4 flex flex-col justify-between space-y-3 ${isToday ? 'ring-2 ring-indigo-500/50' : ''}"
+          >
+            <div class="space-y-3">
+              <div class="flex items-center justify-between pb-2 border-b border-theme">
+                <div class="flex items-center gap-2">
+                  <h3 class="text-sm font-extrabold text-main">${dayName}</h3>
+                  ${isToday ? '<span class="px-2 py-0.5 rounded-full bg-indigo-500 text-white text-[10px] font-bold">Сегодня</span>' : ''}
+                </div>
+                <button onclick="openEventModal(null, ${d}, '14:00')" class="w-7 h-7 rounded-xl surface-sub border border-theme text-xs font-extrabold text-main hover:bg-indigo-500 hover:text-white transition" title="Добавить дело">+</button>
+              </div>
+              <div class="space-y-2.5">${cardsHtml}</div>
+            </div>
           </div>
-          <div class="space-y-2.5">
-            ${filtered.filter(e => e.day === d).map(ev => `
-              <div onclick="openEventModal('${ev.id}')" class="p-3 rounded-2xl surface-sub border border-theme cursor-pointer space-y-1">
-                <div class="text-xs font-extrabold text-indigo-600">${ev.start}–${ev.end}</div>
-                <div class="text-xs font-extrabold text-main">${ev.title}</div>
-              </div>`).join('') || '<div class="text-xs text-muted text-center py-4">Пусто</div>'}
-          </div>
-        </div>`).join('');
+        `;
+      }).join('');
     }
 
-    function renderFinance() {
-      const cap = (Number(state.accounts.card) || 0) + (Number(state.accounts.cash) || 0) + (Number(state.accounts.savings) || 0);
-      document.getElementById('header-total-balance').textContent = formatMoney(cap);
-      document.getElementById('fin-total-capital').textContent = formatMoney(cap);
-      document.getElementById('acc-card-val').textContent = formatMoney(state.accounts.card);
-      document.getElementById('acc-cash-val').textContent = formatMoney(state.accounts.cash);
-      document.getElementById('acc-savings-val').textContent = formatMoney(state.accounts.savings);
-
-      document.getElementById('savings-goals-list').innerHTML = state.goals.map(g => `
-        <div class="p-3 rounded-2xl surface-sub border space-y-1">
-          <div class="text-xs font-extrabold text-main">${g.title}</div>
-          <div class="text-xs text-muted">${formatMoney(g.current)} / ${formatMoney(g.target)}</div>
-        </div>`).join('');
-
-      document.getElementById('transactions-list').innerHTML = state.transactions.map(tx => `
-        <div class="py-2.5 flex justify-between text-xs">
-          <span class="font-bold text-main">${tx.title}</span>
-          <span class="font-extrabold ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-500'}">${tx.type === 'income' ? '+' : '−'}${formatMoney(tx.amount)}</span>
-        </div>`).join('');
-    }
-
-    function renderHabits() {
-      const table = document.getElementById('habits-table');
-      if (!table) return;
-      table.innerHTML = `<thead><tr class="border-b text-muted"><th class="py-2">Привычка</th>${DAYS_SHORT.map(d => `<th class="py-2 text-center">${d}</th>`).join('')}</tr></thead><tbody>` +
-        state.habits.map((h, i) => `<tr><td class="py-2.5 font-bold text-main">${h.name}</td>${h.days.map((val, d) => `<td class="text-center"><button onclick="toggleHabit(${i}, ${d})" class="w-6 h-6 rounded border ${val ? 'bg-emerald-500 text-white' : 'surface-sub'}">✓</button></td>`).join('')}</tr>`).join('') + `</tbody>`;
-    }
-
-    function renderNotes() {
-      const grid = document.getElementById('notes-grid');
-      if (!grid) return;
-      grid.innerHTML = state.notes.map((n, idx) => `
-        <div class="bento-card rounded-2xl p-4 space-y-2 relative">
-          <input type="text" value="${n.title}" oninput="updateNote(${idx}, 'title', this.value)" class="w-full font-extrabold text-sm surface-sub px-2 py-1 rounded border border-theme" />
-          <textarea oninput="updateNote(${idx}, 'text', this.value)" rows="3" class="w-full text-xs surface-sub p-2 rounded border border-theme resize-none">${n.text}</textarea>
-          <button onclick="deleteNote(${idx})" class="absolute top-3 right-3 text-xs text-muted hover:text-rose-500">✕</button>
-        </div>`).join('');
-    }
-
-    function addNewNote() {
-      state.notes.push({ id: 'n-' + Date.now(), title: 'Новая заметка', text: '' });
-      saveState();
-      renderNotes();
-    }
-    function updateNote(idx, field, val) { state.notes[idx][field] = val; saveState(); }
-    function deleteNote(idx) { state.notes.splice(idx, 1); saveState(); renderNotes(); }
-    function toggleHabit(hIdx, dayIdx) { state.habits[hIdx].days[dayIdx] = !state.habits[hIdx].days[dayIdx]; saveState(); renderHabits(); }
-
-    function openEventModal(id = null, day = 0, start = '14:00') {
+    // =========================================================================
+    // 8. EVENT MODAL CRUD & CONFLICT DETECTION
+    // =========================================================================
+    function openEventModal(eventId = null, defaultDay = null, defaultStart = '14:00') {
       const modal = document.getElementById('event-modal');
+      const delBtn = document.getElementById('ev-delete-btn');
+
+      if (eventId) {
+        const ev = state.events.find(x => x.id === eventId);
+        if (!ev) return;
+        document.getElementById('event-modal-title').textContent = 'Редактировать занятие';
+        document.getElementById('ev-id').value = ev.id;
+        document.getElementById('ev-title').value = ev.title;
+        document.getElementById('ev-day').value = ev.day;
+        document.getElementById('ev-start').value = ev.start;
+        document.getElementById('ev-end').value = ev.end;
+        document.getElementById('ev-category').value = ev.category;
+        document.getElementById('ev-room').value = ev.room || '';
+        document.getElementById('ev-parity').value = ev.parity || 'all';
+        document.getElementById('ev-important').checked = !!ev.important;
+        document.getElementById('ev-money-type').value = ev.moneyType || 'none';
+        document.getElementById('ev-rate-mode').value = ev.rateMode || 'fixed';
+        document.getElementById('ev-amount').value = ev.amount || 0;
+        document.getElementById('ev-account').value = ev.account || 'card';
+        document.getElementById('ev-auto-credit').checked = ev.autoCredit !== false;
+        document.getElementById('ev-note').value = ev.note || '';
+        delBtn.classList.remove('hidden');
+      } else {
+        const todayIdx = (new Date().getDay() + 6) % 7;
+        document.getElementById('event-modal-title').textContent = 'Новое занятие / Подработка';
+        document.getElementById('ev-id').value = '';
+        document.getElementById('ev-title').value = '';
+        document.getElementById('ev-day').value = defaultDay !== null ? defaultDay : todayIdx;
+        document.getElementById('ev-start').value = defaultStart;
+        document.getElementById('ev-end').value = minsToTime(timeToMins(defaultStart) + 90);
+        document.getElementById('ev-category').value = 'study';
+        document.getElementById('ev-room').value = '';
+        document.getElementById('ev-parity').value = 'all';
+        document.getElementById('ev-important').checked = false;
+        document.getElementById('ev-money-type').value = 'none';
+        document.getElementById('ev-rate-mode').value = 'fixed';
+        document.getElementById('ev-amount').value = 0;
+        document.getElementById('ev-account').value = 'card';
+        document.getElementById('ev-auto-credit').checked = true;
+        document.getElementById('ev-note').value = '';
+        delBtn.classList.add('hidden');
+      }
+
+      toggleMoneyFields();
+      recalcEventFinancePreview();
+      checkTimeConflict();
+
       modal.classList.remove('hidden');
       modal.classList.add('flex');
     }
+
     function closeEventModal() {
       const modal = document.getElementById('event-modal');
       modal.classList.add('hidden');
       modal.classList.remove('flex');
     }
-    function saveEventFromModal() { closeEventModal(); renderAll(); showToast('Сохранено', 'success'); }
-    function deleteCurrentEvent() { closeEventModal(); renderAll(); }
-    function openTransactionModal() {
-      const modal = document.getElementById('tx-modal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    }
-    function closeTransactionModal() {
-      const modal = document.getElementById('tx-modal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    }
-    function saveManualTransaction() {
-      const title = document.getElementById('tx-title').value;
-      const amount = Number(document.getElementById('tx-amount').value) || 0;
-      const type = document.getElementById('tx-type').value;
-      const account = document.getElementById('tx-account').value;
-      if (!title || amount <= 0) return;
-      if (type === 'income') state.accounts[account] += amount;
-      else state.accounts[account] -= amount;
-      state.transactions.unshift({ id: 'tx-' + Date.now(), title, amount, type, account, date: new Date().toLocaleDateString('ru-RU') });
-      saveState();
-      closeTransactionModal();
-      renderAll();
-      showToast('Операция записана', 'success');
+
+    function toggleMoneyFields() {
+      const mType = document.getElementById('ev-money-type').value;
+      const box = document.getElementById('ev-money-details');
+      box.classList.toggle('hidden', mType === 'none');
+      if (mType === 'income' && document.getElementById('ev-category').value === 'study') {
+        document.getElementById('ev-category').value = 'work';
+      }
+      recalcEventFinancePreview();
     }
 
+    function recalcEventFinancePreview() {
+      const mode = document.getElementById('ev-rate-mode').value;
+      const amt = Number(document.getElementById('ev-amount').value) || 0;
+      const start = document.getElementById('ev-start').value;
+      const end = document.getElementById('ev-end').value;
+      const label = document.getElementById('ev-amount-label');
+      const totalEl = document.getElementById('ev-calculated-total');
+
+      label.textContent = mode === 'hourly' ? 'Ставка (₸ / час)' : 'Фиксированная сумма (₸)';
+      const hours = Math.max(0.25, (timeToMins(end) - timeToMins(start)) / 60);
+      const total = mode === 'hourly' ? Math.round(amt * hours) : Math.round(amt);
+      totalEl.textContent = `${formatMoney(total)} (${hours.toFixed(1)} ч)`;
+    }
+
+    function shiftModalTime(delta) {
+      const sInp = document.getElementById('ev-start');
+      const eInp = document.getElementById('ev-end');
+      sInp.value = minsToTime(timeToMins(sInp.value) + delta);
+      eInp.value = minsToTime(timeToMins(eInp.value) + delta);
+      recalcEventFinancePreview();
+      checkTimeConflict();
+    }
+
+    function shiftModalDay(delta) {
+      const dSel = document.getElementById('ev-day');
+      dSel.value = (Number(dSel.value) + delta + 7) % 7;
+      checkTimeConflict();
+    }
+
+    function checkTimeConflict() {
+      const id = document.getElementById('ev-id').value;
+      const day = Number(document.getElementById('ev-day').value);
+      const s = timeToMins(document.getElementById('ev-start').value);
+      const e = timeToMins(document.getElementById('ev-end').value);
+      const warn = document.getElementById('ev-conflict-warning');
+
+      const conflict = state.events.find(ev => {
+        if (ev.id === id || ev.day !== day) return false;
+        if (ev.parity !== 'all' && ev.parity !== state.weekParity) return false;
+        const es = timeToMins(ev.start);
+        const ee = timeToMins(ev.end);
+        return s < ee && e > es;
+      });
+
+      if (conflict) {
+        warn.textContent = `⚠️ Пересечение по времени с «${conflict.title}» (${conflict.start}–${conflict.end})`;
+        warn.classList.remove('hidden');
+      } else {
+        warn.classList.add('hidden');
+      }
+    }
+
+    function saveEventFromModal() {
+      const title = document.getElementById('ev-title').value.trim();
+      if (!title) {
+        showToast('Введите название занятия!', 'error');
+        return;
+      }
+
+      const id = document.getElementById('ev-id').value;
+      const existing = id ? state.events.find(x => x.id === id) : null;
+
+      const payload = {
+        id: id || 'ev-' + Date.now(),
+        title,
+        day: Number(document.getElementById('ev-day').value),
+        start: document.getElementById('ev-start').value || '10:00',
+        end: document.getElementById('ev-end').value || '11:30',
+        category: document.getElementById('ev-category').value,
+        room: document.getElementById('ev-room').value.trim(),
+        parity: document.getElementById('ev-parity').value,
+        important: document.getElementById('ev-important').checked,
+        moneyType: document.getElementById('ev-money-type').value,
+        rateMode: document.getElementById('ev-rate-mode').value,
+        amount: Number(document.getElementById('ev-amount').value) || 0,
+        account: document.getElementById('ev-account').value,
+        autoCredit: document.getElementById('ev-auto-credit').checked,
+        credited: existing ? existing.credited : false,
+        completed: existing ? existing.completed : false,
+        note: document.getElementById('ev-note').value.trim()
+      };
+
+      if (existing) {
+        Object.assign(existing, payload);
+        showToast('✅ Занятие обновлено', 'success');
+      } else {
+        state.events.push(payload);
+        showToast('✅ Занятие добавлено в расписание', 'success');
+      }
+
+      saveState();
+      closeEventModal();
+      renderAll();
+    }
+
+    function deleteCurrentEvent() {
+      const id = document.getElementById('ev-id').value;
+      if (!id) return;
+      state.events = state.events.filter(x => x.id !== id);
+      saveState();
+      closeEventModal();
+      renderAll();
+      showToast('🗑 Занятие удалено', 'warning');
+    }
+
+    function resetDefaultSchedule() {
+      state.events = JSON.parse(JSON.stringify(DEFAULT_EVENTS));
+      saveState();
+      renderAll();
+      showToast('↺ Базовое расписание ИСУ 26дд-1 восстановлено', 'info');
+    }
+
+    // =========================================================================
+    // 9. FINANCE DASHBOARD, SIDE-HUSTLE METRICS & REAL HOURLY RATE
+    // =========================================================================
+    function getFinanceStats() {
+      const totalCapital = (state.accounts.card || 0) + (state.accounts.cash || 0) + (state.accounts.savings || 0);
+
+      let plannedSideIncome = 0;
+      let creditedSideIncome = 0;
+      let workHours = 0;
+      let studyHours = 0;
+
+      state.events.forEach(ev => {
+        if (ev.parity !== 'all' && ev.parity !== state.weekParity) return;
+        const h = getEventDurationHours(ev);
+        if (ev.category === 'work') workHours += h;
+        if (ev.category === 'study') studyHours += h;
+
+        if (ev.moneyType === 'income') {
+          const val = getEventTotalMoney(ev);
+          plannedSideIncome += val;
+          if (ev.credited) creditedSideIncome += val;
+        }
+      });
+
+      const totalInvestedHours = Math.max(1, workHours + studyHours);
+      const realHourlyRate = Math.round(plannedSideIncome / totalInvestedHours);
+
+      return {
+        totalCapital,
+        plannedSideIncome,
+        creditedSideIncome,
+        workHours,
+        studyHours,
+        realHourlyRate
+      };
+    }
+
+    function renderFinance() {
+      const stats = getFinanceStats();
+
+      // Update Header Pills
+      document.getElementById('header-total-balance').textContent = formatMoney(stats.totalCapital);
+      document.getElementById('header-sidejob-stats').textContent = `${formatMoney(stats.creditedSideIncome)} / ${formatMoney(stats.plannedSideIncome)}`;
+
+      // Update Finance KPIs
+      document.getElementById('fin-total-capital').textContent = formatMoney(stats.totalCapital);
+      const daysLeftInMonth = Math.max(1, 30 - new Date().getDate() + 1);
+      const spendable = (state.accounts.card || 0) + (state.accounts.cash || 0);
+      document.getElementById('fin-safe-daily').textContent = `Безопасно тратить в день: ${formatMoney(spendable / daysLeftInMonth)}`;
+
+      document.getElementById('fin-sidejob-credited').textContent = formatMoney(stats.creditedSideIncome);
+      document.getElementById('fin-sidejob-planned').textContent = formatMoney(stats.plannedSideIncome);
+
+      document.getElementById('fin-real-hourly').textContent = `${stats.realHourlyRate.toLocaleString('ru-RU')} ₸/ч`;
+      document.getElementById('fin-hours-breakdown').textContent = `Работа: ${stats.workHours.toFixed(1)}ч • Учёба: ${stats.studyHours.toFixed(1)}ч`;
+
+      // Wallets
+      document.getElementById('acc-card-val').textContent = formatMoney(state.accounts.card);
+      document.getElementById('acc-cash-val').textContent = formatMoney(state.accounts.cash);
+      document.getElementById('acc-savings-val').textContent = formatMoney(state.accounts.savings);
+
+      // Transactions & 50/30/20
+      let incomeSum = 0, expenseSum = 0;
+      let needs = 0, wants = 0, save = 0;
+
+      state.transactions.forEach(tx => {
+        if (tx.type === 'income') incomeSum += tx.amount;
+        else {
+          expenseSum += tx.amount;
+          if (tx.bucket === 'needs') needs += tx.amount;
+          else if (tx.bucket === 'wants') wants += tx.amount;
+          else save += tx.amount;
+        }
+      });
+
+      document.getElementById('fin-month-expense').textContent = formatMoney(expenseSum);
+      document.getElementById('fin-month-income').textContent = formatMoney(incomeSum);
+
+      const base = Math.max(1, incomeSum || expenseSum);
+      const pNeeds = Math.min(100, Math.round((needs / base) * 100));
+      const pWants = Math.min(100, Math.round((wants / base) * 100));
+      const pSave = Math.min(100, Math.round(((save + state.accounts.savings) / Math.max(1, base + state.accounts.savings)) * 100));
+
+      document.getElementById('rule-needs-label').textContent = `${formatMoney(needs)} (${pNeeds}%)`;
+      document.getElementById('rule-needs-bar').style.width = `${pNeeds}%`;
+      document.getElementById('rule-wants-label').textContent = `${formatMoney(wants)} (${pWants}%)`;
+      document.getElementById('rule-wants-bar').style.width = `${pWants}%`;
+      document.getElementById('rule-save-label').textContent = `${formatMoney(state.accounts.savings)} (${pSave}%)`;
+      document.getElementById('rule-save-bar').style.width = `${pSave}%`;
+
+      // Savings Goals
+      const goalsList = document.getElementById('savings-goals-list');
+      goalsList.innerHTML = state.goals.map(g => {
+        const pct = Math.min(100, Math.round((g.current / Math.max(1, g.target)) * 100));
+        return `
+          <div class="p-3 rounded-2xl surface-sub border border-theme space-y-1.5">
+            <div class="flex items-center justify-between text-xs font-extrabold">
+              <span class="text-main">${g.title}</span>
+              <button onclick="topUpGoal('${g.id}', 5000)" class="px-2 py-0.5 rounded-lg bg-emerald-600 text-white text-[10px] hover:brightness-110">+5 000 ₸</button>
+            </div>
+            <div class="w-full h-2 rounded-full surface-solid overflow-hidden">
+              <div class="h-full bg-emerald-500 rounded-full transition-all" style="width: ${pct}%"></div>
+            </div>
+            <div class="flex justify-between text-[11px] text-muted font-bold">
+              <span>${formatMoney(g.current)} / ${formatMoney(g.target)}</span>
+              <span class="text-emerald-600 dark:text-emerald-400">${pct}%</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Transactions List
+      const txList = document.getElementById('transactions-list');
+      document.getElementById('tx-count-badge').textContent = `${state.transactions.length} записей`;
+      const accNames = { card: '💳 Карта', cash: '💵 Наличные', savings: '🐷 Копилка' };
+
+      txList.innerHTML = state.transactions.map(tx => `
+        <div class="py-2.5 flex items-center justify-between gap-2 text-xs">
+          <div>
+            <div class="font-extrabold text-main">${tx.title}</div>
+            <div class="text-[11px] text-muted">${tx.date} • ${accNames[tx.account] || 'Карта'}</div>
+          </div>
+          <div class="font-extrabold ${tx.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500'}">
+            ${tx.type === 'income' ? '+' : '−'}${formatMoney(tx.amount)}
+          </div>
+        </div>
+      `).join('');
+
+      updateLifeHoursCalc();
+    }
+
+    function updateLifeHoursCalc() {
+      const cost = Number(document.getElementById('life-cost-input')?.value) || 0;
+      const res = document.getElementById('life-cost-result');
+      if (!res) return;
+      if (cost <= 0) {
+        res.textContent = 'Введи сумму покупки, чтобы увидеть её стоимость в твоих рабочих часах.';
+        return;
+      }
+      const stats = getFinanceStats();
+      const rate = stats.realHourlyRate > 0 ? stats.realHourlyRate : 2000;
+      const hoursNeeded = (cost / rate).toFixed(1);
+      res.innerHTML = `Эта покупка стоит <span class="text-indigo-600 dark:text-indigo-400 font-extrabold">${hoursNeeded} ч</span> твоей продуктивной работы (при ставке ${rate.toLocaleString('ru-RU')} ₸/ч).`;
+    }
+
+    function executeTransfer() {
+      const from = document.getElementById('transfer-from').value;
+      const to = document.getElementById('transfer-to').value;
+      const amt = Number(document.getElementById('transfer-amount').value) || 0;
+
+      if (from === to || amt <= 0) {
+        showToast('Укажите разные счета и корректную сумму', 'warning');
+        return;
+      }
+      if ((state.accounts[from] || 0) < amt) {
+        showToast('Недостаточно средств на выбранном счёте', 'error');
+        return;
+      }
+
+      state.accounts[from] -= amt;
+      state.accounts[to] += amt;
+      document.getElementById('transfer-amount').value = '';
+      saveState();
+      renderFinance();
+      showToast(`🔄 Переведено ${formatMoney(amt)}`, 'success');
+    }
+
+    function topUpGoal(goalId, amount) {
+      const g = state.goals.find(x => x.id === goalId);
+      if (!g) return;
+      g.current += amount;
+      state.accounts.savings += amount;
+      saveState();
+      renderFinance();
+      showToast(`🎯 Цель «${g.title}» пополнена на ${formatMoney(amount)}`, 'success');
+    }
+
+    function addSavingsGoalPrompt() {
+      const title = prompt('Название финансовой цели:');
+      if (!title) return;
+      const target = Number(prompt('Целевая сумма в ₸:', '100000')) || 100000;
+      state.goals.push({ id: 'g-' + Date.now(), title, current: 0, target });
+      saveState();
+      renderFinance();
+    }
+
+    function openTransactionModal() {
+      document.getElementById('tx-modal').classList.remove('hidden');
+      document.getElementById('tx-modal').classList.add('flex');
+    }
+
+    function closeTransactionModal() {
+      document.getElementById('tx-modal').classList.add('hidden');
+      document.getElementById('tx-modal').classList.remove('flex');
+    }
+
+    function saveManualTransaction() {
+      const type = document.getElementById('tx-type').value;
+      const account = document.getElementById('tx-account').value;
+      const title = document.getElementById('tx-title').value.trim();
+      const amount = Number(document.getElementById('tx-amount').value) || 0;
+      const bucket = document.getElementById('tx-bucket').value;
+
+      if (!title || amount <= 0) {
+        showToast('Заполните описание и сумму', 'error');
+        return;
+      }
+
+      if (type === 'income') state.accounts[account] += amount;
+      else state.accounts[account] -= amount;
+
+      state.transactions.unshift({
+        id: 'tx-' + Date.now(),
+        title,
+        amount,
+        type,
+        account,
+        bucket,
+        date: new Date().toLocaleDateString('ru-RU')
+      });
+
+      document.getElementById('tx-title').value = '';
+      document.getElementById('tx-amount').value = '';
+      saveState();
+      closeTransactionModal();
+      renderFinance();
+      showToast('✅ Операция записана', 'success');
+    }
+
+    // =========================================================================
+    // 10. POMODORO TIMER + WEB AUDIO AMBIENT SOUND GENERATOR
+    // =========================================================================
+    let pomoSeconds = 25 * 60;
+    let pomoInitialSeconds = 25 * 60;
+    let pomoTimerId = null;
+
+    function setPomodoroMode(mins, label) {
+      if (pomoTimerId) {
+        clearInterval(pomoTimerId);
+        pomoTimerId = null;
+        document.getElementById('pomo-start-btn').textContent = '▶ Старт';
+      }
+      pomoInitialSeconds = mins * 60;
+      pomoSeconds = pomoInitialSeconds;
+      document.getElementById('pomo-mode-label').textContent = label;
+      updatePomodoroDisplay();
+    }
+
+    function updatePomodoroDisplay() {
+      const m = String(Math.floor(pomoSeconds / 60)).padStart(2, '0');
+      const s = String(pomoSeconds % 60).padStart(2, '0');
+      document.getElementById('pomo-display').textContent = `${m}:${s}`;
+      document.getElementById('pomo-sessions-badge').textContent = `Сессий сегодня: ${state.pomoSessionsToday || 0}`;
+    }
+
+    function togglePomodoro() {
+      const btn = document.getElementById('pomo-start-btn');
+      if (pomoTimerId) {
+        clearInterval(pomoTimerId);
+        pomoTimerId = null;
+        btn.textContent = '▶ Продолжить';
+      } else {
+        btn.textContent = '⏸ Пауза';
+        pomoTimerId = setInterval(() => {
+          pomoSeconds--;
+          updatePomodoroDisplay();
+          if (pomoSeconds <= 0) {
+            clearInterval(pomoTimerId);
+            pomoTimerId = null;
+            btn.textContent = '▶ Старт';
+            state.pomoSessionsToday = (state.pomoSessionsToday || 0) + 1;
+            saveState();
+            updatePomodoroDisplay();
+            playBellChime();
+            showToast('🎉 Фокус-сессия завершена! Отличная работа!', 'success');
+          }
+        }, 1000);
+      }
+    }
+
+    function resetPomodoro() {
+      if (pomoTimerId) {
+        clearInterval(pomoTimerId);
+        pomoTimerId = null;
+      }
+      pomoSeconds = pomoInitialSeconds;
+      document.getElementById('pomo-start-btn').textContent = '▶ Старт';
+      updatePomodoroDisplay();
+    }
+
+    // Web Audio API Synthesizer (No external URLs needed)
+    let audioCtx = null;
+    let ambientNode = null;
+    let ambientGain = null;
+    let currentAmbientType = null;
+
+    function playBellChime() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 1.2);
+      } catch (e) {}
+    }
+
+    function stopAmbientSound() {
+      if (ambientNode) {
+        try { ambientNode.stop(); ambientNode.disconnect(); } catch (e) {}
+        ambientNode = null;
+      }
+      currentAmbientType = null;
+      document.getElementById('ambient-status').textContent = 'Выкл';
+      document.querySelectorAll('.ambient-btn').forEach(b => b.classList.remove('ring-2', 'ring-indigo-500'));
+    }
+
+    function toggleAmbientSound(type) {
+      if (currentAmbientType === type) {
+        stopAmbientSound();
+        return;
+      }
+      stopAmbientSound();
+
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        ambientGain = audioCtx.createGain();
+        const vol = (Number(document.getElementById('ambient-volume').value) || 35) / 100;
+        ambientGain.gain.value = vol * 0.25;
+        ambientGain.connect(audioCtx.destination);
+
+        if (type === 'brown' || type === 'rain') {
+          const bufferSize = audioCtx.sampleRate * 3;
+          const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+          const data = buffer.getChannelData(0);
+          let lastOut = 0.0;
+          for (let i = 0; i < bufferSize; i++) {
+            const white = Math.random() * 2 - 1;
+            if (type === 'brown') {
+              data[i] = (lastOut + 0.02 * white) / 1.02;
+              lastOut = data[i];
+              data[i] *= 3.2;
+            } else {
+              data[i] = white * (Math.random() > 0.97 ? 0.9 : 0.25);
+            }
+          }
+          const noise = audioCtx.createBufferSource();
+          noise.buffer = buffer;
+          noise.loop = true;
+
+          const filter = audioCtx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.value = type === 'brown' ? 320 : 1200;
+
+          noise.connect(filter);
+          filter.connect(ambientGain);
+          noise.start();
+          ambientNode = noise;
+        } else {
+          // Warm ambient chord oscillator
+          const osc = audioCtx.createOscillator();
+          osc.type = 'triangle';
+          osc.frequency.value = 146.83; // D3
+          osc.connect(ambientGain);
+          osc.start();
+          ambientNode = osc;
+        }
+
+        currentAmbientType = type;
+        document.getElementById('ambient-status').textContent = 'Активен';
+        document.querySelectorAll('.ambient-btn').forEach(b => {
+          b.classList.toggle('ring-2', b.dataset.sound === type);
+          b.classList.toggle('ring-indigo-500', b.dataset.sound === type);
+        });
+      } catch (e) {
+        showToast('Аудио не поддерживается браузером', 'warning');
+      }
+    }
+
+    function updateAmbientVolume(val) {
+      if (ambientGain) {
+        ambientGain.gain.value = (Number(val) / 100) * 0.25;
+      }
+    }
+
+    // =========================================================================
+    // 11. HABIT TRACKER & DAILY CHECKLIST
+    // =========================================================================
+    function renderHabits() {
+      const table = document.getElementById('habits-table');
+      if (!table) return;
+
+      let html = `
+        <thead>
+          <tr class="border-b border-theme text-muted">
+            <th class="py-2 pr-3 font-extrabold">Привычка</th>
+            ${DAYS_SHORT.map(d => `<th class="py-2 px-1.5 text-center font-extrabold">${d}</th>`).join('')}
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200/50 dark:divide-slate-700/50">
+      `;
+
+      state.habits.forEach((h, hIdx) => {
+        html += `<tr><td class="py-2.5 pr-3 font-bold text-main">${h.name}</td>`;
+        for (let d = 0; d < 7; d++) {
+          const checked = !!h.days[d];
+          html += `
+            <td class="py-2 px-1 text-center">
+              <button
+                onclick="toggleHabit(${hIdx}, ${d})"
+                class="w-7 h-7 rounded-xl border transition font-extrabold text-xs ${
+                  checked
+                    ? 'bg-emerald-500 border-emerald-500 text-white shadow-sm'
+                    : 'surface-sub border-theme text-transparent hover:border-indigo-500'
+                }"
+              >✓</button>
+            </td>
+          `;
+        }
+        html += `</tr>`;
+      });
+
+      html += `</tbody>`;
+      table.innerHTML = html;
+    }
+
+    function toggleHabit(hIdx, dayIdx) {
+      state.habits[hIdx].days[dayIdx] = !state.habits[hIdx].days[dayIdx];
+      saveState();
+      renderHabits();
+    }
+
+    function addCustomHabitPrompt() {
+      const name = prompt('Новая привычка (например: 🧘 Медитация 10 мин):');
+      if (!name) return;
+      state.habits.push({ id: 'h-' + Date.now(), name, days: [false, false, false, false, false, false, false] });
+      saveState();
+      renderHabits();
+    }
+
+    function renderChecklist() {
+      const sel = document.getElementById('checklist-day-select');
+      const list = document.getElementById('daily-checklist-list');
+      if (!sel || !list) return;
+
+      const day = Number(sel.value);
+      const dayEvents = state.events
+        .filter(e => e.day === day && (e.parity === 'all' || e.parity === state.weekParity))
+        .sort((a, b) => timeToMins(a.start) - timeToMins(b.start));
+
+      if (!dayEvents.length) {
+        list.innerHTML = `<div class="text-xs text-muted py-4 text-center">На этот день задач нет.</div>`;
+        return;
+      }
+
+      list.innerHTML = dayEvents.map(ev => {
+        const total = getEventTotalMoney(ev);
+        return `
+          <div class="p-3 rounded-2xl surface-sub border border-theme flex items-center justify-between gap-3">
+            <label class="flex items-center gap-3 cursor-pointer flex-1">
+              <input type="checkbox" ${ev.completed ? 'checked' : ''} onchange="toggleChecklistEvent('${ev.id}')" class="w-4 h-4 rounded accent-indigo-600" />
+              <div class="${ev.completed ? 'line-through opacity-60' : ''}">
+                <div class="text-xs sm:text-sm font-extrabold text-main">${ev.title}</div>
+                <div class="text-[11px] text-muted">${ev.start}–${ev.end} ${ev.room ? `• ${ev.room}` : ''}</div>
+              </div>
+            </label>
+            ${total > 0 ? `<span class="text-xs font-extrabold ${ev.credited ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600'}">${ev.credited ? '✓ ' : ''}${formatMoney(total)}</span>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleChecklistEvent(id) {
+      const ev = state.events.find(x => x.id === id);
+      if (!ev) return;
+      ev.completed = !ev.completed;
+
+      if (ev.completed && ev.moneyType !== 'none' && ev.autoCredit && !ev.credited) {
+        creditEventMoney(id);
+        return;
+      }
+
+      saveState();
+      renderAll();
+    }
+
+    // =========================================================================
+    // 12. NAVIGATION, CLOCK, EXPORT / IMPORT & INIT
+    // =========================================================================
     function switchTab(tabId) {
       state.activeTab = tabId;
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+      const activeEl = document.getElementById(`tab-${tabId}`);
+      if (activeEl) activeEl.classList.remove('hidden');
+
       document.querySelectorAll('.nav-tab').forEach(btn => {
-        const active = btn.dataset.tab === tabId;
-        btn.style.backgroundColor = active ? 'var(--accent)' : '';
-        btn.classList.toggle('text-white', active);
-        btn.classList.toggle('text-muted', !active);
+        const isActive = btn.dataset.tab === tabId;
+        btn.style.backgroundColor = isActive ? 'var(--accent)' : '';
+        btn.classList.toggle('text-white', isActive);
+        btn.classList.toggle('shadow-sm', isActive);
+        btn.classList.toggle('text-muted', !isActive);
       });
+
       saveState();
+    }
+
+    function toggleWeekParity() {
+      state.weekParity = state.weekParity === 'even' ? 'odd' : 'even';
+      saveState();
+      renderAll();
+      showToast(state.weekParity === 'even' ? 'Переключено на Чётную неделю' : 'Переключено на Нечётную неделю');
     }
 
     function updateClockAndNextClass() {
       const now = new Date();
-      document.getElementById('live-clock').textContent = `${now.toLocaleDateString('ru-RU', {weekday: 'short'})}, ${now.toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit[span_0](start_span)'[span_0](end_span)})}`;
+      const dayIdx = (now.getDay() + 6) % 7;
+      const timeStr = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+      const dateStr = now.toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric', month: 'short' });
+      document.getElementById('live-clock').textContent = `${dateStr}, ${timeStr}`;
+
+      const nowMins = now.getHours() * 60 + now.getMinutes();
+      const todayEvs = state.events
+        .filter(e => e.day === dayIdx && (e.parity === 'all' || e.parity === state.weekParity))
+        .sort((a, b) => timeToMins(a.start) - timeToMins(b.start));
+
+      const current = todayEvs.find(e => timeToMins(e.start) <= nowMins && nowMins < timeToMins(e.end));
+      const upcoming = todayEvs.find(e => timeToMins(e.start) > nowMins);
+      const banner = document.getElementById('next-class-banner');
+
+      if (current) {
+        banner.textContent = `Сейчас: ${current.title} (до ${current.end})`;
+      } else if (upcoming) {
+        const diff = timeToMins(upcoming.start) - nowMins;
+        banner.textContent = `Далее через ${diff} мин: ${upcoming.title} (${upcoming.start})`;
+      } else {
+        banner.textContent = 'На сегодня запланированных пар больше нет ✨';
+      }
+    }
+
+    function exportCSV() {
+      const rows = [['День', 'Начало', 'Конец', 'Название', 'Категория', 'Аудитория', 'Тип денег', 'Сумма', 'Зачислено']];
+      state.events.forEach(e => {
+        rows.push([
+          DAYS_FULL[e.day],
+          e.start,
+          e.end,
+          `"${e.title.replace(/"/g, '""')}"`,
+          e.category,
+          `"${(e.room || '').replace(/"/g, '""')}"`,
+          e.moneyType,
+          getEventTotalMoney(e),
+          e.credited ? 'Да' : 'Нет'
+        ]);
+      });
+      const csvContent = '\uFEFF' + rows.map(r => r.join(';')).join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `ИСУ_26дд1_Расписание_${new Date().toISOString().slice(0, 10)}.csv`;
+      link.click();
+      showToast('📥 Excel CSV файл скачан', 'success');
+    }
+
+    function exportJSON() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `ИСУ_26дд1_Backup_${new Date().toISOString().slice(0, 10)}.json`;
+      link.click();
+      showToast('💾 Резервная копия JSON сохранена', 'success');
+    }
+
+    function importJSON(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (imported && Array.isArray(imported.events)) {
+            state = { ...state, ...imported };
+            saveState();
+            applyAppearance();
+            renderAll();
+            showToast('📂 Данные успешно восстановлены!', 'success');
+          }
+        } catch (err) {
+          showToast('Ошибка чтения JSON файла', 'error');
+        }
+      };
+      reader.readAsText(file);
     }
 
     function renderAll() {
-      applyAppearance();
+      const parityBadge = document.getElementById('week-parity-badge');
+      if (parityBadge) {
+        parityBadge.textContent = state.weekParity === 'even' ? 'Чётная неделя' : 'Нечётная неделя';
+      }
+
       renderExcelGrid();
       renderDaysKanban();
       renderFinance();
       renderHabits();
-      renderNotes();
+      renderChecklist();
       updateClockAndNextClass();
     }
 
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      const tag = document.activeElement?.tagName;
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        document.getElementById('search-input')?.focus();
+      } else if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') {
+        if (e.key.toLowerCase() === 'n' || e.key.toLowerCase() === 'т') {
+          e.preventDefault();
+          openEventModal();
+        } else if (e.key === '/') {
+          e.preventDefault();
+          document.getElementById('smart-input')?.focus();
+        }
+      }
+    });
+
+    // Boot Application
     window.addEventListener('DOMContentLoaded', () => {
       applyAppearance();
       setExcelZoom(state.excelZoom || 1);
       setFilter(state.filter || 'all');
       switchTab(state.activeTab || 'excel');
+
+      const todayIdx = (new Date().getDay() + 6) % 7;
+      const checklistSel = document.getElementById('checklist-day-select');
+      if (checklistSel) checklistSel.value = String(todayIdx);
+
+      initExcelGestures();
+      updatePomodoroDisplay();
       renderAll();
+      setInterval(updateClockAndNextClass, 30000);
     });
   </script>
 </body>
