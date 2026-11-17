@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="midnight" data-font="inter" data-scale="md">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, width=device-width, initial-scale=1.0">
+    <title>LIFE.OS — Personal Life Management System</title>
+    <meta name="description" content="LIFE.OS — personal dashboard for schedule, time, finances and goals.">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter, Manrope, JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@0.468.0"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <!-- SheetJS for real XLSX & CSV export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body class="min-h-screen flex flex-col lg:flex-row pb-16 lg:pb-0">
+
+    <!-- =========================================================
+         DESKTOP SIDEBAR NAVIGATION
+    ========================================================= -->
+    <aside class="hidden lg:flex flex-col w-64 shrink-0 border-r sticky top-0 h-screen p-4 justify-between select-none"
+           style="background-color: var(--bg-sidebar); border-color: var(--border);">
+        <div class="space-y-6">
+            <!-- Brand Header -->
+            <div class="flex items-center gap-3 px-2 pt-1">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white shadow-md"
+                     style="background: linear-gradient(135deg, var(--accent), var(--info));">
+                    <i data-lucide="layers" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <div class="font-extrabold text-base tracking-tight flex items-center gap-1.5">
+                        LIFE.OS <span class="text-[10px] px-1.5 py-0.5 rounded font-semibold" style="background-color: var(--accent-soft); color: var(--accent);">v2.0</span>
+                    </div>
+                    <div class="text-[11px]" style="color: var(--text-muted);">Life Management System</div>
+                </div>
+            </div>
+
+            <!-- Main Nav Links -->
+            <nav class="space-y-1">
+                <button onclick="App.navigate('dashboard')" data-nav="dashboard" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                    <span>Главная панель</span>
+                </button>
+                <button onclick="App.navigate('schedule')" data-nav="schedule" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition">
+                    <i data-lucide="calendar-days" class="w-4 h-4"></i>
+                    <span>Календарь и Время</span>
+                </button>
+                <button onclick="App.navigate('excel')" data-nav="excel" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition">
+                    <i data-lucide="sheet" class="w-4 h-4"></i>
+                    <span>Excel-режим</span>
+                </button>
+                <button onclick="App.navigate('finance')" data-nav="finance" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition">
+                    <i data-lucide="wallet" class="w-4 h-4"></i>
+                    <span>Финансы и Капитал</span>
+                </button>
+                <button onclick="App.navigate('analytics')" data-nav="analytics" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition">
+                    <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                    <span>Аналитика</span>
+                </button>
+                <button onclick="App.navigate('settings')" data-nav="settings" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition">
+                    <i data-lucide="settings" class="w-4 h-4"></i>
+                    <span>Настройки и Данные</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Bottom Status & Quick Create -->
+        <div class="space-y-3">
+            <div class="elevated rounded-xl p-3 space-y-1.5">
+                <div class="flex items-center justify-between text-[11px]" style="color: var(--text-muted);">
+                    <span>Чистый капитал</span>
+                    <span class="w-2 h-2 rounded-full" style="background-color: var(--success);"></span>
+                </div>
+                <div id="sidebarNetWorth" class="font-bold text-base tabular-nums">0 ₸</div>
+                <div id="sidebarClock" class="text-[11px] tabular-nums" style="color: var(--text-sub);">--:--:--</div>
+            </div>
+            <button onclick="UI.openEventModal()" class="btn-primary w-full py-2.5 px-4 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-sm">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>Новое событие</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- =========================================================
+         MAIN CONTENT WRAPPER
+    ========================================================= -->
+    <div class="flex-1 flex flex-col min-w-0">
+
+        <!-- Top Utility Header -->
+        <header class="sticky top-0 z-20 border-b backdrop-blur-md px-4 lg:px-8 h-14 flex items-center justify-between gap-3"
+                style="background-color: color-mix(in srgb, var(--bg-app) 85%, transparent); border-color: var(--border);">
+            <div class="flex items-center gap-2.5">
+                <div class="lg:hidden w-8 h-8 rounded-lg flex items-center justify-center text-white" style="background-color: var(--accent);">
+                    <i data-lucide="layers" class="w-4 h-4"></i>
+                </div>
+                <h1 id="pageTitle" class="font-bold text-base sm:text-lg tracking-tight">Главная панель</h1>
+            </div>
+
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Live Date & Time Pill -->
+                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium tabular-nums elevated">
+                    <i data-lucide="clock" class="w-3.5 h-3.5" style="color: var(--accent);"></i>
+                    <span id="headerDateTime">--</span>
+                </div>
+
+                <!-- Quick Transaction Button -->
+                <button onclick="UI.openTxModal('expense')" class="elevated px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 hover:opacity-85 transition" title="Записать расход или доход">
+                    <i data-lucide="plus-circle" class="w-3.5 h-3.5" style="color: var(--success);"></i>
+                    <span class="hidden sm:inline">Операция</span>
+                </button>
+
+                <!-- Quick Event Button -->
+                <button onclick="UI.openEventModal()" class="btn-primary px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5">
+                    <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                    <span>Событие</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Dynamic Views Container -->
+        <main class="flex-1 max-w-[1440px] w-full mx-auto p-4 lg:p-6 space-y-6">
+
+            <!-- =====================================================
+                 VIEW 1: MAIN DASHBOARD (ГЛАВНАЯ ПАНЕЛЬ)
+            ===================================================== -->
+            <section id="view-dashboard" class="app-view space-y-5 view-enter">
+                <!-- Dashboard Header Bar -->
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <p id="dashGreeting" class="text-xs sm:text-sm" style="color: var(--text-sub);">Обзор дня, времени и финансов</p>
+                    </div>
+                    <button onclick="UI.openDashboardCustomizer()" class="elevated px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 hover:opacity-85 transition">
+                        <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5" style="color: var(--accent);"></i>
+                        <span>Настроить виджеты</span>
+                    </button>
+                </div>
+
+                <!-- Top KPI Cards (Always visible summary strip) -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4" id="dashTopKpis">
+                    <!-- Rendered dynamically -->
+                </div>
+
+                <!-- Customizable Widgets Grid -->
+                <div id="dashboardWidgetsContainer" class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    <!-- Rendered dynamically according to user widget order & visibility -->
+                </div>
+            </section>
+
+            <!-- =====================================================
+                 VIEW 2: SCHEDULE & TIME MANAGEMENT (КАЛЕНДАРЬ)
+            ===================================================== -->
+            <section id="view-schedule" class="app-view hidden space-y-4 view-enter">
+                <!-- Conflict Warning Banner -->
+                <div id="scheduleConflictBanner" class="hidden rounded-2xl p-3.5 border flex items-center justify-between gap-3"
+                     style="background-color: var(--danger-soft); border-color: var(--danger); color: var(--text-main);">
+                    <div class="flex items-center gap-2.5 text-xs sm:text-sm">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 shrink-0" style="color: var(--danger);"></i>
+                        <span id="scheduleConflictText">Обнаружено пересечение событий по времени!</span>
+                    </div>
+                    <button onclick="ScheduleView.jumpToConflict()" class="px-3 py-1 rounded-lg text-xs font-semibold text-white shrink-0" style="background-color: var(--danger);">
+                        Показать
+                    </button>
+                </div>
+
+                <!-- Calendar Controls Toolbar -->
+                <div class="card rounded-2xl p-3 sm:p-4 space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <!-- Date Navigation -->
+                        <div class="flex items-center gap-2">
+                            <button onclick="ScheduleView.shiftDate(-1)" class="elevated p-2 rounded-xl hover:opacity-80">
+                                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="ScheduleView.goToday()" class="elevated px-3 py-1.5 rounded-xl text-xs font-semibold hover:opacity-80">
+                                Сегодня
+                            </button>
+                            <button onclick="ScheduleView.shiftDate(1)" class="elevated p-2 rounded-xl hover:opacity-80">
+                                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            </button>
+                            <h2 id="calendarCurrentRangeLabel" class="font-bold text-sm sm:text-base ml-1">--</h2>
+                        </div>
+
+                        <!-- View Mode Switcher -->
+                        <div class="flex items-center gap-1 p-1 rounded-xl elevated overflow-x-auto max-w-full">
+                            <button onclick="ScheduleView.setMode('day')" data-cal-mode="day" class="cal-mode-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition">День</button>
+                            <button onclick="ScheduleView.setMode('3days')" data-cal-mode="3days" class="cal-mode-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition">3 дня</button>
+                            <button onclick="ScheduleView.setMode('week')" data-cal-mode="week" class="cal-mode-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition">Неделя</button>
+                            <button onclick="ScheduleView.setMode('month')" data-cal-mode="month" class="cal-mode-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition">Месяц</button>
+                            <button onclick="App.navigate('excel')" class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition" style="color: var(--accent);">
+                                <i data-lucide="sheet" class="w-3.5 h-3.5"></i> Таблица
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Time Balance Summary Bar for Current Range -->
+                    <div id="scheduleTimeSummaryBar" class="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-2 border-t text-xs" style="border-color: var(--border);">
+                        <!-- Rendered dynamically: Busy, Confirmed Free, Unallocated, Planned vs Completed, Paid Income -->
+                    </div>
+                </div>
+
+                <!-- Interactive Calendar Surface -->
+                <div class="card rounded-2xl overflow-hidden">
+                    <div id="calendarRenderSurface" class="overflow-auto relative" style="max-height: 70vh;">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+
+                <!-- Embedded Time Analytics Breakdown -->
+                <div class="card rounded-2xl p-4 sm:p-5 space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                            <h3 class="font-bold text-base">Аналитика времени за выбранный период</h3>
+                            <p class="text-xs" style="color: var(--text-muted);">Незапланированные часы отображаются отдельно и не считаются подтверждённым свободным временем</p>
+                        </div>
+                        <button onclick="UI.openCategoryModal()" class="elevated px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5">
+                            <i data-lucide="tags" class="w-3.5 h-3.5" style="color: var(--accent);"></i> Категории
+                        </button>
+                    </div>
+                    <div id="scheduleCategoryBreakdown" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- =====================================================
+                 VIEW 3: TABLE & EXCEL MODE (EXCEL-МАТРИЦА И ЭКСПОРТ)
+            ===================================================== -->
+            <section id="view-excel" class="app-view hidden space-y-4 view-enter">
+                <!-- Excel Toolbar -->
+                <div class="card rounded-2xl p-3 sm:p-4 space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex items-center gap-2">
+                            <button onclick="ExcelView.shiftDate(-1)" class="elevated p-2 rounded-xl hover:opacity-80">
+                                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                            </button>
+                            <span id="excelDateRangeLabel" class="font-bold text-sm sm:text-base min-w-[160px] text-center">--</span>
+                            <button onclick="ExcelView.shiftDate(1)" class="elevated p-2 rounded-xl hover:opacity-80">
+                                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+
+                        <!-- Span Selector + Zoom Slider + Exports -->
+                        <div class="flex flex-wrap items-center gap-2">
+                            <!-- Span -->
+                            <div class="flex items-center gap-1 p-1 rounded-xl elevated">
+                                <button onclick="ExcelView.setSpan(1)" data-excel-span="1" class="excel-span-btn px-2.5 py-1 rounded-lg text-xs font-semibold">1 день</button>
+                                <button onclick="ExcelView.setSpan(3)" data-excel-span="3" class="excel-span-btn px-2.5 py-1 rounded-lg text-xs font-semibold">3 дня</button>
+                                <button onclick="ExcelView.setSpan(7)" data-excel-span="7" class="excel-span-btn px-2.5 py-1 rounded-lg text-xs font-semibold">Неделя</button>
+                            </div>
+
+                            <!-- Zoom Slider -->
+                            <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl elevated text-xs">
+                                <i data-lucide="zoom-out" class="w-3.5 h-3.5" style="color: var(--text-muted);"></i>
+                                <input type="range" id="excelZoomSlider" min="1" max="5" value="3" oninput="ExcelView.setZoom(this.value)" class="w-20 sm:w-28 accent-indigo-500 cursor-pointer">
+                                <i data-lucide="zoom-in" class="w-3.5 h-3.5" style="color: var(--text-muted);"></i>
+                                <span id="excelZoomText" class="font-semibold tabular-nums w-12 text-right">100%</span>
+                            </div>
+
+                            <!-- Real XLSX / CSV Export -->
+                            <button onclick="DataExport.exportXLSX()" class="px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 text-white" style="background-color: var(--success);">
+                                <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i> Экспорт XLSX
+                            </button>
+                            <button onclick="DataExport.exportCSV()" class="elevated px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5">
+                                <i data-lucide="file-text" class="w-3.5 h-3.5"></i> CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Category Filter Strip -->
+                    <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs" id="excelCategoryFilterBar">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+
+                <!-- Spreadsheet Matrix Container -->
+                <div class="card rounded-2xl overflow-hidden">
+                    <div class="px-3 py-2 border-b flex items-center justify-between text-xs" style="background-color: var(--bg-elevated); border-color: var(--border); color: var(--text-sub);">
+                        <span>Нажмите на любую ячейку для мгновенного создания или на блок для редактирования</span>
+                        <span class="tabular-nums hidden sm:inline">Сетка 00:00 — 23:45</span>
+                    </div>
+                    <div id="excelMatrixWrapper" class="overflow-auto relative select-none" style="max-height: 72vh;">
+                        <div id="excelMatrixCanvas"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =====================================================
+                 VIEW 4: FINANCE MANAGEMENT (ФИНАНСЫ И КАПИТАЛ)
+            ===================================================== -->
+            <section id="view-finance" class="app-view hidden space-y-5 view-enter">
+                <!-- Net Worth & Accounts Overview -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    <!-- Total Net Capital Card -->
+                    <div class="lg:col-span-5 card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-semibold uppercase tracking-wider" style="color: var(--text-sub);">Чистый капитал (Net Worth)</span>
+                                <span class="text-xs px-2 py-0.5 rounded-md font-semibold" style="background-color: var(--accent-soft); color: var(--accent);" id="financeCurrencyBadge">KZT (₸)</span>
+                            </div>
+                            <div id="finNetWorthTotal" class="text-3xl sm:text-4xl font-extrabold mt-2 tabular-nums">0 ₸</div>
+                            <div class="grid grid-cols-2 gap-2 mt-3 pt-3 border-t text-xs" style="border-color: var(--border);">
+                                <div>
+                                    <span style="color: var(--text-muted);">Активы и счета:</span>
+                                    <div id="finTotalAssets" class="font-bold tabular-nums mt-0.5" style="color: var(--success);">0 ₸</div>
+                                </div>
+                                <div>
+                                    <span style="color: var(--text-muted);">Обязательства / Долги:</span>
+                                    <div id="finTotalDebts" class="font-bold tabular-nums mt-0.5" style="color: var(--danger);">0 ₸</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <button onclick="UI.openTxModal('income')" class="flex-1 py-2.5 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5" style="background-color: var(--success-soft); color: var(--success);">
+                                <i data-lucide="arrow-down-left" class="w-4 h-4"></i> + Доход
+                            </button>
+                            <button onclick="UI.openTxModal('expense')" class="flex-1 py-2.5 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5" style="background-color: var(--danger-soft); color: var(--danger);">
+                                <i data-lucide="arrow-up-right" class="w-4 h-4"></i> - Расход
+                            </button>
+                            <button onclick="UI.openAccountModal()" class="elevated py-2.5 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5" title="Добавить счёт или долг">
+                                <i data-lucide="landmark" class="w-4 h-4"></i> + Счёт
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Accounts Breakdown List -->
+                    <div class="lg:col-span-7 card rounded-2xl p-5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2 class="font-bold text-base">Счета, наличные, активы и долги</h2>
+                                <p class="text-xs" style="color: var(--text-muted);">Нажмите на счёт для редактирования баланса</p>
+                            </div>
+                            <button onclick="UI.openAccountModal()" class="btn-primary px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1">
+                                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Счёт
+                            </button>
+                        </div>
+                        <div id="financeAccountsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            <!-- Rendered dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Savings Goals & Financial Calculator -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    <!-- Savings Goals -->
+                    <div class="lg:col-span-7 card rounded-2xl p-5 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2 class="font-bold text-base flex items-center gap-2">
+                                    <i data-lucide="target" class="w-4 h-4" style="color: var(--accent);"></i>
+                                    Финансовые цели (Savings Goals)
+                                </h2>
+                                <p class="text-xs" style="color: var(--text-muted);">Авторасчёт необходимой суммы в день, неделю и месяц до дедлайна</p>
+                            </div>
+                            <button onclick="UI.openGoalModal()" class="btn-primary px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1">
+                                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Цель
+                            </button>
+                        </div>
+                        <div id="financeGoalsList" class="space-y-3">
+                            <!-- Rendered dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Built-in Multi-Mode Financial Calculator -->
+                    <div class="lg:col-span-5 card rounded-2xl p-5 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h2 class="font-bold text-base flex items-center gap-2">
+                                <i data-lucide="calculator" class="w-4 h-4" style="color: var(--warning);"></i>
+                                Финансовый калькулятор
+                            </h2>
+                            <select id="finCalcMode" onchange="FinanceCalc.render()" class="input-field px-2.5 py-1 rounded-lg text-xs font-semibold">
+                                <option value="goal">План накопления на цель</option>
+                                <option value="hourly">Расчёт заработка за час</option>
+                                <option value="afford">Оценка стоимости покупки</option>
+                                <option value="percent">Проценты и сложение трат</option>
+                            </select>
+                        </div>
+
+                        <div id="finCalcBody" class="space-y-3">
+                            <!-- Dynamic Calculator Mode Form & Live Output -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transactions Ledger -->
+                <div class="card rounded-2xl p-5 space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                            <h2 class="font-bold text-base">История доходов и расходов</h2>
+                            <p class="text-xs" style="color: var(--text-muted);">Полный журнал операций с фильтрацией</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <input type="text" id="txSearchInput" oninput="FinanceView.renderTransactions()" placeholder="Поиск по описанию..." class="input-field px-3 py-1.5 rounded-xl text-xs w-40 sm:w-52">
+                            <select id="txTypeFilter" onchange="FinanceView.renderTransactions()" class="input-field px-3 py-1.5 rounded-xl text-xs">
+                                <option value="all">Все операции</option>
+                                <option value="income">Только доходы</option>
+                                <option value="expense">Только расходы</option>
+                            </select>
+                            <button onclick="UI.openTxModal('income')" class="btn-primary px-3 py-1.5 rounded-xl text-xs font-semibold">+ Запись</button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                            <thead>
+                                <tr class="border-b" style="border-color: var(--border); color: var(--text-sub);">
+                                    <th class="py-2.5 px-3">Дата</th>
+                                    <th class="py-2.5 px-3">Категория</th>
+                                    <th class="py-2.5 px-3">Описание</th>
+                                    <th class="py-2.5 px-3">Счёт</th>
+                                    <th class="py-2.5 px-3 text-right">Сумма</th>
+                                    <th class="py-2.5 px-2 text-right"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="financeTxTableBody" class="divide-y tabular-nums" style="border-color: var(--border);">
+                                <!-- Rendered dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =====================================================
+                 VIEW 5: ANALYTICS & PRODUCTIVITY (АНАЛИТИКА)
+            ===================================================== -->
+            <section id="view-analytics" class="app-view hidden space-y-5 view-enter">
+                <div class="card rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <h2 class="font-bold text-base sm:text-lg">Аналитика продуктивности, времени и финансов</h2>
+                        <p class="text-xs" style="color: var(--text-muted);">Интерактивные графики и сравнение показателей</p>
+                    </div>
+                    <div class="flex items-center gap-1 p-1 rounded-xl elevated">
+                        <button onclick="AnalyticsView.setRange('week')" data-an-range="week" class="an-range-btn px-3 py-1.5 rounded-lg text-xs font-semibold">Неделя</button>
+                        <button onclick="AnalyticsView.setRange('month')" data-an-range="month" class="an-range-btn px-3 py-1.5 rounded-lg text-xs font-semibold">Месяц</button>
+                        <button onclick="AnalyticsView.setRange('all')" data-an-range="all" class="an-range-btn px-3 py-1.5 rounded-lg text-xs font-semibold">Всё время</button>
+                    </div>
+                </div>
+
+                <!-- Summary Metrics Row -->
+                <div id="analyticsKpiStrip" class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <!-- Rendered dynamically -->
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="card rounded-2xl p-5 space-y-3">
+                        <h3 class="font-bold text-sm sm:text-base">Распределение времени по категориям (часы)</h3>
+                        <div class="h-64 relative"><canvas id="chartTimeCategories"></canvas></div>
+                    </div>
+
+                    <div class="card rounded-2xl p-5 space-y-3">
+                        <h3 class="font-bold text-sm sm:text-base">Запланированное vs Фактическое время (по дням)</h3>
+                        <div class="h-64 relative"><canvas id="chartPlannedVsActual"></canvas></div>
+                    </div>
+
+                    <div class="card rounded-2xl p-5 space-y-3">
+                        <h3 class="font-bold text-sm sm:text-base">Доходы vs Расходы</h3>
+                        <div class="h-64 relative"><canvas id="chartIncomeExpense"></canvas></div>
+                    </div>
+
+                    <div class="card rounded-2xl p-5 space-y-3">
+                        <h3 class="font-bold text-sm sm:text-base">Структура расходов по категориям</h3>
+                        <div class="h-64 relative"><canvas id="chartExpenseBreakdown"></canvas></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =====================================================
+                 VIEW 6: SETTINGS & DATA RELIABILITY (НАСТРОЙКИ)
+            ===================================================== -->
+            <section id="view-settings" class="app-view hidden space-y-5 view-enter">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <!-- Appearance & Themes -->
+                    <div class="card rounded-2xl p-5 space-y-4">
+                        <h2 class="font-bold text-base flex items-center gap-2">
+                            <i data-lucide="palette" class="w-4 h-4" style="color: var(--accent);"></i>
+                            Внешний вид и темы
+                        </h2>
+
+                        <div>
+                            <label class="block text-xs font-medium mb-2" style="color: var(--text-sub);">Цветовая тема</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                <button onclick="SettingsView.setTheme('midnight')" data-theme-opt="midnight" class="theme-opt p-2.5 rounded-xl border text-left text-xs font-semibold">Midnight Linear</button>
+                                <button onclick="SettingsView.setTheme('oled')" data-theme-opt="oled" class="theme-opt p-2.5 rounded-xl border text-left text-xs font-semibold">True OLED</button>
+                                <button onclick="SettingsView.setTheme('nord')" data-theme-opt="nord" class="theme-opt p-2.5 rounded-xl border text-left text-xs font-semibold">Nord Slate</button>
+                                <button onclick="SettingsView.setTheme('emerald')" data-theme-opt="emerald" class="theme-opt p-2.5 rounded-xl border text-left text-xs font-semibold">Emerald Dark</button>
+                                <button onclick="SettingsView.setTheme('light')" data-theme-opt="light" class="theme-opt p-2.5 rounded-xl border text-left text-xs font-semibold">Clean Light</button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-medium mb-1.5" style="color: var(--text-sub);">Шрифт интерфейса</label>
+                                <select id="settingFontSelect" onchange="SettingsView.setFont(this.value)" class="input-field w-full px-3 py-2 rounded-xl text-xs font-semibold">
+                                    <option value="inter">Inter (Modern UI)</option>
+                                    <option value="manrope">Manrope (Geometric)</option>
+                                    <option value="mono">JetBrains Mono (Tabular)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium mb-1.5" style="color: var(--text-sub);">Масштаб текста</label>
+                                <select id="settingScaleSelect" onchange="SettingsView.setScale(this.value)" class="input-field w-full px-3 py-2 rounded-xl text-xs font-semibold">
+                                    <option value="sm">Компактный (90%)</option>
+                                    <option value="md">Стандартный (100%)</option>
+                                    <option value="lg">Крупный (110%)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium mb-1.5" style="color: var(--text-sub);">Акцентный цвет</label>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <button onclick="SettingsView.setAccent('#6366f1')" class="w-7 h-7 rounded-full border-2 border-white/20" style="background:#6366f1"></button>
+                                <button onclick="SettingsView.setAccent('#8b5cf6')" class="w-7 h-7 rounded-full border-2 border-white/20" style="background:#8b5cf6"></button>
+                                <button onclick="SettingsView.setAccent('#10b981')" class="w-7 h-7 rounded-full border-2 border-white/20" style="background:#10b981"></button>
+                                <button onclick="SettingsView.setAccent('#06b6d4')" class="w-7 h-7 rounded-full border-2 border-white/20" style="background:#06b6d4"></button>
+                                <button onclick="SettingsView.setAccent('#f59e0b')" class="w-7 h-7 rounded-full border-2 border-white/20" style="background:#f59e0b"></button>
+                                <button onclick="SettingsView.setAccent('#ec4899')" class="w-7 h-7 rounded-full border-2 border-white/20" style="background:#ec4899"></button>
+                                <input type="color" id="settingAccentPicker" onchange="SettingsView.setAccent(this.value)" class="w-8 h-8 rounded cursor-pointer bg-transparent border-0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Regional, Currency & Categories -->
+                    <div class="card rounded-2xl p-5 space-y-4">
+                        <h2 class="font-bold text-base flex items-center gap-2">
+                            <i data-lucide="globe" class="w-4 h-4" style="color: var(--accent);"></i>
+                            Регион, валюта и категории
+                        </h2>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-medium mb-1.5" style="color: var(--text-sub);">Основная валюта</label>
+                                <select id="settingCurrencySelect" onchange="SettingsView.setCurrency(this.value)" class="input-field w-full px-3 py-2 rounded-xl text-xs font-semibold">
+                                    <option value="KZT">KZT (₸) — Тенге</option>
+                                    <option value="USD">USD ($) — Доллар США</option>
+                                    <option value="EUR">EUR (€) — Евро</option>
+                                    <option value="RUB">RUB (₽) — Рубль</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium mb-1.5" style="color: var(--text-sub);">Часовой пояс</label>
+                                <select id="settingTimezoneSelect" onchange="SettingsView.setTimezone(this.value)" class="input-field w-full px-3 py-2 rounded-xl text-xs font-semibold">
+                                    <option value="Asia/Almaty">Asia/Almaty (UTC+5)</option>
+                                    <option value="Europe/Moscow">Europe/Moscow (UTC+3)</option>
+                                    <option value="Asia/Tashkent">Asia/Tashkent (UTC+5)</option>
+                                    <option value="UTC">UTC (Гринвич)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-medium mb-1.5" style="color: var(--text-sub);">Формат времени</label>
+                                <select id="settingTimeFormatSelect" onchange="SettingsView.setTimeFormat(this.value)" class="input-field w-full px-3 py-2 rounded-xl text-xs font-semibold">
+                                    <option value="24h">24-часовой (18:30)</option>
+                                    <option value="12h">12-часовой (6:30 PM)</option>
+                                </select>
+                            </div>
+                            <div class="flex items-end">
+                                <button onclick="UI.openCategoryModal()" class="elevated w-full py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 hover:opacity-85">
+                                    <i data-lucide="tags" class="w-4 h-4" style="color: var(--accent);"></i>
+                                    <span>Управление категориями</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Reliability, Backup & Storage Engine -->
+                <div class="card rounded-2xl p-5 space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                            <h2 class="font-bold text-base flex items-center gap-2">
+                                <i data-lucide="database" class="w-4 h-4" style="color: var(--success);"></i>
+                                Хранилище данных, резервное копирование и экспорт
+                            </h2>
+                            <p class="text-xs" style="color: var(--text-muted);">Локальное хранилище v2.0 с автоматическим сохранением и проверкой целостности</p>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-lg font-medium" style="background-color: var(--success-soft); color: var(--success);" id="storageStatusBadge">Автосохранение активно</span>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2.5">
+                        <button onclick="DataExport.exportJSON()" class="btn-primary px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5">
+                            <i data-lucide="download" class="w-4 h-4"></i> Скачать JSON-бэкап
+                        </button>
+
+                        <label class="elevated px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 cursor-pointer hover:opacity-85">
+                            <i data-lucide="upload" class="w-4 h-4"></i> Импорт из JSON
+                            <input type="file" accept=".json" onchange="DataExport.importJSON(event)" class="hidden">
+                        </label>
+
+                        <button onclick="DataExport.exportXLSX()" class="elevated px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 hover:opacity-85">
+                            <i data-lucide="file-spreadsheet" class="w-4 h-4" style="color: var(--success);"></i> Экспорт в Excel (.xlsx)
+                        </button>
+
+                        <button onclick="DataExport.exportCSV()" class="elevated px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 hover:opacity-85">
+                            <i data-lucide="file-text" class="w-4 h-4"></i> Экспорт в CSV
+                        </button>
+
+                        <button onclick="UI.openConfirmModal('Сбросить все данные к демо-шаблону?', 'Все текущие события, счета и цели будут заменены начальными примерами.', () => StorageAdapter.resetToSample())"
+                                class="px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5"
+                                style="background-color: var(--danger-soft); color: var(--danger);">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Сбросить к демо-данным
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- =========================================================
+         MOBILE BOTTOM NAVIGATION
+    ========================================================= -->
+    <nav class="lg:hidden fixed bottom-0 inset-x-0 z-30 border-t backdrop-blur-lg flex justify-around py-1.5 px-1"
+         style="background-color: color-mix(in srgb, var(--bg-sidebar) 94%, transparent); border-color: var(--border);">
+        <button onclick="App.navigate('dashboard')" data-nav="dashboard" class="nav-item flex-1 py-1 rounded-xl flex flex-col items-center gap-0.5 text-[10px] font-semibold">
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i><span>Главная</span>
+        </button>
+        <button onclick="App.navigate('schedule')" data-nav="schedule" class="nav-item flex-1 py-1 rounded-xl flex flex-col items-center gap-0.5 text-[10px] font-semibold">
+            <i data-lucide="calendar-days" class="w-4 h-4"></i><span>График</span>
+        </button>
+        <button onclick="App.navigate('excel')" data-nav="excel" class="nav-item flex-1 py-1 rounded-xl flex flex-col items-center gap-0.5 text-[10px] font-semibold">
+            <i data-lucide="sheet" class="w-4 h-4"></i><span>Excel</span>
+        </button>
+        <button onclick="App.navigate('finance')" data-nav="finance" class="nav-item flex-1 py-1 rounded-xl flex flex-col items-center gap-0.5 text-[10px] font-semibold">
+            <i data-lucide="wallet" class="w-4 h-4"></i><span>Финансы</span>
+        </button>
+        <button onclick="App.navigate('analytics')" data-nav="analytics" class="nav-item flex-1 py-1 rounded-xl flex flex-col items-center gap-0.5 text-[10px] font-semibold">
+            <i data-lucide="bar-chart-3" class="w-4 h-4"></i><span>Отчёты</span>
+        </button>
+        <button onclick="App.navigate('settings')" data-nav="settings" class="nav-item flex-1 py-1 rounded-xl flex flex-col items-center gap-0.5 text-[10px] font-semibold">
+            <i data-lucide="settings" class="w-4 h-4"></i><span>Ещё</span>
+        </button>
+    </nav>
+
+    <!-- =========================================================
+         MODALS (EVENT, CATEGORY, ACCOUNT, TRANSACTION, GOAL, WIDGETS, CONFIRM)
+    ========================================================= -->
+
+    <!-- 1. Event / Task Modal -->
+    <div id="eventModal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 bg-black/65 backdrop-blur-xs overflow-y-auto">
+        <div class="card w-full max-w-lg rounded-2xl p-5 space-y-4 shadow-2xl my-auto view-enter">
+            <div class="flex items-center justify-between">
+                <h3 id="eventModalTitle" class="font-bold text-lg">Новое событие / задача</h3>
+                <button onclick="UI.closeModal('eventModal')" class="elevated p-1.5 rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+
+            <form onsubmit="ScheduleView.saveEvent(event)" class="space-y-3">
+                <input type="hidden" id="evId">
+
+                <div>
+                    <label class="block text-xs font-medium mb-1" style="color: var(--text-sub);">Название</label>
+                    <input type="text" id="evTitle" required placeholder="Например: Тренировка в зале / Смена / Лекция" class="input-field w-full px-3.5 py-2 rounded-xl text-sm">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    <div>
+                        <label class="block text-xs font-medium mb-1" style="color: var(--text-sub);">Дата</label>
+                        <input type="date" id="evDate" required class="input-field w-full px-3 py-2 rounded-xl text-xs tabular-nums">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium mb-1" style="color: var(--text-sub);">Начало</label>
+                        <input type="time" id="evStart" required value="09:00" class="input-field w-full px-3 py-2 rounded-xl text-xs tabular-nums">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium mb-1" style="color: var(--text-sub);">Конец</label>
+                        <input type="time" id="evEnd" required value="10:30" class="input-field w-full px-3 py-2 rounded-xl text-xs tabular-nums">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block text-xs font-medium mb-1" style="color: var(--text-sub);">Категория</label>
+                        <select id="evCategory" class="input-field w-full px-3 py-2 rounded-xl text-xs font-semibold"></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium mb-1" style="color: var(--text-sub);">Тип слота времени</label>
+                        <select id="evSlotType" class="input-field w-full px-3 py-2 rounded-xl text-xs font-semibold">
+                            <option value="busy">Занято / Задача</option>
+                            <option value="free">Подтверждённое свободное окно</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2.5">
+                    <div>
+                        <label class="block text-xs font-medium mb-1" style="color: var(--text-sub);">Приоритет</label>
+                        <select id="evPriority" class="input-field w-full px-3 py-2 rounded-xl text-xs">
+                            <option value="medium">Средний</option>
+                            <option value="high">Высокий</option>
+                            <option value="low">Низкий</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium mb-1" style="color: var(--text-sub);">Статус</label>
+                        <select id="evStatus" class="input-field w-full px-3 py-2 rounded-xl text-xs">
+                            <option value="planned">Запланировано</option>
+                            <option value="completed">Выполнено</option>
+                            <option value="missed">Пропущено</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium mb-1" style="color: var(--text-sub);">Повтор</label>
+                        <select id="evRepeat" class="input-field w-full px-3 py-2 rounded-xl text-xs">
+                            <option value="none">Без повтора</option>
+                            <option value="daily">Каждый день</option>
+                            <option value="weekdays">По будням (Пн-Пт)</option>
+                            <option value="weekly">Еженедельно</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Custom Color & Reminder -->
+                <div class="flex items-center justify-between gap-3 elevated px-3 py-2 rounded-xl text-xs">
+                    <div class="flex items-center gap-2">
+                        <input type="color" id="evCustomColor" value="#6366f1" class="w-7 h-7 rounded cursor-pointer bg-transparent border-0">
+                        <label class="flex items-center gap-1.5 cursor-pointer">
+                            <input type="checkbox" id="evUseCustomColor" class="accent-indigo-500">
+                            <span>Свой цвет</span>
+                        </label>
+                    </div>
+                    <label class="flex items-center gap-1.5 cursor-pointer">
+                        <input type="checkbox" id="evReminder" class="accent-indigo-500">
+                        <span>Напоминание</span>
+                    </label>
+                </div>
+
+                <!-- Income from Activity -->
+                <div class="elevated p-3 rounded-xl space-y-2">
+                    <label class="flex items-center justify-between text-xs font-semibold cursor-pointer">
+                        <span class="flex items-center gap-1.5"><i data-lucide="banknote" class="w-4 h-4" style="color: var(--success);"></i> Доход от деятельности</span>
+                        <input type="checkbox" id="evHasIncome" onchange="document.getElementById('evIncomeFields').classList.toggle('hidden', !this.checked)" class="accent-emerald-500">
+                    </label>
+                    <div id="evIncomeFields" class="hidden grid grid-cols-2 gap-2 pt-1">
+                        <div>
+                            <label class="block text-[11px] mb-1" style="color: var(--text-sub);">Тип оплаты</label>
+                            <select id="evIncomeType" class="input-field w-full px-2.5 py-1.5 rounded-lg text-xs">
+                                <option value="fixed">Фиксированная сумма</option>
+                                <option value="hourly">Ставка за час</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] mb-1" style="color: var(--text-sub);">Сумма / Ставка</label>
+                            <input type="number" id="evIncomeValue" min="0" step="any" placeholder="5000" class="input-field w-full px-2.5 py-1.5 rounded-lg text-xs tabular-nums">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium mb-1" style="color: var(--text-sub);">Описание / Заметки</label>
+                    <textarea id="evDesc" rows="2" placeholder="Детали задачи..." class="input-field w-full px-3 py-2 rounded-xl text-xs"></textarea>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2">
+                    <button type="button" id="evDeleteBtn" onclick="ScheduleView.deleteCurrentEvent()" class="hidden px-3.5 py-2 rounded-xl text-xs font-semibold" style="background-color: var(--danger-soft); color: var(--danger);">Удалить</button>
+                    <button type="submit" class="btn-primary flex-1 py-2.5 rounded-xl text-xs font-semibold">Сохранить событие</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. Categories Modal -->
+    <div id="categoryModal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 bg-black/65 backdrop-blur-xs">
+        <div class="card w-full max-w-md rounded-2xl p-5 space-y-4 shadow-2xl view-enter">
+            <div class="flex items-center justify-between">
+                <h3 class="font-bold text-lg">Категории</h3>
+                <button onclick="UI.closeModal('categoryModal')" class="elevated p-1.5 rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <form onsubmit="SettingsView.addCategory(event)" class="flex gap-2">
+                <input type="color" id="newCatColor" value="#10b981" class="w-10 h-9 rounded-lg cursor-pointer bg-transparent border-0 shrink-0">
+                <select id="newCatType" class="input-field px-2 py-1.5 rounded-xl text-xs">
+                    <option value="schedule">Время</option>
+                    <option value="income">Доход</option>
+                    <option value="expense">Расход</option>
+                </select>
+                <input type="text" id="newCatName" required placeholder="Название..." class="input-field flex-1 px-3 py-1.5 rounded-xl text-xs">
+                <button type="submit" class="btn-primary px-3 py-1.5 rounded-xl text-xs font-semibold">+</button>
+            </form>
+            <div id="categoriesListContainer" class="space-y-2 max-h-64 overflow-y-auto pr-1"></div>
+        </div>
+    </div>
+
+    <!-- 3. Account / Liability Modal -->
+    <div id="accountModal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 bg-black/65 backdrop-blur-xs">
+        <div class="card w-full max-w-sm rounded-2xl p-5 space-y-4 shadow-2xl view-enter">
+            <div class="flex items-center justify-between">
+                <h3 id="accModalTitle" class="font-bold text-lg">Счёт / Актив / Долг</h3>
+                <button onclick="UI.closeModal('accountModal')" class="elevated p-1.5 rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <form onsubmit="FinanceView.saveAccount(event)" class="space-y-3">
+                <input type="hidden" id="accId">
+                <div>
+                    <label class="block text-xs mb-1" style="color: var(--text-sub);">Название счёта</label>
+                    <input type="text" id="accName" required placeholder="Kaspi Gold / Наличные / Кредит" class="input-field w-full px-3 py-2 rounded-xl text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs mb-1" style="color: var(--text-sub);">Тип</label>
+                    <select id="accType" class="input-field w-full px-3 py-2 rounded-xl text-xs font-semibold">
+                        <option value="bank">Банковский счёт</option>
+                        <option value="cash">Наличные</option>
+                        <option value="asset">Активы / Инвестиции</option>
+                        <option value="debt">Обязательства / Долг (вычитается из капитала)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs mb-1" style="color: var(--text-sub);">Текущий баланс</label>
+                    <input type="number" id="accBalance" required step="any" placeholder="150000" class="input-field w-full px-3 py-2 rounded-xl text-sm font-bold tabular-nums">
+                </div>
+                <div class="flex gap-2 pt-1">
+                    <button type="button" id="accDeleteBtn" onclick="FinanceView.deleteCurrentAccount()" class="hidden px-3 py-2 rounded-xl text-xs font-semibold" style="background-color: var(--danger-soft); color: var(--danger);">Удалить</button>
+                    <button type="submit" class="btn-primary flex-1 py-2.5 rounded-xl text-xs font-semibold">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. Transaction Modal -->
+    <div id="txModal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 bg-black/65 backdrop-blur-xs">
+        <div class="card w-full max-w-sm rounded-2xl p-5 space-y-4 shadow-2xl view-enter">
+            <div class="flex items-center justify-between">
+                <h3 class="font-bold text-lg">Финансовая операция</h3>
+                <button onclick="UI.closeModal('txModal')" class="elevated p-1.5 rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <form onsubmit="FinanceView.saveTransaction(event)" class="space-y-3">
+                <div class="grid grid-cols-2 gap-2">
+                    <select id="txType" onchange="UI.populateTxCategories()" class="input-field px-3 py-2 rounded-xl text-xs font-semibold">
+                        <option value="income">Доход (+)</option>
+                        <option value="expense">Расход (-)</option>
+                    </select>
+                    <input type="date" id="txDate" required class="input-field px-3 py-2 rounded-xl text-xs tabular-nums">
+                </div>
+                <div>
+                    <label class="block text-xs mb-1" style="color: var(--text-sub);">Сумма</label>
+                    <input type="number" id="txAmount" required min="1" step="any" placeholder="15000" class="input-field w-full px-3 py-2 rounded-xl text-base font-bold tabular-nums">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs mb-1" style="color: var(--text-sub);">Категория</label>
+                        <select id="txCategory" class="input-field w-full px-3 py-2 rounded-xl text-xs"></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs mb-1" style="color: var(--text-sub);">Счёт</label>
+                        <select id="txAccount" class="input-field w-full px-3 py-2 rounded-xl text-xs"></select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs mb-1" style="color: var(--text-sub);">Описание</label>
+                    <input type="text" id="txDesc" required placeholder="Продукты / Оплата за проект" class="input-field w-full px-3 py-2 rounded-xl text-xs">
+                </div>
+                <button type="submit" class="btn-primary w-full py-2.5 rounded-xl text-xs font-semibold">Записать операцию</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 5. Savings Goal Modal -->
+    <div id="goalModal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 bg-black/65 backdrop-blur-xs">
+        <div class="card w-full max-w-sm rounded-2xl p-5 space-y-4 shadow-2xl view-enter">
+            <div class="flex items-center justify-between">
+                <h3 id="goalModalTitle" class="font-bold text-lg">Финансовая цель</h3>
+                <button onclick="UI.closeModal('goalModal')" class="elevated p-1.5 rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <form onsubmit="FinanceView.saveGoal(event)" class="space-y-3">
+                <input type="hidden" id="goalId">
+                <div>
+                    <label class="block text-xs mb-1" style="color: var(--text-sub);">Название цели</label>
+                    <input type="text" id="goalTitle" required placeholder="Подушка безопасности / MacBook" class="input-field w-full px-3 py-2 rounded-xl text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs mb-1" style="color: var(--text-sub);">Накоплено</label>
+                        <input type="number" id="goalCurrent" required min="0" step="any" value="0" class="input-field w-full px-3 py-2 rounded-xl text-xs tabular-nums">
+                    </div>
+                    <div>
+                        <label class="block text-xs mb-1" style="color: var(--text-sub);">Целевая сумма</label>
+                        <input type="number" id="goalTarget" required min="1" step="any" placeholder="500000" class="input-field w-full px-3 py-2 rounded-xl text-xs tabular-nums">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs mb-1" style="color: var(--text-sub);">Дедлайн</label>
+                        <input type="date" id="goalDeadline" required class="input-field w-full px-3 py-2 rounded-xl text-xs tabular-nums">
+                    </div>
+                    <div>
+                        <label class="block text-xs mb-1" style="color: var(--text-sub);">Цвет</label>
+                        <input type="color" id="goalColor" value="#10b981" class="w-full h-9 rounded-lg cursor-pointer bg-transparent border-0">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary w-full py-2.5 rounded-xl text-xs font-semibold">Сохранить цель</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 6. Dashboard Widget Customizer Modal -->
+    <div id="widgetCustomModal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 bg-black/65 backdrop-blur-xs">
+        <div class="card w-full max-w-md rounded-2xl p-5 space-y-4 shadow-2xl view-enter">
+            <div class="flex items-center justify-between">
+                <h3 class="font-bold text-lg">Настройка главной панели</h3>
+                <button onclick="UI.closeModal('widgetCustomModal')" class="elevated p-1.5 rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <p class="text-xs" style="color: var(--text-muted);">Включайте, скрывайте и меняйте порядок виджетов на Dashboard</p>
+            <div id="widgetCustomList" class="space-y-2"></div>
+        </div>
+    </div>
+
+    <!-- 7. Confirmation Modal (Replaces window.confirm) -->
+    <div id="confirmModal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 bg-black/65 backdrop-blur-xs">
+        <div class="card w-full max-w-sm rounded-2xl p-5 space-y-4 shadow-2xl view-enter">
+            <h3 id="confirmModalTitle" class="font-bold text-base">Подтверждение</h3>
+            <p id="confirmModalText" class="text-xs" style="color: var(--text-sub);">Вы уверены?</p>
+            <div class="flex gap-2">
+                <button onclick="UI.closeModal('confirmModal')" class="elevated flex-1 py-2 rounded-xl text-xs font-semibold">Отмена</button>
+                <button id="confirmModalActionBtn" class="flex-1 py-2 rounded-xl text-xs font-semibold text-white" style="background-color: var(--danger);">Подтвердить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-20 lg:bottom-6 right-4 z-50 pointer-events-none opacity-0 transition-all duration-200 translate-y-2">
+        <div class="card px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2 text-xs font-semibold">
+            <i data-lucide="check-circle-2" class="w-4 h-4" style="color: var(--success);"></i>
+            <span id="toastMessage">Готово</span>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         MODULAR APPLICATION ARCHITECTURE
+    ========================================================= -->
+    <script defer src="./js/01-utils.js"></script>
+    <script defer src="./js/02-storageadapter.js"></script>
+    <script defer src="./js/03-store.js"></script>
+    <script defer src="./js/04-dashboardview.js"></script>
+    <script defer src="./js/05-scheduleview.js"></script>
+    <script defer src="./js/06-excelview.js"></script>
+    <script defer src="./js/07-financeview.js"></script>
+    <script defer src="./js/07a-financecalc.js"></script>
+    <script defer src="./js/08-analyticsview.js"></script>
+    <script defer src="./js/09-settingsview.js"></script>
+    <script defer src="./js/10-dataexport.js"></script>
+    <script defer src="./js/11-ui.js"></script>
+    <script defer src="./js/12-app.js"></script>
+</body>
+</html>
