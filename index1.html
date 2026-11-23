@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Mini City & Park Sandbox (GMod + Brookhaven Style)</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+        }
+        #crosshair {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.85);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 10;
+            box-shadow: 0 0 4px rgba(0,0,0,0.8);
+        }
+        #crosshair::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 4px;
+            height: 4px;
+            background: #00ffcc;
+            border-radius: 50%;
+        }
+        #hud {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            background: rgba(20, 25, 35, 0.85);
+            padding: 10px 15px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            z-index: 20;
+            backdrop-filter: blur(5px);
+        }
+        .slot {
+            width: 68px;
+            height: 68px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 11px;
+            text-align: center;
+            transition: 0.15s;
+        }
+        .slot:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .slot.active {
+            border-color: #00ffcc;
+            background: rgba(0, 255, 204, 0.2);
+            transform: translateY(-4px);
+        }
+        .slot span.key {
+            font-weight: bold;
+            color: #00ffcc;
+            font-size: 13px;
+            margin-bottom: 3px;
+        }
+        #top-panel {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: rgba(20, 25, 35, 0.8);
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            line-height: 1.5;
+            z-index: 20;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        #controls-bar {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 8px;
+            z-index: 20;
+        }
+        button {
+            background: #2b3548;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #3d4b66;
+        }
+        #overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 14, 22, 0.75);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            z-index: 30;
+            text-align: center;
+        }
+        #overlay h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: #00ffcc;
+        }
+        #overlay p {
+            max-width: 500px;
+            color: #cbd5e1;
+            margin-bottom: 25px;
+        }
+        #start-btn {
+            font-size: 18px;
+            padding: 14px 32px;
+            background: #00ffcc;
+            color: #0f172a;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div id="overlay">
+    <h1>City & Park Sandbox 3D</h1>
+    <p>Строй свой город, парки, дороги и расставляй машины в стиле Brookhaven и Garry's Mod прямо в браузере!</p>
+    <button id="start-btn">ИГРАТЬ / ПРОДОЛЖИТЬ</button>
+</div>
+
+<div id="crosshair"></div>
+
+<div id="top-panel">
+    <b>Управление:</b><br>
+    <b>WASD</b> — Ходить | <b>Пробел</b> — Прыжок<br>
+    <b>ЛКМ</b> — Построить | <b>R / ПКМ</b> — Повернуть<br>
+    <b>X</b> — Удалить объект | <b>ESC</b> — Курсор
+</div>
+
+<div id="controls-bar">
+    <button id="toggle-time">День / Ночь</button>
+    <button id="clear-map">Очистить карту</button>
+</div>
+
+<div id="hud"></div>
+
+<!-- Подключаем Three.js через CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+    // --- НАСТРОЙКА СЦЕНЫ И КАМЕРЫ ---
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x87CEEB);
+    scene.fog = new THREE.Fog(0x87CEEB, 40, 180);
+
+    const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 500);
+    camera.position.set(0, 3, 12);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    document.body.appendChild(renderer.domElement);
+
+    // --- ОСВЕЩЕНИЕ ---
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
+    scene.add(ambientLight);
+
+    const sunLight = new THREE.DirectionalLight(0xfff5e0, 0.9);
+    sunLight.position.set(50, 80, 40);
+    sunLight.castShadow = true;
+    sunLight.shadow.mapSize.width = 2048;
+    sunLight.shadow.mapSize.height = 2048;
+    sunLight.shadow.camera.near = 10;
+    sunLight.shadow.camera.far = 200;
+    const d = 70;
+    sunLight.shadow.camera.left = -d;
+    sunLight.shadow.camera.right = d;
+    sunLight.shadow.camera.top = d;
+    sunLight.shadow.camera.bottom = -d;
+    scene.add(sunLight);
+
+    // --- ЗЕМЛЯ И СЕТКА ---
+    const groundGeo = new THREE.PlaneGeometry(240, 240);
+    const groundMat = new THREE.MeshStandardMaterial({ color: 0x4caf50, roughness: 0.9 });
+    const ground = new THREE.Mesh(groundGeo, groundMat);
+    ground.rotation.x = -Math.PI / 2;
+    ground.receiveShadow = true;
+    ground.name = "ground";
+    scene.add(ground);
+
+    const gridHelper = new THREE.GridHelper(240, 60, 0x000000, 0x000000);
+    gridHelper.material.opacity = 0.12;
+    gridHelper.material.transparent = true;
+    scene.add(gridHelper);
+
+    // --- ГЕНЕРАТОР 3D ОБЪЕКТОВ (ПРОПОВ) ---
+    const pointLights = [];
+
+    function createProp(type, isGhost = false) {
+        const group = new THREE.Group();
+        const matOptions = (color) => ({
+            color: color,
+            transparent: isGhost,
+            opacity: isGhost ? 0.55 : 1.0,
+            roughness: 0.7
+        });
+
+        if (type === 'road') {
+            const road = new THREE.Mesh(new THREE.BoxGeometry(4, 0.1, 4), new THREE.MeshStandardMaterial(matOptions(0x333842)));
+            road.position.y = 0.05;
+            const stripe = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.12, 1.8), new THREE.MeshStandardMaterial(matOptions(0xffffff)));
+            stripe.position.y = 0.05;
+            group.add(road, stripe);
+        }
+        else if (type === 'house') {
+            const base = new THREE.Mesh(new THREE.BoxGeometry(5, 3.5, 5), new THREE.MeshStandardMaterial(matOptions(0xf5deb3)));
+            base.position.y = 1.75;
+            const roof = new THREE.Mesh(new THREE.ConeGeometry(4.2, 2.2, 4), new THREE.MeshStandardMaterial(matOptions(0xb22222)));
+            roof.position.y = 4.6;
+            roof.rotation.y = Math.PI / 4;
+            const door = new THREE.Mesh(new THREE.BoxGeometry(1, 2, 0.2), new THREE.MeshStandardMaterial(matOptions(0x5c3a21)));
+            door.position.set(0, 1, 2.5);
+            const win1 = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 0.2), new THREE.MeshStandardMaterial(matOptions(0x87cefa)));
+            win1.position.set(-1.5, 2, 2.5);
+            const win2 = win1.clone();
+            win2.position.set(1.5, 2, 2.5);
+            group.add(base, roof, door, win1, win2);
+        }
+        else if (type === 'skyscraper') {
+            const tower = new THREE.Mesh(new THREE.BoxGeometry(6, 14, 6), new THREE.MeshStandardMaterial(matOptions(0x4a607a)));
+            tower.position.y = 7;
+            group.add(tower);
+            for (let y = 2; y <= 12; y += 2.5) {
+                const band = new THREE.Mesh(new THREE.BoxGeometry(6.15, 0.8, 6.15), new THREE.MeshStandardMaterial(matOptions(0x9be7ff)));
+                band.position.y = y;
+                group.add(band);
+            }
+        }
+        else if (type === 'tree') {
+            const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.5, 2.2, 8), new THREE.MeshStandardMaterial(matOptions(0x6d4c41)));
+            trunk.position.y = 1.1;
+            const leaves1 = new THREE.Mesh(new THREE.DodecahedronGeometry(1.8), new THREE.MeshStandardMaterial(matOptions(0x2e7d32)));
+            leaves1.position.y = 3.0;
+            const leaves2 = new THREE.Mesh(new THREE.DodecahedronGeometry(1.3), new THREE.MeshStandardMaterial(matOptions(0x388e3c)));
+            leaves2.position.set(0.6, 4.1, 0.3);
+            group.add(trunk, leaves1, leaves2);
+        }
+        else if (type === 'bench') {
+            const seat = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.15, 0.8), new THREE.MeshStandardMaterial(matOptions(0x8d5524)));
+            seat.position.y = 0.6;
+            const back = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.7, 0.12), new THREE.MeshStandardMaterial(matOptions(0x8d5524)));
+            back.position.set(0, 1.0, -0.35);
+            const leg1 = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.6, 0.7), new THREE.MeshStandardMaterial(matOptions(0x222222)));
+            leg1.position.set(-1, 0.3, 0);
+            const leg2 = leg1.clone();
+            leg2.position.set(1, 0.3, 0);
+            group.add(seat, back, leg1, leg2);
+        }
+        else if (type === 'lamp') {
+            const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.15, 4.5, 8), new THREE.MeshStandardMaterial(matOptions(0x263238)));
+            pole.position.y = 2.25;
+            const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.35, 12, 12), new THREE.MeshStandardMaterial({
+                color: 0xfff176,
+                emissive: 0xffd54f,
+                emissiveIntensity: 0.9,
+                transparent: isGhost,
+                opacity: isGhost ? 0.55 : 1
+            }));
+            bulb.position.y = 4.6;
+            group.add(pole, bulb);
+
+            if (!isGhost) {
+                const light = new THREE.PointLight(0xffdf80, 1.2, 16);
+                light.position.set(0, 4.4, 0);
+                group.add(light);
+                pointLights.push(light);
+            }
+        }
+        else if (type === 'fountain') {
+            const basin = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.8, 0.7, 16), new THREE.MeshStandardMaterial(matOptions(0xb0bec5)));
+            basin.position.y = 0.35;
+            const water = new THREE.Mesh(new THREE.CylinderGeometry(2.3, 2.3, 0.75, 16), new THREE.MeshStandardMaterial(matOptions(0x00bcd4)));
+            water.position.y = 0.36;
+            const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.5, 1.8, 12), new THREE.MeshStandardMaterial(matOptions(0x90a4ae)));
+            pillar.position.y = 1.1;
+            const topBowl = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 0.5, 0.4, 16), new THREE.MeshStandardMaterial(matOptions(0xb0bec5)));
+            topBowl.position.y = 2.0;
+            group.add(basin, water, pillar, topBowl);
+        }
+        else if (type === 'car') {
+            const body = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.8, 4.2), new THREE.MeshStandardMaterial(matOptions(0xe53935)));
+            body.position.y = 0.65;
+            const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.7, 2.2), new THREE.MeshStandardMaterial(matOptions(0x90caf9)));
+            cabin.position.set(0, 1.35, -0.2);
+            const wheelGeo = new THREE.CylinderGeometry(0.4, 0.4, 0.3, 12);
+            const wheelMat = new THREE.MeshStandardMaterial(matOptions(0x111111));
+            const positions = [[-1.1, 0.4, 1.3], [1.1, 0.4, 1.3], [-1.1, 0.4, -1.3], [1.1, 0.4, -1.3]];
+            positions.forEach(p => {
+                const w = new THREE.Mesh(wheelGeo, wheelMat);
+                w.rotation.z = Math.PI / 2;
+                w.position.set(...p);
+                group.add(w);
+            });
+            group.add(body, cabin);
+        }
+
+        group.traverse(child => {
+            if (child.isMesh && !isGhost) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+
+        return group;
+    }
+
+    // --- ИНВЕНТАРЬ И ПАНЕЛЬ ИНСТРУМЕНТОВ ---
+    const items = [
+        { id: 'road', name: 'Дорога', key: '1', snap: 4 },
+        { id: 'house', name: 'Дом', key: '2', snap: 2 },
+        { id: 'skyscraper', name: 'Небоскрёб', key: '3', snap: 2 },
+        { id: 'tree', name: 'Дерево', key: '4', snap: 1 },
+        { id: 'bench', name: 'Лавочка', key: '5', snap: 1 },
+        { id: 'lamp', name: 'Фонарь', key: '6', snap: 1 },
+        { id: 'fountain', name: 'Фонтан', key: '7', snap: 2 },
+        { id: 'car', name: 'Машина', key: '8', snap: 1 }
+    ];
+
+    let selectedIndex = 0;
+    let currentRotation = 0;
+    let ghostMesh = null;
+    const placedObjects = [];
+
+    const hud = document.getElementById('hud');
+    items.forEach((item, idx) => {
+        const div = document.createElement('div');
+        div.className = 'slot' + (idx === 0 ? ' active' : '');
+        div.innerHTML = `<span class="key">[${item.key}]</span><span>${item.name}</span>`;
+        div.onclick = () => selectItem(idx);
+        hud.appendChild(div);
+    });
+
+    function selectItem(index) {
+        selectedIndex = index;
+        document.querySelectorAll('.slot').forEach((el, i) => {
+            el.classList.toggle('active', i === index);
+        });
+        updateGhost();
+    }
+
+    function updateGhost() {
+        if (ghostMesh) scene.remove(ghostMesh);
+        ghostMesh = createProp(items[selectedIndex].id, true);
+        ghostMesh.rotation.y = currentRotation;
+        scene.add(ghostMesh);
+    }
+    updateGhost();
+
+    // --- УПРАВЛЕНИЕ ИГРОКОМ (FPS КАМЕРА) ---
+    let yaw = 0;
+    let pitch = 0;
+    let velocityY = 0;
+    let isGrounded = true;
+    const keys = {};
+
+    const overlay = document.getElementById('overlay');
+    const startBtn = document.getElementById('start-btn');
+
+    startBtn.addEventListener('click', () => {
+        document.body.requestPointerLock();
+    });
+
+    document.addEventListener('pointerlockchange', () => {
+        if (document.pointerLockElement === document.body) {
+            overlay.style.display = 'none';
+        } else {
+            overlay.style.display = 'flex';
+        }
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (document.pointerLockElement === document.body) {
+            yaw -= e.movementX * 0.0022;
+            pitch -= e.movementY * 0.0022;
+            pitch = Math.max(-Math.PI / 2.2, Math.min(Math.PI / 2.2, pitch));
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        keys[e.code] = true;
+
+        // Выбор слотов 1-8
+        if (e.key >= '1' && e.key <= '8') {
+            selectItem(parseInt(e.key) - 1);
+        }
+        // Поворот объекта
+        if (e.code === 'KeyR') {
+            rotateProp();
+        }
+        // Удаление объекта под прицелом (Tool Gun Remove)
+        if (e.code === 'KeyX') {
+            removeTargetProp();
+        }
+    });
+
+    document.addEventListener('keyup', (e) => {
+        keys[e.code] = false;
+    });
+
+    function rotateProp() {
+        currentRotation += Math.PI / 4;
+        if (ghostMesh) ghostMesh.rotation.y = currentRotation;
+    }
+
+    // --- СТРОИТЕЛЬСТВО И УДАЛЕНИЕ (RAYCASTER) ---
+    const raycaster = new THREE.Raycaster();
+    const centerScreen = new THREE.Vector2(0, 0);
+
+    document.addEventListener('mousedown', (e) => {
+        if (document.pointerLockElement !== document.body) return;
+
+        if (e.button === 0 && ghostMesh && ghostMesh.visible) {
+            // Ставим объект
+            const prop = createProp(items[selectedIndex].id, false);
+            prop.position.copy(ghostMesh.position);
+            prop.rotation.y = currentRotation;
+            scene.add(prop);
+            placedObjects.push(prop);
+        } else if (e.button === 2) {
+            rotateProp();
+        }
+    });
+
+    document.addEventListener('contextmenu', e => e.preventDefault());
+
+    function removeTargetProp() {
+        raycaster.setFromCamera(centerScreen, camera);
+        const intersects = raycaster.intersectObjects(placedObjects, true);
+        if (intersects.length > 0) {
+            let target = intersects[0].object;
+            while (target.parent && !placedObjects.includes(target)) {
+                target = target.parent;
+            }
+            if (placedObjects.includes(target)) {
+                scene.remove(target);
+                const idx = placedObjects.indexOf(target);
+                if (idx > -1) placedObjects.splice(idx, 1);
+            }
+        }
+    }
+
+    // --- ДЕНЬ / НОЧЬ И ОЧИСТКА ---
+    let isNight = false;
+    document.getElementById('toggle-time').onclick = () => {
+        isNight = !isNight;
+        if (isNight) {
+            scene.background = new THREE.Color(0x0b1021);
+            scene.fog.color = new THREE.Color(0x0b1021);
+            ambientLight.intensity = 0.2;
+            sunLight.intensity = 0.15;
+            pointLights.forEach(l => l.intensity = 1.8);
+        } else {
+            scene.background = new THREE.Color(0x87CEEB);
+            scene.fog.color = new THREE.Color(0x87CEEB);
+            ambientLight.intensity = 0.55;
+            sunLight.intensity = 0.9;
+            pointLights.forEach(l => l.intensity = 0.6);
+        }
+    };
+
+    document.getElementById('clear-map').onclick = () => {
+        placedObjects.forEach(obj => scene.remove(obj));
+        placedObjects.length = 0;
+        pointLights.length = 0;
+    };
+
+    // --- НАЧАЛЬНЫЙ МИНИ-ПАРК ДЛЯ ПРИМЕРА ---
+    function spawnStarterPark() {
+        const starter = [
+            { type: 'road', x: 0, z: 0, r: 0 },
+            { type: 'road', x: 0, z: -4, r: 0 },
+            { type: 'road', x: 0, z: -8, r: 0 },
+            { type: 'fountain', x: -8, z: -4, r: 0 },
+            { type: 'bench', x: -5, z: -4, r: -Math.PI / 2 },
+            { type: 'tree', x: -11, z: -1, r: 0 },
+            { type: 'tree', x: -11, z: -7, r: 0 },
+            { type: 'lamp', x: -2.5, z: -2, r: 0 },
+            { type: 'house', x: 6, z: -5, r: -Math.PI / 2 },
+            { type: 'car', x: 0, z: -2, r: 0 }
+        ];
+        starter.forEach(s => {
+            const p = createProp(s.type, false);
+            p.position.set(s.x, 0, s.z);
+            p.rotation.y = s.r;
+            scene.add(p);
+            placedObjects.push(p);
+        });
+    }
+    spawnStarterPark();
+
+    // --- ИГРОВОЙ ЦИКЛ ---
+    const clock = new THREE.Clock();
+
+    function animate() {
+        requestAnimationFrame(animate);
+        const dt = Math.min(clock.getDelta(), 0.1);
+
+        // Поворот камеры
+        camera.rotation.order = 'YXZ';
+        camera.rotation.y = yaw;
+        camera.rotation.x = pitch;
+
+        // Движение игрока
+        const speed = keys['ShiftLeft'] ? 22 : 12;
+        const forward = new THREE.Vector3(-Math.sin(yaw), 0, -Math.cos(yaw));
+        const right = new THREE.Vector3(Math.cos(yaw), 0, -Math.sin(yaw));
+
+        if (keys['KeyW']) camera.position.addScaledVector(forward, speed * dt);
+        if (keys['KeyS']) camera.position.addScaledVector(forward, -speed * dt);
+        if (keys['KeyA']) camera.position.addScaledVector(right, -speed * dt);
+        if (keys['KeyD']) camera.position.addScaledVector(right, speed * dt);
+
+        // Прыжок и гравитация
+        if (keys['Space'] && isGrounded) {
+            velocityY = 9;
+            isGrounded = false;
+        }
+        velocityY -= 24 * dt;
+        camera.position.y += velocityY * dt;
+
+        if (camera.position.y <= 2.4) {
+            camera.position.y = 2.4;
+            velocityY = 0;
+            isGrounded = true;
+        }
+
+        // Обновление призрака постройки
+        raycaster.setFromCamera(centerScreen, camera);
+        const hits = raycaster.intersectObject(ground);
+        if (hits.length > 0 && hits[0].distance < 45) {
+            const pt = hits[0].point;
+            const snap = items[selectedIndex].snap;
+            ghostMesh.visible = true;
+            ghostMesh.position.set(
+                Math.round(pt.x / snap) * snap,
+                0,
+                Math.round(pt.z / snap) * snap
+            );
+        } else {
+            ghostMesh.visible = false;
+        }
+
+        renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    animate();
+</script>
+</body>
+</html>
